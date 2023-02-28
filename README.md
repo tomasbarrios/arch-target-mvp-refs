@@ -186,3 +186,47 @@ This project uses ESLint for linting. That is configured in `.eslintrc.js`.
 ### Formatting
 
 We use [Prettier](https://prettier.io/) for auto-formatting in this project. It's recommended to install an editor plugin (like the [VSCode Prettier plugin](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)) to get auto-formatting on save. There's also a `npm run format` script you can run to format all files in the project.
+
+### Libraries
+
+| lib | version | usage |
+| --- | --- | ---|
+| @faker-js/faker | ^7.6.0 | test |
+| @remix-run/dev | ^1.13.0 | local env |
+| @remix-run/eslint-config | ^1.13.0 | lint |
+| @testing-library/cypress | ^8.0.7 | e2e |
+| @testing-library/dom | ^8.20.0 | ? |
+| @testing-library/jest-dom | ^5.16.5 | test |
+| @testing-library/react | ^13.4.0 | html |
+| @testing-library/user-event | ^14.4.3 | ? |
+| @types/bcryptjs | ^2.4.2 | login passwords |
+| @types/eslint | ^8.4.10 | ? |
+| @types/node | ^18.11.18 | ? |
+| @types/react | ^18.0.26 | ? |
+| @types/react-dom | ^18.0.10 | ? |
+| @vitejs/plugin-react | ^3.0.1 | ? |
+| @vitest/coverage-c8 | ^0.27.2 | ? |
+| autoprefixer | ^10.4.13 | ? |
+| binode | ^1.0.5 | ? |
+| c8 | ^7.12.0 | ? |
+| cookie | ^0.5.0 | ? |
+| cross-env | ^7.0.3 | ? |
+| cypress | ^10.11.0 | ? |
+| eslint | ^8.32.0 | ? |
+| eslint-config-prettier | ^8.6.0 | ? |
+| eslint-plugin-cypress | ^2.12.1 | ? |
+| happy-dom | ^8.1.4 | ? |
+| msw | ^0.49.2 | ? |
+| npm-run-all | ^4.1.5 | ? |
+| postcss | ^8.4.21 | ? |
+| prettier | 2.8.3 | ? |
+| prettier-plugin-tailwindcss | ^0.2.1 | ? |
+| prisma | ^4.9.0 | ? |
+| start-server-and-test | ^1.15.2 | ? |
+| tailwindcss | ^3.2.4 | ? |
+| ts-node | ^10.9.1 | ? |
+| tsconfig-paths | ^4.1.2 | ? |
+| typescript | ^4.9.4 | ? |
+| vite | ^4.0.4 | ? |
+| vite-tsconfig-paths | ^3.6.0 | ? |
+| vitest | ^0.27.2 | ? |
