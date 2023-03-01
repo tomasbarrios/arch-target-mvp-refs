@@ -60,6 +60,8 @@ export async function requireUser(request: Request) {
   const user = await getUserById(userId);
   if (user) return user;
 
+  // REMIX magic, will handle different this error
+  // because it is a promise
   throw await logout(request);
 }
 

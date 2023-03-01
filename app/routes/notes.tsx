@@ -6,6 +6,9 @@ import { requireUserId } from "~/session.server";
 import { useUser } from "~/utils";
 import { getNoteListItems } from "~/models/note.server";
 
+/*
+REMIX MAGIC™️
+*/
 export async function loader({ request }: LoaderArgs) {
   const userId = await requireUserId(request);
   const noteListItems = await getNoteListItems({ userId });

@@ -28,6 +28,58 @@ export async function createUser(email: User["email"], password: string) {
   });
 }
 
+export function getUser({
+  id,
+}: Pick<User, "id"> & {
+  userId: User["id"];
+}) {
+  return prisma.user.findFirst({
+    select: { id: true, email: true },
+    where: { id },
+  });
+}
+
+export async function updateUser(email: User["email"], password: string) {
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  return prisma.user.update({
+    where: {
+      email: email,
+    },
+    data: {
+      password: {
+        update: {
+          hash: hashedPassword,
+        },
+      },
+    },
+  });
+}
+
+export function getUserListItems({ userId }: { userId: User["id"] }) {
+  return prisma.user.findMany({
+    where: { id: userId },
+    select: { id: true, email: true },
+    orderBy: { updatedAt: "desc" },
+  });
+}
+
+// export async function updateUserPassword(email: User["email"], password: string) {
+//   const hashedPassword = await bcrypt.hash(password, 10);
+
+  
+//   return prisma.user.update({
+//     data: {
+//       email,
+//       password: {
+//         create: {
+//           hash: hashedPassword,
+//         },
+//       },
+//     },
+//   });
+// }
+
 export async function deleteUserByEmail(email: User["email"]) {
   return prisma.user.delete({ where: { email } });
 }
