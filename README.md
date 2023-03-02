@@ -1,3 +1,17 @@
+TO ORGANIZE:
+
+## migrations
+1. Alter `prisma.schema`
+2. npx prisma migrate dev
+
+### Only run seed?
+
+```npx prisma db seed```
+
+
+
+----
+
 Generated from template
 https://github.com/tomasbarrios/indie-stack-mvps
 tomasbarrios/indie-stack-mvps
