@@ -1,17 +1,22 @@
 import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Form, Link, NavLink, Outlet, useLoaderData } from "@remix-run/react";
-
+import { requireUserId } from "~/session.server";
+import { useUser } from "~/utils";
+import { getOrganization } from "~/models/organization.server";
 import { getTaskListItems } from "~/models/task.server";
 
 export async function loader({ request }: LoaderArgs) {
   const taskListItems = await getTaskListItems({ noteId: null });
-  return json({ taskListItems });
+  const userId = await requireUserId(request);
+  const organization = await getOrganization({userId});
+  console.log({organization})
+  return json({ taskListItems, organization });
 }
 
 export default function TasksPage() {
   const data = useLoaderData<typeof loader>();
-  console.log({data})
+  const user = useUser()
 
   return (
     <div className="flex h-full min-h-screen flex-col">
@@ -19,6 +24,9 @@ export default function TasksPage() {
         <h1 className="text-3xl font-bold">
           <Link to=".">Tasks</Link>
         </h1>
+        <p>
+          ORG: {data.organization[0].name}
+          </p>
         <Form action="/logout" method="post">
           <button
             type="submit"
