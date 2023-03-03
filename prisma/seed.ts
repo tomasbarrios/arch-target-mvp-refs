@@ -21,42 +21,56 @@ async function seed() {
           hash: hashedPassword,
         },
       },
+      organizations: {
+        create: [
+          {
+            assignedBy: 'Bob',
+            assignedAt: new Date(),
+            organization: {
+              create: {
+                name: "`${email}'s personal`",
+                slug: email,
+              },
+            },
+          }
+        ],
+      },
     },
   });
 
-  const note = await prisma.note.create({
-    data: {
-      title: "My first note",
-      body: "Hello, world!",
-      userId: user.id,
-    },
-  });
+const note = await prisma.note.create({
+  data: {
+    title: "My first note",
+    body: "Hello, world!",
+    userId: user.id,
+  },
+});
 
-  await prisma.note.create({
-    data: {
-      title: "My second note",
-      body: "Hello, world!",
-      userId: user.id,
-    },
-  });
+await prisma.note.create({
+  data: {
+    title: "My second note",
+    body: "Hello, world!",
+    userId: user.id,
+  },
+});
 
-  //   /**
-  //    * Added by me
-  //    */
+//   /**
+//    * Added by me
+//    */
 
-  const tasks = [
-    {
-      title: "My First Post",
-      body: `
+const tasks = [
+  {
+    title: "My First Post",
+    body: `
     # This is my first task
 
     Isn't it great?
         `.trim(),
-      noteId: note.id,
-    },
-    {
-      title: "A Mixtape I Made Just For You",
-      body: `
+    noteId: note.id,
+  },
+  {
+    title: "A Mixtape I Made Just For You",
+    body: `
     # 90s Mixtape
 
     - I wish (Skee-Lo)
@@ -77,22 +91,22 @@ async function seed() {
     - Santa Monica (Everclear)
     - C'mon N' Ride it (Quad City DJ's)
         `.trim(),
-    },
-  ];
+  },
+];
 
-  for (const task of tasks) {
-    // await prisma.task.upsert({
-    //   where: { title: task.title },
-    await prisma.task.create({
-      data: task
-    });
-  }
+for (const task of tasks) {
+  // await prisma.task.upsert({
+  //   where: { title: task.title },
+  await prisma.task.create({
+    data: task
+  });
+}
 
-  /**
-   * Original again
-   * 
-   */
-  console.log(`Database has been seeded. 🌱`);
+/**
+ * Original again
+ * 
+ */
+console.log(`Database has been seeded. 🌱`);
 }
 
 seed()

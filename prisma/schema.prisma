@@ -16,6 +16,8 @@ model User {
 
   password Password?
   notes    Note[]
+
+  organizations   UsersOnOrganizations[]
 }
 
 model Password {
@@ -39,7 +41,6 @@ model Note {
   task    Task[]
 }
 
-
 model Task {
   id    String @id @default(cuid())
   title String
@@ -51,4 +52,55 @@ model Task {
 
   note   Note?   @relation(fields: [noteId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   noteId String?
+}
+
+model Product {
+  id              String            @id @default(cuid())
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  sku             String            @unique
+  model           String
+  description     String
+  image           String
+  category        String
+  size            String
+  stock           Int
+  variants        ProductVariant[]
+  organization    Organization      @relation(fields: [organizationId], references: [id])
+  organizationId  String            
+}
+
+model ProductVariant {
+  id              String            @id @default(cuid())
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  sku             String            @unique
+  size            String
+  stock           Int
+  product         Product           @relation(fields: [productId], references: [id])
+  productId       String
+}
+
+model Organization {
+  id          String              @id @default(cuid())
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+  slug        String              @unique
+  name        String
+  description String?
+  image       String?
+  category    String?
+  products    Product[]
+  users   UsersOnOrganizations[]
+}
+
+model UsersOnOrganizations {
+  user            User     @relation(fields: [userId], references: [id])
+  userId          String // relation scalar field (used in the `@relation` attribute above)
+  organization    Organization @relation(fields: [organizationId], references: [id])
+  organizationId  String // relation scalar field (used in the `@relation` attribute above)
+  assignedAt      DateTime @default(now())
+  assignedBy      String
+
+  @@id([userId, organizationId])
 }

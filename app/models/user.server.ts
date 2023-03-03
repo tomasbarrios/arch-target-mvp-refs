@@ -24,6 +24,20 @@ export async function createUser(email: User["email"], password: string) {
           hash: hashedPassword,
         },
       },
+      organizations: {
+        create: [
+          {
+            assignedBy: 'Bob',
+            assignedAt: new Date(),
+            organization: {
+              create: {
+                name: `${email}'s personal`,
+                slug: email,
+              },
+            },
+          }
+        ],
+      },
     },
   });
 }

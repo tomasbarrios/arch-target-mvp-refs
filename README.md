@@ -1,5 +1,10 @@
 TO ORGANIZE:
 
+### Prisma
+
+#### Many to Many
+https://www.prisma.io/docs/concepts/components/prisma-schema/relations/many-to-many-relations
+
 ## migrations
 1. Alter `prisma.schema`
 2. npx prisma migrate dev
