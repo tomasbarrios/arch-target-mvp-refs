@@ -15,6 +15,7 @@
     "allowJs": true,
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
+    "experimentalDecorators": true,
     "paths": {
       "~/*": ["./app/*"]
     },
