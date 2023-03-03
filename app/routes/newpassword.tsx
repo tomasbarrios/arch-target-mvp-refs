@@ -5,7 +5,7 @@ import * as React from "react";
 
 import { getUserId, createUserSession } from "~/session.server";
 
-import { createUser, getUserByEmail, updateUser } from "~/models/user.server";
+import { updateUser } from "~/models/user.server";
 import { safeRedirect, validateEmail } from "~/utils";
 
 export async function loader({ request }: LoaderArgs) {
@@ -40,19 +40,6 @@ export async function action({ request }: ActionArgs) {
       { status: 400 }
     );
   }
-
-  const existingUser = await getUserByEmail(email);
-//   if (existingUser) {
-//     return json(
-//       {
-//         errors: {
-//           email: "A user already exists with this email",
-//           password: null,
-//         },
-//       },
-//       { status: 400 }
-//     );
-//   }
 
   const user = await updateUser(email, password);
 

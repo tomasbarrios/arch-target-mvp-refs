@@ -2,15 +2,12 @@ import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Form, useCatch, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
-
 import { deleteTask, getTask } from "~/models/task.server";
-import { requireUserId } from "~/session.server";
 
 export async function loader({ request, params }: LoaderArgs) {
-  const userId = await requireUserId(request);
   invariant(params.taskId, "taskId not found");
 
-  const task = await getTask({ userId, id: params.taskId });
+  const task = await getTask({ id: params.taskId });
   if (!task) {
     throw new Response("Not Found", { status: 404 });
   }
@@ -18,10 +15,9 @@ export async function loader({ request, params }: LoaderArgs) {
 }
 
 export async function action({ request, params }: ActionArgs) {
-  const userId = await requireUserId(request);
   invariant(params.taskId, "taskId not found");
 
-  await deleteTask({ userId, id: params.taskId });
+  await deleteTask({ id: params.taskId });
 
   return redirect("/tasks");
 }

@@ -8,7 +8,7 @@ export function getTask({
   id,
   noteId,
 }: Pick<Task, "id"> & {
-  noteId: Note["id"];
+  noteId?: Note["id"];
 }) {
   return prisma.task.findFirst({
     select: { id: true, body: true, title: true, noteId: true },
@@ -27,7 +27,6 @@ export function getTaskListItems({ noteId }: { noteId: Note["id"] | null }) {
 export function createTask({
   body,
   title,
-  // noteId,
 }: Pick<Task, "body" | "title">) {
     return prisma.task.create({
       data: {
@@ -39,9 +38,8 @@ export function createTask({
 
 export function deleteTask({
   id,
-  noteId,
-}: Pick<Task, "id"> & { noteId: Note["id"] }) {
+}: Pick<Task, "id">) {
   return prisma.task.deleteMany({
-    where: { id, noteId },
+    where: { id },
   });
 }
