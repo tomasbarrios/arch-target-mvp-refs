@@ -1,5 +1,7 @@
 TO ORGANIZE:
 
+flyctl certs create domain.com
+
 ### Prisma
 
 #### Many to Many
