@@ -13,6 +13,17 @@ const hydrate = () => {
   });
 };
 
+// if the browser supports SW (all modern browsers do it)
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    // we will register it after the page complete the load
+    console.log("LLLLLLLLL")
+    navigator.serviceWorker.register("/sw.js");
+  });
+} else {
+  console.log("no sergice worker")
+}
+
 if (window.requestIdleCallback) {
   window.requestIdleCallback(hydrate);
 } else {

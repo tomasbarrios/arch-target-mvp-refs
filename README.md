@@ -1,4 +1,8 @@
+
 TO ORGANIZE:
+https://sergiodxa.com/articles/using-service-workers-with-remix
+
+flyctl certs create domain.com
 
 ### Prisma
 
