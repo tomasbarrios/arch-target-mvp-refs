@@ -78,22 +78,6 @@ export function getUserListItems({ userId }: { userId: User["id"] }) {
   });
 }
 
-// export async function updateUserPassword(email: User["email"], password: string) {
-//   const hashedPassword = await bcrypt.hash(password, 10);
-
-  
-//   return prisma.user.update({
-//     data: {
-//       email,
-//       password: {
-//         create: {
-//           hash: hashedPassword,
-//         },
-//       },
-//     },
-//   });
-// }
-
 export async function deleteUserByEmail(email: User["email"]) {
   return prisma.user.delete({ where: { email } });
 }
