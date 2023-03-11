@@ -3,7 +3,7 @@
 // npx ts-node --require tsconfig-paths/register ./cypress/support/delete-user.ts username@example.com
 // and that user will get deleted
 
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { installGlobals } from "@remix-run/node";
 
 import { prisma } from "~/db.server";
@@ -14,11 +14,17 @@ async function deleteUser(email: string) {
   if (!email) {
     throw new Error("email required for login");
   }
-  if (!email.endsWith("@example.com")) {
-    throw new Error("All test emails must end in @example.com");
-  }
+  // if (!email.endsWith("@example.com")) {
+  //   throw new Error("All test emails must end in @example.com");
+  // }
 
   try {
+    await prisma.user.update({ data: {
+      organizations: {
+        deleteMany: {},
+      },
+    }, where: { email } });
+
     await prisma.user.delete({ where: { email } });
   } catch (error) {
     if (
@@ -27,6 +33,8 @@ async function deleteUser(email: string) {
     ) {
       console.log("User not found, so no need to delete");
     } else {
+      console.log("UINEXPECTED ERROR!");
+
       throw error;
     }
   } finally {

@@ -1,4 +1,12 @@
+Delete
+
+https://stackoverflow.com/a/69580292
+
 TO ORGANIZE:
+
+TODO
+Strufy rollbacks in prisma
+https://www.prisma.io/docs/guides/database/developing-with-prisma-migrate/generating-down-migrations
 
 ### Prisma
 

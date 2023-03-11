@@ -4,11 +4,21 @@ import bcrypt from "bcryptjs";
 const prisma = new PrismaClient();
 
 async function seed() {
-  const email = "rachel@remix.run";
+  const email = "rachel4@remix.run";
 
   // cleanup the existing database
+  await prisma.user.update({ data: {
+    organizations: {
+      deleteMany: {},
+    },
+  }, where: { email } }).catch(() => {
+    // no worries if it doesn't exist yet
+    console.log("COULD NOT DELETE EXISTING RELATION!!")
+  });
+
   await prisma.user.delete({ where: { email } }).catch(() => {
     // no worries if it doesn't exist yet
+    console.log("COULD NOT DELETE!!")
   });
 
   const hashedPassword = await bcrypt.hash("racheliscool", 10);
