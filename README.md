@@ -1,13 +1,15 @@
-<<<<<<< Updated upstream
 Delete
 
 https://stackoverflow.com/a/69580292
-=======
+
+---
+
 1 day (10 marzo) since breaking deploys
 Reason: needs latest prisma lib
 
+Current Status: DEPLOY BROKEN. 1 day (10 marzo)
+
 ----
->>>>>>> Stashed changes
 
 TO ORGANIZE:
 
