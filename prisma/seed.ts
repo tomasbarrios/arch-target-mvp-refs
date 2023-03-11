@@ -38,7 +38,7 @@ async function seed() {
             assignedAt: new Date(),
             organization: {
               create: {
-                name: "`${email}'s personal`",
+                name: `${email}'s personal`,
                 slug: email,
               },
             },

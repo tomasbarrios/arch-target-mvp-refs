@@ -16,7 +16,7 @@ export async function loader({ request }: LoaderArgs) {
 
 export default function TasksPage() {
   const data = useLoaderData<typeof loader>();
-  const user = useUser()
+  // const user = useUser()
 
   return (
     <div className="flex h-full min-h-screen flex-col">
