@@ -131,7 +131,18 @@ export default function Index() {
             ))}
           </div>
         </div> */}
+
+<div className="center">
+      <Link
+                    to="/hey"
+                    className=""
+                    >
+                    
+      💌
+                  </Link>
       </div>
+      </div>
+
     </main>
   );
 }

@@ -1,5 +1,11 @@
-Delete
+Trouble on Fly.io?
 
+- Try [SSH](https://fly.io/docs/getting-started/troubleshooting/#inspecting-with-ssh)
+
+---
+
+### Prisma 
+#### Delete associated record
 https://stackoverflow.com/a/69580292
 
 ---
