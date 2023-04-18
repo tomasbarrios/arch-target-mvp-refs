@@ -1,3 +1,8 @@
+SQLLite
+
+`npx prisma studio`
+
+---
 Trouble on Fly.io?
 
 - Try [SSH](https://fly.io/docs/getting-started/troubleshooting/#inspecting-with-ssh)

@@ -32,6 +32,7 @@ model Note {
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   task      Task[]
+  wish      Wish[]
 }
 
 model Task {
@@ -93,4 +94,14 @@ model UsersOnOrganizations {
   user           User         @relation(fields: [userId], references: [id])
 
   @@id([userId, organizationId])
+}
+
+model Wish {
+  id        String   @id @default(cuid())
+  title     String
+  body      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  noteId    String?
+  note      Note?    @relation(fields: [noteId], references: [id], onDelete: Cascade)
 }
