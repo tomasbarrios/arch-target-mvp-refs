@@ -25,7 +25,8 @@ export default function TasksPage() {
           <Link to=".">Tasks</Link>
         </h1>
         <p>
-          ORG: {data.organization[0].name}
+          {/* FIXME: Org should bot be optional */}
+          ORG: {data.organization[0]?.name}
           </p>
         <Form action="/logout" method="post">
           <button
