@@ -44,30 +44,27 @@ export async function action({ request }: ActionArgs) {
 
   if (typeof title !== "string" || title.length === 0) {
     return json(
-      { errors: { title: "Title is required", body: null } },
+      { errors: { title: "Title is required", body: null, noteId: null } },
       { status: 400 }
     );
   }
 
   if (typeof body !== "string" || body.length === 0) {
     return json(
-      { errors: { title: null, body: "Body is required" } },
+      { errors: { title: null, body: "Body is required",  noteId: null } },
       { status: 400 }
     );
   }
 
   if (typeof noteId !== "string" || noteId.length === 0) {
     return json(
-      { errors: { title: null, noteId: "List is required" } },
+      { errors: { title: null, body: null, noteId: "List is required" } },
       { status: 400 }
     );
   }
-console.log({ title, body, noteId })
-  // getDefaultNoteForWish()
   const wish = await createWish({ title, body, noteId });
 
   return redirect(`/wishes/${wish.id}`);
-  // return null
 }
 
 export default function NewWishPage() {

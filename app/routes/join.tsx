@@ -148,7 +148,7 @@ export default function Join() {
             type="submit"
             className="w-full rounded bg-blue-500  py-2 px-4 text-white hover:bg-blue-600 focus:bg-blue-400"
           >
-            Crearme una nueva cuenta
+            Crear una nueva cuenta
           </button>
           <div className="flex items-center justify-center">
             <div className="text-center text-sm text-gray-500">
