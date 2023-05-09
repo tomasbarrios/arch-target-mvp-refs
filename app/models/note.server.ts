@@ -52,3 +52,20 @@ export function deleteNote({
     where: { id, userId },
   });
 }
+
+export function getDefaultNoteForWish({
+  userId,
+}: Pick<Note, "userId">) {
+  console.log("USERUD", userId)
+  return prisma.note.findFirst({
+    select: { id: true, title: true },
+    where: { 
+      userId, 
+      wish: {
+        none: {
+          id: undefined
+        }
+      }
+    }
+  });
+}

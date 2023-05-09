@@ -5,6 +5,7 @@ import { requireUserId } from "~/session.server";
 // import { useUser } from "~/utils";
 import { getOrganization } from "~/models/organization.server";
 import { getWishListItems } from "~/models/la-lista-pa.server";
+import { getNote } from "~/models/note.server";
 
 export async function loader({ request, params }: LoaderArgs) {
     
@@ -12,6 +13,12 @@ export async function loader({ request, params }: LoaderArgs) {
     const userId = await requireUserId(request);
     const organization = await getOrganization({userId});
     
+
+      
+
+    // Obtener las notas que podrían ser asignadas para esta lista (o crear una nueva por defecto)
+
+
     console.log("WHAY", {params})
     // const noteId = await requireNoteId(request);
     // console.log("WHAY2", {noteId})
@@ -19,6 +26,10 @@ export async function loader({ request, params }: LoaderArgs) {
     // params.wishId is really a noteId
     // then, we get all wishes for that note
     if (!params.wishId) throw new Error("No id provided")
+    // if (!params.noteId) throw new Error("No id provided")
+
+    // const note = await getNote({ userId, id: params.noteId });
+
     
     const wishListItems = await getWishListItems({ noteId: params.wishId });
 
@@ -63,7 +74,7 @@ export default function WishesPage() {
                     className={({ isActive }) =>
                       `block border-b p-4 text-xl ${isActive ? "bg-white" : ""}`
                     }
-                    to={wish.id}
+                    to={`deseos/${wish.id}`}
                   >
                     📝 {wish.title}
                     

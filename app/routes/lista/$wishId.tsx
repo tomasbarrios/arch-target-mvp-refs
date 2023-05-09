@@ -31,8 +31,6 @@ export default function WishDetailsPage() {
       <p className="py-6">{data.wish.body}</p>
       <hr className="my-4" />
       
-      
-      
       <Form method="post">
         {!data.wish.noteId &&
           <>
@@ -42,10 +40,10 @@ export default function WishDetailsPage() {
               type="submit"
               className="rounded bg-blue-500  py-2 px-4 text-white hover:bg-blue-600 focus:bg-blue-400"
             >
-                Send as link
-            </button>
-            </>
-          }
+              Send as link
+          </button>
+          </>
+        }
       </Form>
 
 

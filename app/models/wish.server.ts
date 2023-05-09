@@ -27,11 +27,13 @@ export function getWishListItems({ noteId }: { noteId: Note["id"] | null }) {
 export function createWish({
   body,
   title,
-}: Pick<Wish, "body" | "title">) {
+  noteId,
+}: Pick<Wish, "body" | "title"> & { noteId: Note["id"] }) {
     return prisma.wish.create({
       data: {
         title,
         body,
+        noteId
       },
     });
 }

@@ -1,19 +1,46 @@
-import type { ActionArgs } from "@remix-run/node";
+import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { Form, useActionData } from "@remix-run/react";
+import { Form, useActionData, useLoaderData } from "@remix-run/react";
+
 import * as React from "react";
 
 import { createWish } from "~/models/wish.server";
-// import { requireNoteId } from "~/wish.server";
+import { requireUserId } from "~/session.server";
+import { getDefaultNoteForWish } from "~/models/note.server";
+
+
+export async function loader({ request, params }: LoaderArgs) {
+  // invariant(params.wishId, "wishId not found");
+
+  const userId = await requireUserId(request);
+
+  /**
+   * FIXME
+   * We select the first note, this can generate problems if the user creates more than one note
+   * 
+   * SOL: Note should be dynamically changed
+   */
+  const defaultNote = await getDefaultNoteForWish({userId})
+
+  if (!defaultNote) {
+    throw new Response("No default note Found", { status: 404 });
+  }
+  
+  return json({ defaultNote });
+}
 
 export async function action({ request }: ActionArgs) {
   // const userId = await requireUserId(request);
-  // const noteId = "123"//await requireNoteId(request);
-
+  // const noteId = "123"//await requirenoteId(request);
   const formData = await request.formData();
+  console.log({formData})
   const title = formData.get("title");
   const body = formData.get("body");
+  const noteId = formData.get("noteId");
   // const body = formData.get("body");
+
+  console.log({ title, body, noteId })
+
 
   if (typeof title !== "string" || title.length === 0) {
     return json(
@@ -29,14 +56,27 @@ export async function action({ request }: ActionArgs) {
     );
   }
 
-  const wish = await createWish({ title, body });
+  if (typeof noteId !== "string" || noteId.length === 0) {
+    return json(
+      { errors: { title: null, noteId: "List is required" } },
+      { status: 400 }
+    );
+  }
+console.log({ title, body, noteId })
+  // getDefaultNoteForWish()
+  const wish = await createWish({ title, body, noteId });
 
   return redirect(`/wishes/${wish.id}`);
+  // return null
 }
 
 export default function NewWishPage() {
+  const data = useLoaderData<typeof loader>();
+
+  console.log( "DATAs DATA DATA DATA", data )
   const actionData = useActionData<typeof action>();
   const titleRef = React.useRef<HTMLInputElement>(null);
+  const noteIdRef = React.useRef<HTMLInputElement>(null);
   const bodyRef = React.useRef<HTMLTextAreaElement>(null);
 
   React.useEffect(() => {
@@ -57,6 +97,10 @@ export default function NewWishPage() {
         width: "100%",
       }}
     >
+
+      
+
+      
       <div>
         <label className="flex w-full flex-col gap-1">
           <span>Title: </span>
@@ -97,6 +141,33 @@ export default function NewWishPage() {
           </div>
         )}
       </div>
+
+      {/* LISTA begin */}
+
+      <div>
+        <label className="flex w-full flex-col gap-1">
+        <span>Se agregara a la <i>Lista de deseos</i>: <b>{data.defaultNote.title}</b> </span>
+          <input
+            ref={noteIdRef}
+            // disabled="true"
+            // hidden="true"
+            value={data.defaultNote.id}
+            name="noteId"
+            className="flex-1 rounded-md border-2 border-blue-500 px-3 text-lg leading-loose"
+            aria-invalid={actionData?.errors?.noteId ? true : undefined}
+            aria-errormessage={
+              actionData?.errors?.noteId ? "noteId-error" : undefined
+            }
+          />
+        </label>
+        {actionData?.errors?.noteId && (
+          <div className="pt-1 text-red-700" id="noteId-error">
+            {actionData.errors.noteId}
+          </div>
+        )}
+      </div>
+
+      {/* LISTA end */}
 
       <div className="text-right">
         <button
