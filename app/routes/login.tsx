@@ -88,7 +88,7 @@ export default function LoginPage() {
               htmlFor="email"
               className="block text-sm font-medium text-gray-700"
             >
-              Email address
+              Email
             </label>
             <div className="mt-1">
               <input
@@ -156,11 +156,11 @@ export default function LoginPage() {
                 htmlFor="remember"
                 className="ml-2 block text-sm text-gray-900"
               >
-                Remember me
+                Recordar
               </label>
             </div>
             <div className="text-center text-sm text-gray-500">
-              Don't have an account?!{" "}
+              No tienes una cuenta?{" "}
               <Link
                 className="text-blue-500 underline"
                 to={{
@@ -168,21 +168,23 @@ export default function LoginPage() {
                   search: searchParams.toString(),
                 }}
               >
-                Sign up
+                Registrate
               </Link>
             </div>
-            <div className="text-center text-sm text-gray-500">
-              Don't have an account?{" "}
+            
+          </div>
+
+          <div className="text-center text-sm text-gray-500">
+              Olvidaste tu password?{" "}
               <Link
                 className="text-blue-500 underline"
                 to={{
                   pathname: "/newpassword",
                 }}
               >
-                Sign up
+                Recupera tu cuenta
               </Link>
             </div>
-          </div>
         </Form>
       </div>
     </div>
