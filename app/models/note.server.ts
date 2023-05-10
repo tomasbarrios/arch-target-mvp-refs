@@ -56,16 +56,26 @@ export function deleteNote({
 export function getDefaultNoteForWish({
   userId,
 }: Pick<Note, "userId">) {
-  console.log("USERUD", userId)
   return prisma.note.findFirst({
     select: { id: true, title: true },
     where: { 
       userId, 
       wish: {
-        none: {
-          id: undefined
-        }
+        some: { }
       }
     }
   });
+}
+
+export function createWishGroup({
+  title = "Mi primera lista 💕",
+  userId 
+}: Pick<Note, "title"> & {
+  userId: User["id"];
+}) {
+  return createNote({
+    title, 
+    body: "Mi primera lista de deseos para compartir",
+    userId
+  })
 }
