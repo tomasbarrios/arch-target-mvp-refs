@@ -53,6 +53,10 @@ export function deleteNote({
   });
 }
 
+/*
+From here, added by me
+*/
+
 export function getDefaultNoteForWish({
   userId,
 }: Pick<Note, "userId">) {
@@ -78,4 +82,15 @@ export function createWishGroup({
     body: "Mi primera lista de deseos para compartir",
     userId
   })
+}
+
+export function getAllWishLists() {
+  return prisma.note.findMany({
+    select: { id: true, title: true },
+    where: { 
+      wish: {
+        some: { }
+      }
+    }
+  });
 }
