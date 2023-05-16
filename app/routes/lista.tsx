@@ -5,7 +5,7 @@ import { requireUserId } from "~/session.server";
 // import { useUser } from "~/utils";
 import { getOrganization } from "~/models/organization.server";
 import { getWishListItems } from "~/models/la-lista-pa.server";
-import { getNote } from "~/models/note.server";
+import { getWishListAsNote } from "~/models/note.server";
 
 export async function loader({ request, params }: LoaderArgs) {
     
@@ -13,28 +13,22 @@ export async function loader({ request, params }: LoaderArgs) {
     const userId = await requireUserId(request);
     const organization = await getOrganization({userId});
     
-
-      
-
-    // Obtener las notas que podrían ser asignadas para esta lista (o crear una nueva por defecto)
-
-
-    console.log("WHAY", {params})
-    // const noteId = await requireNoteId(request);
-    // console.log("WHAY2", {noteId})
-
-    // params.wishId is really a noteId
-    // then, we get all wishes for that note
-    if (!params.wishId) throw new Error("No id provided")
-    // if (!params.noteId) throw new Error("No id provided")
-
-    // const note = await getNote({ userId, id: params.noteId });
-
+    if (!params.listaId) throw new Error("No listId provided")
     
-    const wishListItems = await getWishListItems({ noteId: params.wishId });
+    const wishListItems = await getWishListItems({ noteId: params.listaId });
+    const note = await getWishListAsNote({ id: params.listaId });
 
-    console.log({organization})
-    return json({ wishListItems, organization });
+    console.log({organization, list: "hey", list2: wishListItems, note})
+    return json({ 
+      wishListItems: wishListItems.map(w => (
+        {
+          ...w,
+          url: `/lista/${params.listaId}/deseo/${w.id}`
+        }
+      )), 
+      note,
+      organization
+    });
 }
 
 export default function WishesPage() {
@@ -45,11 +39,11 @@ export default function WishesPage() {
     <div className="flex h-full min-h-screen flex-col">
       <header className="flex items-center justify-between bg-slate-800 p-4 text-white">
         <h1 className="text-3xl font-bold">
-          <Link to=".">Wishes</Link>
+          <Link to=".">Lista </Link>
         </h1>
         <p>
           {/* FIXME: Org should bot be optional */}
-          Lista de: {data.wishListItems[0].noteId}
+          Lista de deseos para {data.note.title}
           </p>
         <Form action="/logout" method="post">
           <button
@@ -74,22 +68,11 @@ export default function WishesPage() {
                     className={({ isActive }) =>
                       `block border-b p-4 text-xl ${isActive ? "bg-white" : ""}`
                     }
-                    to={`deseos/${wish.id}`}
+                    to={wish.url}
                   >
                     📝 {wish.title}
                     
                   </NavLink>
-                  
-                  {/* If we have a related note, this would show it */}
-                  {/* <NavLink
-                    className={({ isActive }) =>
-                      `block border-b p-4 text-xl ${isActive ? "bg-white" : ""}`
-                    }
-                    to={`/notes/${wish.noteId}`}
-                  >
-                  ⨾ {wish.noteId}
-                    
-                  </NavLink> */}
                   
                 </li>
               ))}

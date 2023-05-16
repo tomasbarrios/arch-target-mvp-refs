@@ -57,6 +57,17 @@ export function deleteNote({
 From here, added by me
 */
 
+export function getWishListAsNote({
+  id,
+}: Pick<Note, "id">) {
+  return prisma.note.findUniqueOrThrow({
+    select: { id: true, title: true },
+    where: { 
+      id
+    }
+  });
+}
+
 export function getDefaultNoteForWish({
   userId,
 }: Pick<Note, "userId">) {

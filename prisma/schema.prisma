@@ -8,13 +8,14 @@ datasource db {
 }
 
 model User {
-  id            String                 @id @default(cuid())
-  email         String                 @unique
-  createdAt     DateTime               @default(now())
-  updatedAt     DateTime               @updatedAt
-  notes         Note[]
-  password      Password?
-  organizations UsersOnOrganizations[]
+  id                  String                 @id @default(cuid())
+  email               String                 @unique
+  createdAt           DateTime               @default(now())
+  updatedAt           DateTime               @updatedAt
+  notes               Note[]
+  password            Password?
+  organizations       UsersOnOrganizations[]
+  wishesVolunteered   UsersOnWishVolunteers[]
 }
 
 model Password {
@@ -97,11 +98,23 @@ model UsersOnOrganizations {
 }
 
 model Wish {
-  id        String   @id @default(cuid())
-  title     String
-  body      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  noteId    String?
-  note      Note?    @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  id          String   @id @default(cuid())
+  title       String
+  body        String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  noteId      String?
+  note        Note?    @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  volunteers  UsersOnWishVolunteers[]
+}
+
+model UsersOnWishVolunteers {
+  userId         String
+  wishId         String
+  assignedAt     DateTime     @default(now())
+  assignedBy     String
+  wish           Wish         @relation(fields: [wishId], references: [id])
+  user           User         @relation(fields: [userId], references: [id])
+
+  @@id([wishId, userId])
 }

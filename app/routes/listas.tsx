@@ -19,7 +19,7 @@ export async function loader({ request, params }: LoaderArgs) {
     const host =
         request.headers.get("X-Forwarded-Host") ?? request.headers.get("host");
     return json({ 
-        wishLists: wishLists.map(w => ({ ...w, url: `${host}/lista/${w.id}`})), 
+        wishLists: wishLists.map(w => ({ ...w, url: `/lista/${w.id}`})), 
         organization
     });
 }
@@ -56,14 +56,11 @@ export default function AllWishListsPage() {
             <ol>
               {data.wishLists.map((wl) => (
                 <li key={wl.id}>
-                  <NavLink
-                    className={({ isActive }) =>
-                      `block border-b p-4 text-xl ${isActive ? "bg-white" : ""}`
-                    }
-                    to={wl.id}
+                  <a
+                    href={wl.url}
                   >
                     📝 {wl.title}
-                  </NavLink>
+                  </a>
                 </li>
               ))}
             </ol>

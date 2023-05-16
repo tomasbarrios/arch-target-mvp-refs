@@ -45,3 +45,43 @@ export function deleteWish({
     where: { id },
   });
 }
+
+/**
+ * Fulfill sectio methods
+ */
+
+
+export function getWishByVolunteer({ wishId, userId}: {wishId: string, userId: string}) {
+  return prisma.wish.findFirst({
+    where: {
+      id: wishId,
+      volunteers: {
+        some: {}
+      }
+    }, include: {
+      volunteers: true
+    }
+  })
+}
+
+
+export function assignVolunteer({ wishId, userId}: {wishId: string, userId: string}) {
+  console.log({wishId, userId})
+  return prisma.wish.update({
+    where: {
+      id: wishId
+    },
+    include: {
+      volunteers: true,
+    },
+    data: {
+      volunteers: {
+        create: {
+          userId,
+          assignedBy: userId,
+        },
+      },
+    },
+  })
+}
+
