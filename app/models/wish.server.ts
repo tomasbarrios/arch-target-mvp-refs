@@ -1,4 +1,5 @@
 import type { Note, Wish } from "@prisma/client";
+import { userInfo } from "os";
 
 import { prisma } from "~/db.server";
 
@@ -63,17 +64,21 @@ export function getWishAlreadyVolunteered({ wishId }: {wishId: string}) {
         some: {}
       }
     }, include: {
-      volunteers: true
+      volunteers: {
+        include: {
+          user: true
+        }
+      }
     }
   })
 }
 
 /**
- * Returns a record if the wish has one or more volunteers
+ * Returns true if user is registered as volunteer for wish
  * @param param0 
  * @returns 
  */
-export async function getWishByVolunteer({ wishId, userId}: {wishId: string, userId: string}) {
+export async function isUserVolunteer({ wishId, userId}: {wishId: string, userId: string}) {
   const wish = await getWishAlreadyVolunteered({wishId});
   if(!wish) {
     return false
@@ -82,9 +87,6 @@ export async function getWishByVolunteer({ wishId, userId}: {wishId: string, use
   const isUserVolunteer = wish.volunteers.some(v => v.userId === userId)
   return isUserVolunteer;
 }
-
-
-
 
 export function assignVolunteer({ wishId, userId}: {wishId: string, userId: string}) {
   console.log({wishId, userId})

@@ -51,7 +51,7 @@ export default function AllWishListsPage() {
           <hr />
 
           {data.wishLists.length === 0 ? (
-            <p className="p-4">No notes yet</p>
+            <p className="p-4">No hay listas aún</p>
           ) : (
             <ol>
               {data.wishLists.map((wl) => (

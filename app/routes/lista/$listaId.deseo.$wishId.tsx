@@ -2,7 +2,8 @@ import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Form, useCatch, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
-import { getWish, getWishAlreadyVolunteered, getWishByVolunteer, assignVolunteer } from "~/models/wish.server";
+import { getWish, getWishAlreadyVolunteered, isUserVolunteer, assignVolunteer } from "~/models/wish.server";
+// import { getUsers } from "~/models/user.server";
 import { requireUserId } from "~/session.server";
 
 export async function loader({ request, params }: LoaderArgs) {
@@ -18,7 +19,7 @@ export async function loader({ request, params }: LoaderArgs) {
   const userId = await requireUserId(request);
 
   const wishThatHasVolunteer = await getWishAlreadyVolunteered({wishId: wish.id})
-  const isUserVolunteer = await getWishByVolunteer({wishId: wish.id, userId })
+  const isCurrentUserAVolunteer = await isUserVolunteer({wishId: wish.id, userId })
 
   // console.log("isCurrentUserAVolunteer", {wishThatHasVolunteer})
   // console.log("wishHasCurrentUserAsVolunteer", {isUserVolunteer})
@@ -27,8 +28,9 @@ export async function loader({ request, params }: LoaderArgs) {
     wish: (
       { 
         ...wish, 
-        isCurrentUserAVolunteer: !!isUserVolunteer,
-        hasWishAlreadyVolunteer: !!wishThatHasVolunteer
+        hasWishAlreadyVolunteer: !!wishThatHasVolunteer,
+        isCurrentUserAVolunteer: isCurrentUserAVolunteer,
+        volunteers: wishThatHasVolunteer?.volunteers
       }
     ) 
   });
@@ -46,6 +48,7 @@ export async function action({ request, params }: ActionArgs) {
 export default function WishDetailsPage() {
   const data = useLoaderData<typeof loader>();
 
+  
   return (
     <div>
       <h3 className="text-2xl font-bold">{data.wish.title}</h3>
@@ -55,13 +58,21 @@ export default function WishDetailsPage() {
       <br /><br />
       <div>
 
-      {data.wish.hasWishAlreadyVolunteer&& 
+      {data.wish.hasWishAlreadyVolunteer && data.wish.volunteers &&
           <> 
-          <p>Ya tiene voluntarias! Ver la lista</p>
+          <p></p>
+          <details>
+            <summary>Ya tiene voluntarias ({data.wish.volunteers.length})! Ver la lista</summary>
+            <ul>
+              {data.wish.volunteers?.map(v => 
+                (<li>{v.user.email}, {v.assignedAt}</li>)
+              )}
+            </ul>
+          </details>
           </>
         }
 
-        {data.wish.hasWishAlreadyVolunteer && !data.wish.isCurrentUserAVolunteer &&
+        {!data.wish.isCurrentUserAVolunteer &&
           <Form method="post">
                   <hr className="my-4" />
 
