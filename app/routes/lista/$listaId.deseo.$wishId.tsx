@@ -2,7 +2,7 @@ import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Form, useCatch, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
-import { getWish, getWishByVolunteer, assignVolunteer } from "~/models/wish.server";
+import { getWish, getWishAlreadyVolunteered, getWishByVolunteer, assignVolunteer } from "~/models/wish.server";
 import { requireUserId } from "~/session.server";
 
 export async function loader({ request, params }: LoaderArgs) {
@@ -17,15 +17,18 @@ export async function loader({ request, params }: LoaderArgs) {
   }
   const userId = await requireUserId(request);
 
-  const wishByVolunteer = await getWishByVolunteer({wishId: wish.id, userId})
+  const wishThatHasVolunteer = await getWishAlreadyVolunteered({wishId: wish.id})
+  const isUserVolunteer = await getWishByVolunteer({wishId: wish.id, userId })
 
-  console.log("isCurrentUserAVolunteer", {wishByVolunteer})
+  // console.log("isCurrentUserAVolunteer", {wishThatHasVolunteer})
+  // console.log("wishHasCurrentUserAsVolunteer", {isUserVolunteer})
 
   return json({ 
     wish: (
       { 
         ...wish, 
-        isCurrentUserAVolunteer: !!wishByVolunteer
+        isCurrentUserAVolunteer: !!isUserVolunteer,
+        hasWishAlreadyVolunteer: !!wishThatHasVolunteer
       }
     ) 
   });
@@ -51,8 +54,17 @@ export default function WishDetailsPage() {
        
       <br /><br />
       <div>
-        {!data.wish.isCurrentUserAVolunteer &&
+
+      {data.wish.hasWishAlreadyVolunteer&& 
+          <> 
+          <p>Ya tiene voluntarias! Ver la lista</p>
+          </>
+        }
+
+        {data.wish.hasWishAlreadyVolunteer && !data.wish.isCurrentUserAVolunteer &&
           <Form method="post">
+                  <hr className="my-4" />
+
             <p>Anotate oficialmente para cumplir este deseo</p>
         <br />
         
@@ -65,11 +77,11 @@ export default function WishDetailsPage() {
             (Se mostrará tu nombre en la lista)
           </Form>
         }
-
+        
         {data.wish.isCurrentUserAVolunteer &&
           <Form method="post">
               <br />
-              <p>Actualmente <b>Eres voluntaria</b> para cumplir este deseo. Muchas gracias</p>
+              <p> <b>Eres voluntaria</b> para cumplir este deseo. Muchas gracias</p>
               <br />
               <hr />
               <br />

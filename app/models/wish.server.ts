@@ -2,7 +2,7 @@ import type { Note, Wish } from "@prisma/client";
 
 import { prisma } from "~/db.server";
 
-export type { Wish } from "@prisma/client";
+export type { Wish, User, UsersOnWishVolunteers } from "@prisma/client";
 
 export function getWish({
   id,
@@ -47,11 +47,15 @@ export function deleteWish({
 }
 
 /**
- * Fulfill sectio methods
+ * "Volunteers" methods
  */
 
-
-export function getWishByVolunteer({ wishId, userId}: {wishId: string, userId: string}) {
+/**
+ * Returns a record if the wish has one or more volunteers
+ * @param param0 
+ * @returns 
+ */
+export function getWishAlreadyVolunteered({ wishId }: {wishId: string}) {
   return prisma.wish.findFirst({
     where: {
       id: wishId,
@@ -63,6 +67,23 @@ export function getWishByVolunteer({ wishId, userId}: {wishId: string, userId: s
     }
   })
 }
+
+/**
+ * Returns a record if the wish has one or more volunteers
+ * @param param0 
+ * @returns 
+ */
+export async function getWishByVolunteer({ wishId, userId}: {wishId: string, userId: string}) {
+  const wish = await getWishAlreadyVolunteered({wishId});
+  if(!wish) {
+    return false
+  }
+  console.log("getWishByVolunteer", {userId, volunteerId: wish.volunteers.map(v => v.userId) })
+  const isUserVolunteer = wish.volunteers.some(v => v.userId === userId)
+  return isUserVolunteer;
+}
+
+
 
 
 export function assignVolunteer({ wishId, userId}: {wishId: string, userId: string}) {

@@ -38,6 +38,11 @@ export default function WishDetailsPage() {
     <div>
       <h3 className="text-2xl font-bold">{data.wishList.title}</h3>
 
+      <p>
+          {/* FIXME: Org should bot be optional */}
+          {data.wishList.body}
+          </p>
+
       <hr className="my-4" />
 
 

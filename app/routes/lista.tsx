@@ -43,7 +43,7 @@ export default function WishesPage() {
         </h1>
         <p>
           {/* FIXME: Org should bot be optional */}
-          Lista de deseos para {data.note.title}
+          Lista de deseos para "{data.note.title}"
           </p>
         <Form action="/logout" method="post">
           <button

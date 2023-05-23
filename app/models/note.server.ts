@@ -61,7 +61,7 @@ export function getWishListAsNote({
   id,
 }: Pick<Note, "id">) {
   return prisma.note.findUniqueOrThrow({
-    select: { id: true, title: true },
+    select: { id: true, title: true, body: true },
     where: { 
       id
     }
