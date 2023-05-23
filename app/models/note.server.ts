@@ -105,3 +105,19 @@ export function getAllWishLists() {
     }
   });
 }
+
+export function updateNote({
+  id,
+  body,
+  title,
+}: Pick<Note, "id" | "body" | "title">) {
+  return prisma.note.update({
+    where: {
+      id
+    },
+    data: {
+      title,
+      body,
+    },
+  });
+}
