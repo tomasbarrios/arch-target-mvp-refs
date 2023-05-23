@@ -1,19 +1,20 @@
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { Form, useCatch, useLoaderData } from "@remix-run/react";
+import { Form, Link, useCatch, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
-import { deleteWish, getWish } from "~/models/wish.server";
+import { deleteWish, getWishWithNote } from "~/models/wish.server";
 
 export async function loader({ request, params }: LoaderArgs) {
   invariant(params.wishId, "wishId not found");
 
-  const wish = await getWish({ id: params.wishId });
+  const wish = await getWishWithNote({ id: params.wishId });
   if (!wish) {
     throw new Response("Not Found", { status: 404 });
   }
   const host =
     request.headers.get("X-Forwarded-Host") ?? request.headers.get("host");
-  return json({ wish, url: `${host}/lista/${wish.id}` });
+    console.log()
+  return json({ wish, url: wish.noteId ? `${host}/lista/${wish.noteId}` : 'undefined' });
 }
 
 export async function action({ request, params }: ActionArgs) {
@@ -28,16 +29,23 @@ export default function WishDetailsPage() {
   const data = useLoaderData<typeof loader>();
 
   return (
+    <>  
     <div>
       <h3 className="text-2xl font-bold">{data.wish.title}</h3>
       <p className="py-6">{data.wish.body}</p>
       <hr className="my-4" />
-      
-      <p>Comparte este deseo con tus amigxs usando el siguiente link</p>
-      <br />
+    </div>
 
-      <p>{data.url}</p>
+    { data.url &&
+      <div>
+        <p>Comparte este deseo con tus amigxs usando el siguiente link</p>
+        <br />
 
+        <p>{data.url}</p>
+      </div>
+    }
+    
+    <div>
       <hr className="my-4" />
       
       <Form method="post">
@@ -48,7 +56,10 @@ export default function WishDetailsPage() {
           Delete
         </button>
       </Form>
+      <Link to="edit">Editar</Link>
+
     </div>
+    </>
   );
 }
 

@@ -47,6 +47,21 @@ export function deleteWish({
   });
 }
 
+export function getWishWithNote({
+  id,
+  noteId,
+}: Pick<Wish, "id"> & {
+  noteId?: Note["id"];
+}) {
+  return prisma.wish.findUnique({
+    select: { id: true, body: true, title: true, noteId: true },
+    where: { id },
+    // include: {
+    //   note: true,
+    // }
+  });
+}
+
 /**
  * "Volunteers" methods
  */
@@ -108,3 +123,18 @@ export function assignVolunteer({ wishId, userId}: {wishId: string, userId: stri
   })
 }
 
+export function updateWish({
+  id,
+  body,
+  title,
+}: Pick<Wish, "id" | "body" | "title">) {
+  return prisma.wish.update({
+    where: {
+      id
+    },
+    data: {
+      title,
+      body,
+    },
+  });
+}
