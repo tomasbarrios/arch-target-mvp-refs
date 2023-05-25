@@ -1,4 +1,4 @@
-app = "blog-from-indie-stack-f26a"
+app = "arch-target-mvp-refs-8089"
 kill_signal = "SIGINT"
 kill_timeout = 5
 processes = [ ]
