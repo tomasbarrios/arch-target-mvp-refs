@@ -42,6 +42,10 @@ https://www.prisma.io/docs/concepts/components/prisma-schema/relations/many-to-m
 ```npx prisma db seed```
 
 
+----
+History
+
+25 may: Fix database being erased in deploy. Solved via [Discord](https://discord.com/channels/770287896669978684/1111317089362391141/1111317089362391141)
 
 ----
 
