@@ -1,4 +1,4 @@
-SQLLite
+SQLite
 
 `npx prisma studio`
 
