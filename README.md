@@ -59,7 +59,7 @@ npx create-remix@latest --template tomasbarrios/indie-stack-mvps  arch-target-mv
 
 Learn more about [Remix Stacks](https://remix.run/stacks).
 
-```
+```sh
 npx create-remix@latest --template remix-run/indie-stack
 ```
 
@@ -69,7 +69,7 @@ npx create-remix@latest --template remix-run/indie-stack
 - Production-ready [SQLite Database](https://sqlite.org)
 - Healthcheck endpoint for [Fly backups region fallbacks](https://fly.io/docs/reference/configuration/#services-http_checks)
 - [GitHub Actions](https://github.com/features/actions) for deploy on merge to production and staging environments
-- Email/Password Authentication with [cookie-based sessions](https://remix.run/docs/en/v1/api/remix#createcookiesessionstorage)
+- Email/Password Authentication with [cookie-based sessions](https://remix.run/utils/sessions#md-createcookiesessionstorage)
 - Database ORM with [Prisma](https://prisma.io)
 - Styling with [Tailwind](https://tailwindcss.com/)
 - End-to-end testing with [Cypress](https://cypress.io)
@@ -89,13 +89,7 @@ Click this button to create a [Gitpod](https://gitpod.io) workspace with the pro
 
 ## Development
 
-- This step only applies if you've opted out of having the CLI install dependencies for you:
-
-  ```sh
-  npx remix init
-  ```
-
-- Initial setup: _If you just generated this project, this step has been done for you._
+- Initial setup:
 
   ```sh
   npm run setup
