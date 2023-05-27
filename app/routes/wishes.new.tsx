@@ -73,10 +73,20 @@ export async function action({ request }: ActionArgs) {
   console.log("WHAT")
 
 
-  const firstList = await createWishGroup({ title: "Mi primera lista 💕", userId })
-    //   where: { title: task.title },
-    
-  const wish = await createWish({ title, body, noteId: firstList.id });
+  const defaultNote = await getDefaultNoteForWish({userId})
+console.log({defaultNote})
+
+let firstList = null
+if (!defaultNote) {
+  firstList = await createWishGroup({ title: "Mi primera lista 💕", userId })
+}
+
+let listToAssign = defaultNote || firstList;
+
+  if (!listToAssign) {
+    throw new Error("Could not find a valid list to assign")
+  }
+  const wish = await createWish({ title, body, noteId: listToAssign.id });
 
   return redirect(`/wishes/${wish.id}`);
 }
