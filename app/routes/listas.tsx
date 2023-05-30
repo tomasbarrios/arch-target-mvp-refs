@@ -66,6 +66,22 @@ export default function AllWishListsPage() {
             </ol>
           )}
         </div>
+        <hr />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <Link to="/mejoras">Sugerencias? Mira algunas mejoras propuestas por nuestras usuarias</Link>
 
       </main>
     </div>

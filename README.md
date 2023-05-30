@@ -1,4 +1,15 @@
-SQLite
+### Fly Volumes
+`fly vol list`
+`fly vol show xxx`
+`fly ssh console -s -C df`
+
+#### Snapshots
+Fly crea snapshots automáticos
+
+Ver snapshots creados:
+`fly volumes snapshots list xxx`
+
+### SQLite
 
 `npx prisma studio`
 
