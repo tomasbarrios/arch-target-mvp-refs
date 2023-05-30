@@ -2,6 +2,9 @@ import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Form, useCatch, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
+// FIXME
+// No deberíamos estar consultando wish.server ... (?)
+// Investigar si esto es efectivamente renderizado o no se usa realmente
 import { deleteWish, getWishListItems } from "~/models/wish.server";
 import { getWishListAsNote } from "~/models/note.server";
 
