@@ -34,7 +34,8 @@ export async function action({ request, params }: ActionArgs) {
 
 
 
-export default function WishDetailsPage() {
+export default function WishListPage() {
+  console.log("RENDERING WishListPage")
   const data = useLoaderData<typeof loader>();
 
   return (

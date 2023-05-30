@@ -1,10 +1,16 @@
 import { Form } from "@remix-run/react";
 
 export default function ImprovementsPage() {
-    const content = `
-    Contexto: Lista de deseos (barra en la izquierda de la pantalla)
-    - Mostrar que deseos ya tienen voluntarias
-    
+  const suggestionsDone = [
+    {
+      context: "Contexto: Lista de deseos (barra en la izquierda de la pantalla)",
+      doneChanges: [ 
+        "✅ Mostrar que deseos ya tienen voluntarias"
+      ]
+    }
+  ]
+  
+    const suggestionsToReview = `
     Contexto: Usuaria se asigna como voluntaria
     - Sería lindo que aparezca un mensaje de texto o gráfico tipo: Gracias por asignarte este deseo! Un abrazo de Camila,Tomás y la bebé💖 Algo simpático que lo haga más amigable y cercano
 
@@ -30,11 +36,32 @@ export default function ImprovementsPage() {
 
       <main>
         <div>
-            <p className="py-6"
+          <h2>Historial de mejoras y sugerencias realizadas</h2>
+          <br />
+          <ul>
+          {suggestionsDone.map(item => {
+            return (
+              <li>
+                <h3>
+                {item.context}
+                </h3>
+                {item.doneChanges.map((change,i) => <p>{change}</p>)}
+              </li>
+          )})}
+          </ul>
+        </div>
+
+        <br />
+          <hr />
+          <br />
+        <div>
+        <h2>Sugerencias de usuarias (pendientes por evaluar)</h2>
+
+            <p
             style={{
                 whiteSpace: "pre-line"
               }}>
-            {content}
+            {suggestionsToReview}
             </p>
         </div>
         <p>Quieres sugerir algo?</p>

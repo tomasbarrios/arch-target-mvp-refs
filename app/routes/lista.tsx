@@ -4,7 +4,7 @@ import { Form, Link, NavLink, Outlet, useLoaderData } from "@remix-run/react";
 import { requireUserId } from "~/session.server";
 // import { useUser } from "~/utils";
 import { getOrganization } from "~/models/organization.server";
-import { getWishListItems } from "~/models/la-lista-pa.server";
+import { getWishListItems, getWishListItemsWithVolunteerCount } from "~/models/la-lista-pa.server";
 import { getWishListAsNote } from "~/models/note.server";
 
 export async function loader({ request, params }: LoaderArgs) {
@@ -15,23 +15,28 @@ export async function loader({ request, params }: LoaderArgs) {
     
     if (!params.listaId) throw new Error("No listId provided")
     
-    const wishListItems = await getWishListItems({ noteId: params.listaId });
+    const wishListItems = await getWishListItemsWithVolunteerCount({ noteId: params.listaId });
+    console.log("getWishListItemsWithVolunteerCount", {wishListItems})
     const note = await getWishListAsNote({ id: params.listaId });
 
     console.log({organization, list: "hey", list2: wishListItems, note})
     return json({ 
-      wishListItems: wishListItems.map(w => (
-        {
-          ...w,
-          url: `/lista/${params.listaId}/deseo/${w.id}`
-        }
-      )), 
+      wishListItems: wishListItems.map(w => {
+        // console.log({wwwww: w._count})
+        return {
+            ...w,
+            url: `/lista/${params.listaId}/deseo/${w.id}`,
+            volunteersCount: w._count.volunteers
+          }
+      }),
       note,
       organization
     });
 }
 
-export default function WishesPage() {
+export default function WishListPageNOID() {
+  console.log("RENDERING WishListPageNOID")
+
   const data = useLoaderData<typeof loader>();
   // const user = useUser()
 
@@ -71,6 +76,7 @@ export default function WishesPage() {
                     to={wish.url}
                   >
                     📝 {wish.title}
+                    {wish.volunteersCount > 0 ? ` (${wish.volunteersCount})` : ""}
                     
                   </NavLink>
                   
