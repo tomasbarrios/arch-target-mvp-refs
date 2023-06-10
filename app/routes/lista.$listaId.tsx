@@ -42,7 +42,10 @@ export default function WishListPage() {
     <div>
       <h3 className="text-2xl font-bold">{data.wishList.title}</h3>
 
-      <p>
+      <p
+      style={{
+        whiteSpace: "pre-line"
+      }}>
           {/* FIXME: Org should bot be optional */}
           {data.wishList.body}
           </p>
@@ -50,7 +53,7 @@ export default function WishListPage() {
       <hr className="my-4" />
 
 
-    <div>Selecciona un deseo de la lista</div>
+    <div>Para empezar, selecciona un deseo de la lista 🚀</div>
       
       {
         /**
