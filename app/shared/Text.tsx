@@ -7,7 +7,7 @@ export default function Text(props: MyComponentProps) {
     const defaultStyles: Object = {
         whiteSpace: "pre-line"
     }
-    return (<p style={defaultStyles}>
+    return (<p style={defaultStyles} {...props}>
         {props.children}
     </p>)
 }

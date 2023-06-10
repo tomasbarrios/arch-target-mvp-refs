@@ -8,15 +8,18 @@ export default function ImprovementsPage() {
       doneChanges: [ 
         "✅ Mostrar que deseos ya tienen voluntarias"
       ]
+    },
+    {
+      context: "Contexto: Usuaria ingresa a listas disponibles",
+      doneChanges: [ 
+        "✅ mensajito breve y amigable de bienvenida"
+      ]
     }
   ]
   
     const suggestionsToReview = `
     Contexto: Usuaria se asigna como voluntaria
     - Sería lindo que aparezca un mensaje de texto o gráfico tipo: Gracias por asignarte este deseo! Un abrazo de Camila,Tomás y la bebé💖 Algo simpático que lo haga más amigable y cercano
-
-    Contexto: Usuaria ingresa a listas disponibles
-    - mensajito breve y amigable de bienvenida. 
     `
 
   return (
@@ -38,22 +41,28 @@ export default function ImprovementsPage() {
       <main>
         <div>
           <h2>Historial de mejoras y sugerencias realizadas</h2>
-          <br />
+          
           <ul>
           {suggestionsDone.map(item => {
             return (
               <li>
+                <br />
+
                 <h3>
                 {item.context}
                 </h3>
                 {item.doneChanges.map((change,i) => <p>{change}</p>)}
+                <br />
+
+                <hr />
+
               </li>
           )})}
           </ul>
         </div>
 
         <br />
-          <hr />
+          <br />
           <br />
         <div>
         <h2>Sugerencias de usuarias (pendientes por evaluar)</h2>
@@ -62,6 +71,8 @@ export default function ImprovementsPage() {
             {suggestionsToReview}
             </Text>
         </div>
+        <br />
+
         <p>Quieres sugerir algo?</p>
         <p>
             Escribe a <a href="mailto:tomasbarrios@gmail.com">tomasbarrios@gmail.com</a>
