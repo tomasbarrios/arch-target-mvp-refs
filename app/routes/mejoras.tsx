@@ -1,4 +1,5 @@
 import { Form } from "@remix-run/react";
+import Text from '../shared/Text';
 
 export default function ImprovementsPage() {
   const suggestionsDone = [
@@ -57,12 +58,9 @@ export default function ImprovementsPage() {
         <div>
         <h2>Sugerencias de usuarias (pendientes por evaluar)</h2>
 
-            <p
-            style={{
-                whiteSpace: "pre-line"
-              }}>
+            <Text>
             {suggestionsToReview}
-            </p>
+            </Text>
         </div>
         <p>Quieres sugerir algo?</p>
         <p>

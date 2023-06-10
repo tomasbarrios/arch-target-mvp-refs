@@ -6,6 +6,8 @@ import { getWish, getWishAlreadyVolunteered, isUserVolunteer, assignVolunteer } 
 // import { getUsers } from "~/models/user.server";
 import { requireUserId } from "~/session.server";
 
+import Text from "../shared/Text"
+
 export async function loader({ request, params }: LoaderArgs) {
   console.log("DESEO DESEO DESEO")
   console.log("DESEO DESEO DESEO")
@@ -52,11 +54,8 @@ export default function WishDetailsPage() {
   return (
     <div>
       <h3 className="text-2xl font-bold">{data.wish.title}</h3>
-      <p className="py-6"
-        style={{
-          whiteSpace: "pre-line"
-        }}
-        >{data.wish.body}</p>
+      <Text className="py-6">{data.wish.body}
+      </Text>
       <hr className="my-4" />
        
       <br /><br />
