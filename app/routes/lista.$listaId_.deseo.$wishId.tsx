@@ -23,7 +23,7 @@ export async function loader({ request, params }: LoaderArgs) {
   const wishThatHasVolunteer = await getWishAlreadyVolunteered({wishId: wish.id})
   const isCurrentUserAVolunteer = await isUserVolunteer({wishId: wish.id, userId })
 
-  // console.log("isCurrentUserAVolunteer", {wishThatHasVolunteer})
+  console.log("isCurrentUserAVolunteer", {wishThatHasVolunteer})
   // console.log("wishHasCurrentUserAsVolunteer", {isUserVolunteer})
 
   return json({ 
@@ -48,6 +48,7 @@ export async function action({ request, params }: ActionArgs) {
 }
 
 export default function WishDetailsPage() {
+  console.log("Rendering WishListPage Wish")
   const data = useLoaderData<typeof loader>();
 
   
