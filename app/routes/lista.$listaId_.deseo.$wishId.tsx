@@ -9,9 +9,6 @@ import { requireUserId } from "~/session.server";
 import Text from "../shared/Text"
 
 export async function loader({ request, params }: LoaderArgs) {
-  console.log("DESEO DESEO DESEO")
-  console.log("DESEO DESEO DESEO")
-  console.log("DESEO DESEO DESEO")
   invariant(params.wishId, "wishId not found");
 
   const wish = await getWish({ id: params.wishId });
@@ -55,76 +52,64 @@ export default function WishDetailsPage() {
   return (
     <div>
       <h3 className="text-2xl font-bold">{data.wish.title}</h3>
-      <Text className="py-6">{data.wish.body}
+    
+      <Text className="py-3">
+        {data.wish.body}
       </Text>
-      <hr className="my-4" />
        
-      <br /><br />
+      <hr className="my-4" />
+
       <div>
 
-      {data.wish.hasWishAlreadyVolunteer && data.wish.volunteers &&
+        {/* Lista de voluntarios */}
+        {data.wish.hasWishAlreadyVolunteer && data.wish.volunteers &&
           <> 
-          <p></p>
           <details>
-            <summary>Ya tiene voluntarias ({data.wish.volunteers.length})! Ver la lista</summary>
-            <ul>
-              {data.wish.volunteers?.map(v => 
-                (<li>{v.user.email}, {v.assignedAt}</li>)
+            <summary>Este deseo ya tiene ({data.wish.volunteers.length}) voluntaria(s). 🧙🏻‍♀️  Haz click para ver quienes son</summary>
+            <br />
+            <h3>Lista de voluntarias</h3>
+            <ol className="list-decimal list-inside">
+              {data.wish.volunteers?.map((v,i) => 
+                (<li>{v.user.email}, el pasado {v.assignedAt}</li>)
               )}
-            </ul>
+            </ol>
           </details>
+          <br />
+          
           </>
         }
 
-        {!data.wish.isCurrentUserAVolunteer &&
+        {data.wish.isCurrentUserAVolunteer ?
           <Form method="post">
-                  <hr className="my-4" />
 
-            <p>Anotate oficialmente para cumplir este deseo</p>
-        <br />
-        
-              <button
-                type="submit"
-                className="rounded bg-blue-500  py-2 px-4 text-white hover:bg-blue-600 focus:bg-blue-400"
-              >
-                Asignarme para cumplirlo
-            </button>
-            (Se mostrará tu nombre en la lista)
-          </Form>
-        }
-        
-        {data.wish.isCurrentUserAVolunteer &&
-          <Form method="post">
-              <br />
               <p> <b>Eres voluntaria</b> para cumplir este deseo. Muchas gracias</p>
               <br />
-              <hr />
-              <br />
+              <p>
+
               <button
                 type="submit"
                 className="rounded bg-blue-500  py-2 px-4 text-white hover:bg-blue-600 focus:bg-blue-400"
-              >
+                >
                 Ya NO QUIERO ser voluntaria
-            </button>
-            (Se quitará tu nombre la lista)
+              </button> (Se quitará tu nombre la lista)
+                </p>
           </Form>
-        }   
+          :
+          <Form method="post">
+  
+            <p>Anotate oficialmente para cumplir este deseo</p>
+            <br />
+        
+            <button
+              type="submit"
+              className="rounded bg-blue-500  py-2 px-4 text-white hover:bg-blue-600 focus:bg-blue-400"
+            >
+              Asignarme para cumplirlo
+            </button> (Se mostrará tu nombre en la lista)
+          </Form>
+          }   
       
       </div>
-
-
-      {!data.wish.noteId &&
-        <Form method="post">
-          <span>Add it to a Wishlist </span>
-          <option value=""></option>
-          <button
-            type="submit"
-            className="rounded bg-blue-500  py-2 px-4 text-white hover:bg-blue-600 focus:bg-blue-400"
-          >
-            Send as link
-          </button>
-        </Form>
-      }
     </div>
   );
 }
