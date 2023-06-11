@@ -4,7 +4,7 @@ import { Form, Link, NavLink, Outlet, useLoaderData } from "@remix-run/react";
 import { requireUserId } from "~/session.server";
 // import { useUser } from "~/utils";
 import { getOrganization } from "~/models/organization.server";
-import { getWishListItems, getWishListItemsWithVolunteerCount } from "~/models/la-lista-pa.server";
+import { getWishListItemsWithVolunteerCount } from "~/models/la-lista-pa.server";
 import { getWishListAsNote } from "~/models/note.server";
 
 export async function loader({ request, params }: LoaderArgs) {
@@ -19,7 +19,7 @@ export async function loader({ request, params }: LoaderArgs) {
     console.log("getWishListItemsWithVolunteerCount", {wishListItems})
     const note = await getWishListAsNote({ id: params.listaId });
 
-    console.log({organization, list: "hey", list2: wishListItems, note})
+    console.log({organization, list: "hey", note})
     return json({ 
       wishListItems: wishListItems.map(w => {
         // console.log({wwwww: w._count})
@@ -34,8 +34,8 @@ export async function loader({ request, params }: LoaderArgs) {
     });
 }
 
-export default function WishListPageNOID() {
-  console.log("RENDERING WishListPageNOID")
+export default function WishListPageLayout() {
+  console.log("Rendering WishListPageLayout")
 
   const data = useLoaderData<typeof loader>();
   // const user = useUser()

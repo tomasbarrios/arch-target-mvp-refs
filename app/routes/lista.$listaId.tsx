@@ -1,11 +1,11 @@
-import type { ActionArgs, LoaderArgs } from "@remix-run/node";
-import { json, redirect } from "@remix-run/node";
-import { Form, useCatch, useLoaderData } from "@remix-run/react";
+import type { LoaderArgs } from "@remix-run/node";
+import { json } from "@remix-run/node";
+import {
+  isRouteErrorResponse,
+  useLoaderData,
+  useRouteError,
+} from "@remix-run/react";
 import invariant from "tiny-invariant";
-// FIXME
-// No deberíamos estar consultando wish.server ... (?)
-// Investigar si esto es efectivamente renderizado o no se usa realmente
-import { deleteWish, getWishListItems } from "~/models/wish.server";
 import { getWishListAsNote } from "~/models/note.server";
 
 import Text from '../shared/Text'
@@ -13,31 +13,16 @@ import Text from '../shared/Text'
 export async function loader({ request, params }: LoaderArgs) {
   invariant(params.listaId, "listaId not found");
 
-  const wishListItems = await getWishListItems({ noteId: params.listaId });
-  if (!wishListItems) {
-    console.log(`Note does not appear to have associated wishes ${params.listaId}`)
-    throw new Response("Not Found", { status: 404 });
-  }
 
   const wishList = await getWishListAsNote({ id: params.listaId });
 
   
 
-  return json({ wishList, wishListItems });
+  return json({ wishList });
 }
-
-export async function action({ request, params }: ActionArgs) {
-  invariant(params.listaId, "listaId not found");
-
-  await deleteWish({ id: params.listaId });
-
-  return redirect("/wishes");
-}
-
-
 
 export default function WishListPage() {
-  console.log("RENDERING WishListPage")
+  console.log("Rendering WishListPage With Id")
   const data = useLoaderData<typeof loader>();
 
   return (
@@ -61,18 +46,20 @@ export default function WishListPage() {
   );
 }
 
-export function ErrorBoundary({ error }: { error: Error }) {
-  console.error(error);
+export function ErrorBoundary() {
+  const error = useRouteError();
 
-  return <div>An unexpected error occurred: {error.message}</div>;
-}
-
-export function CatchBoundary() {
-  const caught = useCatch();
-
-  if (caught.status === 404) {
-    return <div>Selecciona un deseo de la lista</div>;
+  if (error instanceof Error) {
+    return <div>An unexpected error occurred: {error.message}</div>;
   }
 
-  throw new Error(`Unexpected caught response with status: ${caught.status}`);
+  if (!isRouteErrorResponse(error)) {
+    return <h1>Unknown Error</h1>;
+  }
+
+  if (error.status === 404) {
+    return <div>Note not found</div>;
+  }
+
+  return <div>An unexpected error occurred: {error.statusText}</div>;
 }
