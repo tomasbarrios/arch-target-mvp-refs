@@ -167,20 +167,19 @@ export default function LoginPage() {
                 Registrate
               </Link>
             </div>
-            
           </div>
 
           <div className="text-center text-sm text-gray-500">
-              Olvidaste tu password?{" "}
-              <Link
-                className="text-blue-500 underline"
-                to={{
-                  pathname: "/newpassword",
-                }}
-              >
-                Recupera tu cuenta
-              </Link>
-            </div>
+            Olvidaste tu password?{" "}
+            <Link
+              className="text-blue-500 underline"
+              to={{
+                pathname: "/newpassword",
+              }}
+            >
+              Recupera tu cuenta
+            </Link>
+          </div>
         </Form>
       </div>
     </div>

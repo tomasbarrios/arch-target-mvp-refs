@@ -9,8 +9,8 @@ import { getWishListItems } from "~/models/wish.server";
 export async function loader({ request }: LoaderArgs) {
   const wishListItems = await getWishListItems({ noteId: null });
   const userId = await requireUserId(request);
-  const organization = await getOrganization({userId});
-  console.log({organization})
+  const organization = await getOrganization({ userId });
+  console.log({ organization });
   return json({ wishListItems, organization });
 }
 
@@ -27,11 +27,11 @@ export default function WishesPage() {
         <p>
           {/* FIXME: Org should bot be optional */}
           ORG: {data.organization[0]?.name}
-          </p>
+        </p>
         <Form action="/logout" method="post">
           <button
             type="submit"
-            className="rounded bg-slate-600 py-2 px-4 text-blue-100 hover:bg-blue-500 active:bg-blue-600"
+            className="rounded bg-slate-600 px-4 py-2 text-blue-100 hover:bg-blue-500 active:bg-blue-600"
           >
             Logout
           </button>
@@ -59,9 +59,8 @@ export default function WishesPage() {
                     to={wish.id}
                   >
                     📝 {wish.title}
-                    
                   </NavLink>
-                  
+
                   {/* If we have a related note, this would show it */}
                   {/* <NavLink
                     className={({ isActive }) =>
@@ -72,7 +71,6 @@ export default function WishesPage() {
                   ⨾ {wish.noteId}
                     
                   </NavLink> */}
-                  
                 </li>
               ))}
             </ol>

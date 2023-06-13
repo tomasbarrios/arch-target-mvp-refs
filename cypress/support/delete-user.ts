@@ -19,11 +19,14 @@ async function deleteUser(email: string) {
   }
 
   try {
-    await prisma.user.update({ data: {
-      organizations: {
-        deleteMany: {},
+    await prisma.user.update({
+      data: {
+        organizations: {
+          deleteMany: {},
+        },
       },
-    }, where: { email } });
+      where: { email },
+    });
 
     await prisma.user.delete({ where: { email } });
   } catch (error) {

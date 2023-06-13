@@ -1,37 +1,34 @@
 import { Form } from "@remix-run/react";
-import Text from '../shared/Text';
+import Text from "../shared/Text";
 
 export default function ImprovementsPage() {
   const suggestionsDone = [
     {
-      context: "Contexto: Lista de deseos (barra en la izquierda de la pantalla)",
-      doneChanges: [ 
-        "✅ Mostrar que deseos ya tienen voluntarias"
-      ]
+      context:
+        "Contexto: Lista de deseos (barra en la izquierda de la pantalla)",
+      doneChanges: ["✅ Mostrar que deseos ya tienen voluntarias"],
     },
     {
       context: "Contexto: Usuaria ingresa a listas disponibles",
-      doneChanges: [ 
-        "✅ mensajito breve y amigable de bienvenida"
-      ]
-    }
-  ]
-  
-    const suggestionsToReview = `
+      doneChanges: ["✅ mensajito breve y amigable de bienvenida"],
+    },
+  ];
+
+  const suggestionsToReview = `
     Contexto: Usuaria se asigna como voluntaria
     - Sería lindo que aparezca un mensaje de texto o gráfico tipo: Gracias por asignarte este deseo! Un abrazo de Camila,Tomás y la bebé💖 Algo simpático que lo haga más amigable y cercano
-    `
+    `;
 
   return (
     <div className="flex h-full min-h-screen flex-col">
       <header className="flex items-center justify-between bg-slate-800 p-4 text-white">
         <h1 className="text-3xl font-bold">
-            Mejoras sugeridas por nuestras usuarias 
+          Mejoras sugeridas por nuestras usuarias
         </h1>
         <Form action="/logout" method="post">
           <button
             type="submit"
-            className="rounded bg-slate-600 py-2 px-4 text-blue-100 hover:bg-blue-500 active:bg-blue-600"
+            className="rounded bg-slate-600 px-4 py-2 text-blue-100 hover:bg-blue-500 active:bg-blue-600"
           >
             Logout
           </button>
@@ -41,45 +38,41 @@ export default function ImprovementsPage() {
       <main>
         <div>
           <h2>Historial de mejoras y sugerencias realizadas</h2>
-          
+
           <ul>
-          {suggestionsDone.map(item => {
-            return (
-              <li>
-                <br />
+            {suggestionsDone.map((item) => {
+              return (
+                <li>
+                  <br />
 
-                <h3>
-                {item.context}
-                </h3>
-                {item.doneChanges.map((change,i) => <p>{change}</p>)}
-                <br />
+                  <h3>{item.context}</h3>
+                  {item.doneChanges.map((change, i) => (
+                    <p>{change}</p>
+                  ))}
+                  <br />
 
-                <hr />
-
-              </li>
-          )})}
+                  <hr />
+                </li>
+              );
+            })}
           </ul>
         </div>
 
         <br />
-          <br />
-          <br />
+        <br />
+        <br />
         <div>
-        <h2>Sugerencias de usuarias (pendientes por evaluar)</h2>
+          <h2>Sugerencias de usuarias (pendientes por evaluar)</h2>
 
-            <Text>
-            {suggestionsToReview}
-            </Text>
+          <Text>{suggestionsToReview}</Text>
         </div>
         <br />
 
         <p>Quieres sugerir algo?</p>
         <p>
-            Escribe a <a href="mailto:tomasbarrios@gmail.com">tomasbarrios@gmail.com</a>
-            </p>
-        
-         
-
+          Escribe a{" "}
+          <a href="mailto:tomasbarrios@gmail.com">tomasbarrios@gmail.com</a>
+        </p>
       </main>
     </div>
   );

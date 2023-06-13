@@ -48,7 +48,7 @@ export async function action({ request }: ActionArgs) {
   }
 
   if (typeof id !== "string" || id.length === 0) {
-    console.log("ID", {id})
+    console.log("ID", { id });
     return json(
       { errors: { title: null, body: null, id: "id is required" } },
       { status: 400 }
@@ -60,7 +60,7 @@ export async function action({ request }: ActionArgs) {
 }
 
 export default function EditDetailsPage() {
-  console.log("EditDetailsPage")
+  console.log("EditDetailsPage");
   const actionData = useActionData<typeof action>();
 
   const data = useLoaderData<typeof loader>();
@@ -83,64 +83,59 @@ export default function EditDetailsPage() {
       <hr className="my-4" />
       <Form method="post">
         <div>
-        <input
-            name="id"
-            type="hidden"
-            value={data.note.id}
+          <input name="id" type="hidden" value={data.note.id} />
+
+          <label className="flex w-full flex-col gap-1">
+            <span>Title: </span>
+
+            <input
+              ref={titleRef}
+              defaultValue={data.note.title}
+              name="title"
+              className="flex-1 rounded-md border-2 border-blue-500 px-3 text-lg leading-loose"
+              aria-invalid={actionData?.errors?.title ? true : undefined}
+              aria-errormessage={
+                actionData?.errors?.title ? "title-error" : undefined
+              }
             />
+          </label>
+          {actionData?.errors?.title && (
+            <div className="pt-1 text-red-700" id="title-error">
+              {actionData.errors.title}
+            </div>
+          )}
+        </div>
 
-        <label className="flex w-full flex-col gap-1">
-          <span>Title: </span>
-          
-          <input
-            ref={titleRef}
-            defaultValue={data.note.title}
-            name="title"
-            className="flex-1 rounded-md border-2 border-blue-500 px-3 text-lg leading-loose"
-            aria-invalid={actionData?.errors?.title ? true : undefined}
-            aria-errormessage={
-              actionData?.errors?.title ? "title-error" : undefined
-            }
-          />
-        </label>
-        {actionData?.errors?.title && (
-          <div className="pt-1 text-red-700" id="title-error">
-            {actionData.errors.title}
-          </div>
-        )}
-      </div>
+        <div>
+          <label className="flex w-full flex-col gap-1">
+            <span>Body: </span>
+            <textarea
+              defaultValue={data.note.body}
+              ref={bodyRef}
+              name="body"
+              rows={8}
+              className="w-full flex-1 rounded-md border-2 border-blue-500 px-3 py-2 text-lg leading-6"
+              aria-invalid={actionData?.errors?.body ? true : undefined}
+              aria-errormessage={
+                actionData?.errors?.body ? "body-error" : undefined
+              }
+            />
+          </label>
+          {actionData?.errors?.body && (
+            <div className="pt-1 text-red-700" id="body-error">
+              {actionData.errors.body}
+            </div>
+          )}
+        </div>
 
-      <div>
-        <label className="flex w-full flex-col gap-1">
-          <span>Body: </span>
-          <textarea
-            defaultValue={data.note.body}
-            ref={bodyRef}
-            name="body"
-            rows={8}
-            className="w-full flex-1 rounded-md border-2 border-blue-500 py-2 px-3 text-lg leading-6"
-            aria-invalid={actionData?.errors?.body ? true : undefined}
-            aria-errormessage={
-              actionData?.errors?.body ? "body-error" : undefined
-            }
-          />
-        </label>
-        {actionData?.errors?.body && (
-          <div className="pt-1 text-red-700" id="body-error">
-            {actionData.errors.body}
-          </div>
-        )}
-      </div>
-
-      <div className="text-right">
-        <button
-          type="submit"
-          className="rounded bg-blue-500 py-2 px-4 text-white hover:bg-blue-600 focus:bg-blue-400"
-        >
-          Save
-        </button>
-      </div>
-
+        <div className="text-right">
+          <button
+            type="submit"
+            className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400"
+          >
+            Save
+          </button>
+        </div>
       </Form>
       <Link to="edit">Editarrrr</Link>
     </div>

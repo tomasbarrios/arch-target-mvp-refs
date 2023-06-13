@@ -33,7 +33,7 @@ export const action = async ({ params, request }: ActionArgs) => {
 };
 
 export default function NoteDetailsPage() {
-  console.log("NoteDetailsPage")
+  console.log("NoteDetailsPage");
   const data = useLoaderData<typeof loader>();
 
   return (

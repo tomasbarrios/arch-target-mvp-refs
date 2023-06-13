@@ -9,8 +9,8 @@ import { getTaskListItems } from "~/models/task.server";
 export async function loader({ request }: LoaderArgs) {
   const taskListItems = await getTaskListItems({ noteId: null });
   const userId = await requireUserId(request);
-  const organization = await getOrganization({userId});
-  console.log({organization})
+  const organization = await getOrganization({ userId });
+  console.log({ organization });
   return json({ taskListItems, organization });
 }
 
@@ -27,11 +27,11 @@ export default function TasksPage() {
         <p>
           {/* FIXME: Org should bot be optional */}
           ORG: {data.organization[0]?.name}
-          </p>
+        </p>
         <Form action="/logout" method="post">
           <button
             type="submit"
-            className="rounded bg-slate-600 py-2 px-4 text-blue-100 hover:bg-blue-500 active:bg-blue-600"
+            className="rounded bg-slate-600 px-4 py-2 text-blue-100 hover:bg-blue-500 active:bg-blue-600"
           >
             Logout
           </button>
@@ -59,7 +59,6 @@ export default function TasksPage() {
                     to={task.id}
                   >
                     📝 {task.title}
-                    
                   </NavLink>
                   <NavLink
                     className={({ isActive }) =>
@@ -67,8 +66,7 @@ export default function TasksPage() {
                     }
                     to={`/notes/${task.noteId}`}
                   >
-                  ⨾ {task.noteId}
-                    
+                    ⨾ {task.noteId}
                   </NavLink>
                 </li>
               ))}

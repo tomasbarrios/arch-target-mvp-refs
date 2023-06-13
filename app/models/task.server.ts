@@ -24,21 +24,16 @@ export function getTaskListItems({ noteId }: { noteId: Note["id"] | null }) {
   });
 }
 
-export function createTask({
-  body,
-  title,
-}: Pick<Task, "body" | "title">) {
-    return prisma.task.create({
-      data: {
-        title,
-        body,
-      },
-    });
+export function createTask({ body, title }: Pick<Task, "body" | "title">) {
+  return prisma.task.create({
+    data: {
+      title,
+      body,
+    },
+  });
 }
 
-export function deleteTask({
-  id,
-}: Pick<Task, "id">) {
+export function deleteTask({ id }: Pick<Task, "id">) {
   return prisma.task.deleteMany({
     where: { id },
   });

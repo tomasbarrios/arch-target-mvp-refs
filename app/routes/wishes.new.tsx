@@ -8,26 +8,25 @@ import { createWish } from "~/models/wish.server";
 import { requireUserId } from "~/session.server";
 import { getDefaultNoteForWish, createWishGroup } from "~/models/note.server";
 
-
 export async function loader({ request, params }: LoaderArgs) {
-  console.log("WE HERE?")
+  console.log("WE HERE?");
   // invariant(params.wishId, "wishId not found");
 
   const userId = await requireUserId(request);
-  console.log("WE HERE?", {userId})
+  console.log("WE HERE?", { userId });
 
   /**
    * FIXME
    * We select the first note, this can generate problems if the user creates more than one note
-   * 
+   *
    * SOL: Note should be dynamically changed
    */
-  const defaultNote = await getDefaultNoteForWish({userId})
+  const defaultNote = await getDefaultNoteForWish({ userId });
 
   // if (!defaultNote) {
   //   throw new Response("No default note Found", { status: 404 });
   // }
-  
+
   return json({ defaultNote });
   // return null
 }
@@ -42,9 +41,8 @@ export async function action({ request }: ActionArgs) {
   const noteId = formData.get("noteId");
   // const body = formData.get("body");
 
-  console.log("ERRRRRRR0")
-  console.log({ title, body, noteId })
-
+  console.log("ERRRRRRR0");
+  console.log({ title, body, noteId });
 
   if (typeof title !== "string" || title.length === 0) {
     return json(
@@ -52,15 +50,15 @@ export async function action({ request }: ActionArgs) {
       { status: 400 }
     );
   }
-  console.log("ERRRRRRR1")
+  console.log("ERRRRRRR1");
 
   if (typeof body !== "string" || body.length === 0) {
     return json(
-      { errors: { title: null, body: "Body is required",  noteId: null } },
+      { errors: { title: null, body: "Body is required", noteId: null } },
       { status: 400 }
     );
   }
-  console.log("ERRRRRRR2")
+  console.log("ERRRRRRR2");
 
   // if (typeof noteId !== "string" || noteId.length === 0) {
   //   console.log("ERRRRRRR3")
@@ -70,21 +68,20 @@ export async function action({ request }: ActionArgs) {
   //   );
   // }
 
-  console.log("WHAT")
+  console.log("WHAT");
 
+  const defaultNote = await getDefaultNoteForWish({ userId });
+  console.log({ defaultNote });
 
-  const defaultNote = await getDefaultNoteForWish({userId})
-console.log({defaultNote})
+  let firstList = null;
+  if (!defaultNote) {
+    firstList = await createWishGroup({ title: "Mi primera lista 💕", userId });
+  }
 
-let firstList = null
-if (!defaultNote) {
-  firstList = await createWishGroup({ title: "Mi primera lista 💕", userId })
-}
-
-let listToAssign = defaultNote || firstList;
+  let listToAssign = defaultNote || firstList;
 
   if (!listToAssign) {
-    throw new Error("Could not find a valid list to assign")
+    throw new Error("Could not find a valid list to assign");
   }
   const wish = await createWish({ title, body, noteId: listToAssign.id });
 
@@ -118,7 +115,6 @@ export default function NewWishPage() {
         width: "100%",
       }}
     >
-      
       <div>
         <label className="flex w-full flex-col gap-1">
           <span>Title: </span>
@@ -146,7 +142,7 @@ export default function NewWishPage() {
             ref={bodyRef}
             name="body"
             rows={8}
-            className="w-full flex-1 rounded-md border-2 border-blue-500 py-2 px-3 text-lg leading-6"
+            className="w-full flex-1 rounded-md border-2 border-blue-500 px-3 py-2 text-lg leading-6"
             aria-invalid={actionData?.errors?.body ? true : undefined}
             aria-errormessage={
               actionData?.errors?.body ? "body-error" : undefined
@@ -164,12 +160,17 @@ export default function NewWishPage() {
 
       <div>
         <label className="flex w-full flex-col gap-1">
-          
-          { 
-            data.defaultNote ? 
-            <span>Se agregara a la <i>Lista de deseos</i>: <b>{data.defaultNote?.title}</b></span> :
-            <span>Al guardar este deseo se creará tu primera lista de deseos 💕</span> } 
-          
+          {data.defaultNote ? (
+            <span>
+              Se agregara a la <i>Lista de deseos</i>:{" "}
+              <b>{data.defaultNote?.title}</b>
+            </span>
+          ) : (
+            <span>
+              Al guardar este deseo se creará tu primera lista de deseos 💕
+            </span>
+          )}
+
           <input
             ref={noteIdRef}
             // disabled="true"
@@ -196,7 +197,7 @@ export default function NewWishPage() {
       <div className="text-right">
         <button
           type="submit"
-          className="rounded bg-blue-500 py-2 px-4 text-white hover:bg-blue-600 focus:bg-blue-400"
+          className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400"
         >
           Save
         </button>

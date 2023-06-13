@@ -17,7 +17,7 @@ export default function Index() {
               />
               <div className="absolute inset-0 bg-[color:rgba(254,204,27,0.5)] mix-blend-multiply" />
             </div>
-            <div className="relative px-4 pt-16 pb-8 sm:px-6 sm:pt-24 sm:pb-14 lg:px-8 lg:pb-20 lg:pt-32">
+            <div className="relative px-4 pb-8 pt-16 sm:px-6 sm:pb-14 sm:pt-24 lg:px-8 lg:pb-20 lg:pt-32">
               <h1 className="text-center text-6xl font-extrabold tracking-tight sm:text-8xl lg:text-9xl">
                 <span className="block uppercase text-yellow-500 drop-shadow-md">
                   Lista de deseos
@@ -132,17 +132,12 @@ export default function Index() {
           </div>
         </div> */}
 
-<div className="center">
-      <a
-                    href="mailto:tomasbarrios@gmail.com"
-                    className=""
-                    >
-                    
-      💌
-                  </a>
+        <div className="center">
+          <a href="mailto:tomasbarrios@gmail.com" className="">
+            💌
+          </a>
+        </div>
       </div>
-      </div>
-
     </main>
   );
 }

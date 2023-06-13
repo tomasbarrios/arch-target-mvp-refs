@@ -13,7 +13,7 @@ export const loader = async ({ request }: LoaderArgs) => {
 };
 
 export default function NotesPage() {
-  console.log("Rendering Notes Layout")
+  console.log("Rendering Notes Layout");
   const data = useLoaderData<typeof loader>();
   const user = useUser();
 

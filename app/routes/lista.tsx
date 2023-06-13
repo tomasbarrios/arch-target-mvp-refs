@@ -8,34 +8,34 @@ import { getWishListItemsWithVolunteerCount } from "~/models/la-lista-pa.server"
 import { getWishListAsNote } from "~/models/note.server";
 
 export async function loader({ request, params }: LoaderArgs) {
-    
-    
-    const userId = await requireUserId(request);
-    const organization = await getOrganization({userId});
-    
-    if (!params.listaId) throw new Error("No listId provided")
-    
-    const wishListItems = await getWishListItemsWithVolunteerCount({ noteId: params.listaId });
-    console.log("getWishListItemsWithVolunteerCount", {wishListItems})
-    const note = await getWishListAsNote({ id: params.listaId });
+  const userId = await requireUserId(request);
+  const organization = await getOrganization({ userId });
 
-    console.log({organization, list: "hey", note})
-    return json({ 
-      wishListItems: wishListItems.map(w => {
-        // console.log({wwwww: w._count})
-        return {
-            ...w,
-            url: `/lista/${params.listaId}/deseo/${w.id}`,
-            volunteersCount: w._count.volunteers
-          }
-      }),
-      note,
-      organization
-    });
+  if (!params.listaId) throw new Error("No listId provided");
+
+  const wishListItems = await getWishListItemsWithVolunteerCount({
+    noteId: params.listaId,
+  });
+  console.log("getWishListItemsWithVolunteerCount", { wishListItems });
+  const note = await getWishListAsNote({ id: params.listaId });
+
+  console.log({ organization, list: "hey", note });
+  return json({
+    wishListItems: wishListItems.map((w) => {
+      // console.log({wwwww: w._count})
+      return {
+        ...w,
+        url: `/lista/${params.listaId}/deseo/${w.id}`,
+        volunteersCount: w._count.volunteers,
+      };
+    }),
+    note,
+    organization,
+  });
 }
 
 export default function WishListPageLayout() {
-  console.log("Rendering WishListPageLayout")
+  console.log("Rendering WishListPageLayout");
 
   const data = useLoaderData<typeof loader>();
   // const user = useUser()
@@ -49,11 +49,11 @@ export default function WishListPageLayout() {
         <p>
           {/* FIXME: Org should bot be optional */}
           Lista de deseos para "{data.note.title}"
-          </p>
+        </p>
         <Form action="/logout" method="post">
           <button
             type="submit"
-            className="rounded bg-slate-600 py-2 px-4 text-blue-100 hover:bg-blue-500 active:bg-blue-600"
+            className="rounded bg-slate-600 px-4 py-2 text-blue-100 hover:bg-blue-500 active:bg-blue-600"
           >
             Logout
           </button>
@@ -62,7 +62,6 @@ export default function WishListPageLayout() {
 
       <main className="flex h-full bg-white">
         <div className="h-full w-80 border-r bg-gray-50">
-
           {data.wishListItems.length === 0 ? (
             <p className="p-4">No wishs yet</p>
           ) : (
@@ -76,10 +75,10 @@ export default function WishListPageLayout() {
                     to={wish.url}
                   >
                     📝 {wish.title}
-                    {wish.volunteersCount > 0 ? ` (${wish.volunteersCount})` : ""}
-                    
+                    {wish.volunteersCount > 0
+                      ? ` (${wish.volunteersCount})`
+                      : ""}
                   </NavLink>
-                  
                 </li>
               ))}
             </ol>

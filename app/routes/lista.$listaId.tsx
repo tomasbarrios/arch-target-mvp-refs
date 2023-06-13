@@ -8,21 +8,18 @@ import {
 import invariant from "tiny-invariant";
 import { getWishListAsNote } from "~/models/note.server";
 
-import Text from '../shared/Text'
+import Text from "../shared/Text";
 
 export async function loader({ request, params }: LoaderArgs) {
   invariant(params.listaId, "listaId not found");
 
-
   const wishList = await getWishListAsNote({ id: params.listaId });
-
-  
 
   return json({ wishList });
 }
 
 export default function WishListPage() {
-  console.log("Rendering WishListPage With Id")
+  console.log("Rendering WishListPage With Id");
   const data = useLoaderData<typeof loader>();
 
   return (
@@ -30,18 +27,14 @@ export default function WishListPage() {
       <h3 className="text-2xl font-bold">{data.wishList.title}</h3>
 
       {/* FIXME: Org should bot be optional */}
-      <Text>
-        {data.wishList.body}
-      </Text>
+      <Text>{data.wishList.body}</Text>
       <hr className="my-4" />
 
-    <div>Para empezar, selecciona un deseo de la lista 🚀</div>
-      
-      {
-        /**
-         * If not fulfilled yet, offer to fulfill
-         */
-      }
+      <div>Para empezar, selecciona un deseo de la lista 🚀</div>
+
+      {/**
+       * If not fulfilled yet, offer to fulfill
+       */}
     </div>
   );
 }

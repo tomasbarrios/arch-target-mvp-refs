@@ -27,7 +27,7 @@ export async function createUser(email: User["email"], password: string) {
       organizations: {
         create: [
           {
-            assignedBy: 'Bob',
+            assignedBy: "Bob",
             assignedAt: new Date(),
             organization: {
               create: {
@@ -35,7 +35,7 @@ export async function createUser(email: User["email"], password: string) {
                 slug: email,
               },
             },
-          }
+          },
         ],
       },
     },

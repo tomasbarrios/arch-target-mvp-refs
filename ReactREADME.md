@@ -1,6 +1,7 @@
 # Types
 
-### Children 
+### Children
+
 https://stackoverflow.com/a/67377965
 
 ````
@@ -16,3 +17,4 @@ export default function MyComponent({ children, ...other}: MyComponentProps) {
 
 ### Cuando trate de usar classname
 https://blog.logrocket.com/using-react-children-prop-with-typescript/
+````

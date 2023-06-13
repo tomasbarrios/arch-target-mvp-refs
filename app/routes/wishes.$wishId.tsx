@@ -13,8 +13,11 @@ export async function loader({ request, params }: LoaderArgs) {
   }
   const host =
     request.headers.get("X-Forwarded-Host") ?? request.headers.get("host");
-    console.log()
-  return json({ wish, url: wish.noteId ? `${host}/lista/${wish.noteId}` : 'undefined' });
+  console.log();
+  return json({
+    wish,
+    url: wish.noteId ? `${host}/lista/${wish.noteId}` : "undefined",
+  });
 }
 
 export async function action({ request, params }: ActionArgs) {
@@ -29,36 +32,35 @@ export default function WishDetailsPage() {
   const data = useLoaderData<typeof loader>();
 
   return (
-    <>  
-    <div>
-      <h3 className="text-2xl font-bold">{data.wish.title}</h3>
-      <p className="py-6">{data.wish.body}</p>
-      <hr className="my-4" />
-    </div>
-
-    { data.url &&
+    <>
       <div>
-        <p>Comparte este deseo con tus amigxs usando el siguiente link</p>
-        <br />
-
-        <p>{data.url}</p>
+        <h3 className="text-2xl font-bold">{data.wish.title}</h3>
+        <p className="py-6">{data.wish.body}</p>
+        <hr className="my-4" />
       </div>
-    }
-    
-    <div>
-      <hr className="my-4" />
-      
-      <Form method="post">
-        <button
-          type="submit"
-          className="rounded bg-blue-500  py-2 px-4 text-white hover:bg-blue-600 focus:bg-blue-400"
-        >
-          Delete
-        </button>
-      </Form>
-      <Link to="edit">Editar</Link>
 
-    </div>
+      {data.url && (
+        <div>
+          <p>Comparte este deseo con tus amigxs usando el siguiente link</p>
+          <br />
+
+          <p>{data.url}</p>
+        </div>
+      )}
+
+      <div>
+        <hr className="my-4" />
+
+        <Form method="post">
+          <button
+            type="submit"
+            className="rounded bg-blue-500  px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400"
+          >
+            Delete
+          </button>
+        </Form>
+        <Link to="edit">Editar</Link>
+      </div>
     </>
   );
 }

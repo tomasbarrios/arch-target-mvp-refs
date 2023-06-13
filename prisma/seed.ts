@@ -7,19 +7,24 @@ async function seed() {
   const email = "tomas@remix.run";
 
   // cleanup the existing database
-  await prisma.user.update({ data: {
-    organizations: {
-      deleteMany: {},
-    },
-  }, where: { email } }).catch(() => {
-    // no worries if errors
-    console.log("ATTEMPTING TO UPDATE CURRENT USER", email)
-    console.log("COULD NOT DELETE EXISTING RELATION!!")
-  });
+  await prisma.user
+    .update({
+      data: {
+        organizations: {
+          deleteMany: {},
+        },
+      },
+      where: { email },
+    })
+    .catch(() => {
+      // no worries if errors
+      console.log("ATTEMPTING TO UPDATE CURRENT USER", email);
+      console.log("COULD NOT DELETE EXISTING RELATION!!");
+    });
 
   await prisma.user.delete({ where: { email } }).catch(() => {
     // no worries if it doesn't exist yet
-    console.log("COULD NOT DELETE!!")
+    console.log("COULD NOT DELETE!!");
   });
 
   const hashedPassword = await bcrypt.hash("wishiscool", 10);
@@ -35,7 +40,7 @@ async function seed() {
       organizations: {
         create: [
           {
-            assignedBy: 'Bob',
+            assignedBy: "Bob",
             assignedAt: new Date(),
             organization: {
               create: {
@@ -43,45 +48,45 @@ async function seed() {
                 slug: email,
               },
             },
-          }
+          },
         ],
       },
     },
   });
 
-const note = await prisma.note.create({
-  data: {
-    title: "My first note",
-    body: "Hello, world!",
-    userId: user.id,
-  },
-});
+  const note = await prisma.note.create({
+    data: {
+      title: "My first note",
+      body: "Hello, world!",
+      userId: user.id,
+    },
+  });
 
-await prisma.note.create({
-  data: {
-    title: "My second note",
-    body: "Hello, world!",
-    userId: user.id,
-  },
-});
+  await prisma.note.create({
+    data: {
+      title: "My second note",
+      body: "Hello, world!",
+      userId: user.id,
+    },
+  });
 
-//   /**
-//    * Added by me
-//    */
+  //   /**
+  //    * Added by me
+  //    */
 
-const tasks = [
-  {
-    title: "My First Post",
-    body: `
+  const tasks = [
+    {
+      title: "My First Post",
+      body: `
     # This is my first task
 
     Isn't it great?
         `.trim(),
-    noteId: note.id,
-  },
-  {
-    title: "A Mixtape I Made Just For You",
-    body: `
+      noteId: note.id,
+    },
+    {
+      title: "A Mixtape I Made Just For You",
+      body: `
     # 90s Mixtape
 
     - I wish (Skee-Lo)
@@ -102,40 +107,40 @@ const tasks = [
     - Santa Monica (Everclear)
     - C'mon N' Ride it (Quad City DJ's)
         `.trim(),
-  },
-];
+    },
+  ];
 
-for (const task of tasks) {
-  // await prisma.task.upsert({
-  //   where: { title: task.title },
-  await prisma.task.create({
-    data: task
-  });
-}
+  for (const task of tasks) {
+    // await prisma.task.upsert({
+    //   where: { title: task.title },
+    await prisma.task.create({
+      data: task,
+    });
+  }
 
-const wishes = [
-  {
-    title: "Pilucho recién nacido",
-    body: `
+  const wishes = [
+    {
+      title: "Pilucho recién nacido",
+      body: `
     # Solo algodon porfa
         `.trim(),
-    noteId: note.id,
-  },
-];
+      noteId: note.id,
+    },
+  ];
 
-for (const wish of wishes) {
-  // await prisma.wish.upsert({
-  //   where: { title: wish.title },
-  await prisma.wish.create({
-    data: wish
-  });
-}
+  for (const wish of wishes) {
+    // await prisma.wish.upsert({
+    //   where: { title: wish.title },
+    await prisma.wish.create({
+      data: wish,
+    });
+  }
 
-/**
- * Original again
- * 
- */
-console.log(`Database has been seeded. 🌱`);
+  /**
+   * Original again
+   *
+   */
+  console.log(`Database has been seeded. 🌱`);
 }
 
 seed()

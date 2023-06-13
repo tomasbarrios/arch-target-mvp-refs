@@ -30,18 +30,16 @@ export function createWish({
   title,
   noteId,
 }: Pick<Wish, "body" | "title"> & { noteId: Note["id"] }) {
-    return prisma.wish.create({
-      data: {
-        title,
-        body,
-        noteId
-      },
-    });
+  return prisma.wish.create({
+    data: {
+      title,
+      body,
+      noteId,
+    },
+  });
 }
 
-export function deleteWish({
-  id,
-}: Pick<Wish, "id">) {
+export function deleteWish({ id }: Pick<Wish, "id">) {
   return prisma.wish.deleteMany({
     where: { id },
   });
@@ -68,46 +66,62 @@ export function getWishWithNote({
 
 /**
  * Returns a record if the wish has one or more volunteers
- * @param param0 
- * @returns 
+ * @param param0
+ * @returns
  */
-export function getWishAlreadyVolunteered({ wishId }: {wishId: string}) {
+export function getWishAlreadyVolunteered({ wishId }: { wishId: string }) {
   return prisma.wish.findFirst({
     where: {
       id: wishId,
       volunteers: {
-        some: {}
-      }
-    }, include: {
+        some: {},
+      },
+    },
+    include: {
       volunteers: {
         include: {
-          user: true
-        }
-      }
-    }
-  })
+          user: true,
+        },
+      },
+    },
+  });
 }
 
 /**
  * Returns true if user is registered as volunteer for wish
- * @param param0 
- * @returns 
+ * @param param0
+ * @returns
  */
-export async function isUserVolunteer({ wishId, userId}: {wishId: string, userId: string}) {
-  const wish = await getWishAlreadyVolunteered({wishId});
-  if(!wish) {
-    return false
+export async function isUserVolunteer({
+  wishId,
+  userId,
+}: {
+  wishId: string;
+  userId: string;
+}) {
+  const wish = await getWishAlreadyVolunteered({ wishId });
+  if (!wish) {
+    return false;
   }
-  console.log("getWishByVolunteer", {userId, volunteerId: wish.volunteers.map(v => v.userId) })
-  const isUserVolunteer = wish.volunteers.some(v => v.userId === userId)
+  console.log("getWishByVolunteer", {
+    userId,
+    volunteerId: wish.volunteers.map((v) => v.userId),
+  });
+  const isUserVolunteer = wish.volunteers.some((v) => v.userId === userId);
   return isUserVolunteer;
 }
 
-export function assignVolunteer({ wishId, userId}: {wishId: string, userId: string}) {
-  console.log({wishId, userId})
+export function assignVolunteer({
+  wishId,
+  userId,
+}: {
+  wishId: string;
+  userId: string;
+}) {
+  console.log({ wishId, userId });
   return prisma.wish.update({
     where: {
-      id: wishId
+      id: wishId,
     },
     include: {
       volunteers: true,
@@ -120,7 +134,7 @@ export function assignVolunteer({ wishId, userId}: {wishId: string, userId: stri
         },
       },
     },
-  })
+  });
 }
 
 export function updateWish({
@@ -130,7 +144,7 @@ export function updateWish({
 }: Pick<Wish, "id" | "body" | "title">) {
   return prisma.wish.update({
     where: {
-      id
+      id,
     },
     data: {
       title,

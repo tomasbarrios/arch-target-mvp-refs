@@ -55,52 +55,48 @@ export function deleteNote({
 From here, added by me
 */
 
-export function getWishListAsNote({
-  id,
-}: Pick<Note, "id">) {
+export function getWishListAsNote({ id }: Pick<Note, "id">) {
   return prisma.note.findUniqueOrThrow({
     select: { id: true, title: true, body: true },
-    where: { 
-      id
-    }
+    where: {
+      id,
+    },
   });
 }
 
-export function getDefaultNoteForWish({
-  userId,
-}: Pick<Note, "userId">) {
+export function getDefaultNoteForWish({ userId }: Pick<Note, "userId">) {
   return prisma.note.findFirst({
     select: { id: true, title: true },
-    where: { 
-      userId, 
+    where: {
+      userId,
       wish: {
-        some: { }
-      }
-    }
+        some: {},
+      },
+    },
   });
 }
 
 export function createWishGroup({
   title = "Mi primera lista 💕",
-  userId 
+  userId,
 }: Pick<Note, "title"> & {
   userId: User["id"];
 }) {
   return createNote({
-    title, 
+    title,
     body: "Mi primera lista de deseos para compartir",
-    userId
-  })
+    userId,
+  });
 }
 
 export function getAllWishLists() {
   return prisma.note.findMany({
     select: { id: true, title: true },
-    where: { 
+    where: {
       wish: {
-        some: { }
-      }
-    }
+        some: {},
+      },
+    },
   });
 }
 
@@ -111,7 +107,7 @@ export function updateNote({
 }: Pick<Note, "id" | "body" | "title">) {
   return prisma.note.update({
     where: {
-      id
+      id,
     },
     data: {
       title,

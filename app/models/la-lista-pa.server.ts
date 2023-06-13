@@ -12,15 +12,22 @@ export function getWishListItems({ noteId }: { noteId: Note["id"] }) {
   });
 }
 
-export function getWishListItemsWithVolunteerCount({ noteId }: { noteId: Note["id"] | null }) {
+export function getWishListItemsWithVolunteerCount({
+  noteId,
+}: {
+  noteId: Note["id"] | null;
+}) {
   return prisma.wish.findMany({
     where: { noteId },
-    select: { id: true, title: true, noteId: true,
+    select: {
+      id: true,
+      title: true,
+      noteId: true,
       _count: {
         select: {
-          volunteers: true
+          volunteers: true,
         },
-      }
+      },
     },
     orderBy: { updatedAt: "desc" },
   });
