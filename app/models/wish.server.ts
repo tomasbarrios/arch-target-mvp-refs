@@ -11,7 +11,7 @@ export function getWish({
   noteId?: Note["id"];
 }) {
   return prisma.wish.findFirst({
-    select: { id: true, body: true, title: true, noteId: true },
+    select: { id: true, body: true, title: true, exampleUrls: true, noteId: true },
     where: { id },
   });
 }

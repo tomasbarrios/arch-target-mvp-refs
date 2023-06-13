@@ -173,7 +173,7 @@ export default function NewWishPage() {
       {/* URLs */}
       <div>
         <label className="flex w-full flex-col gap-1">
-          <span>Links (ejemplos): </span>
+          <span>Links de ejemplo (opcional): </span>
           <textarea
             ref={exampleUrlsRef}
             name="exampleUrls"

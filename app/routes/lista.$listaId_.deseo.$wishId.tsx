@@ -62,6 +62,22 @@ export default function WishDetailsPage() {
 
       <Text className="py-3">{data.wish.body}</Text>
 
+      {data.wish.exampleUrls && 
+      <div>
+        <h4>Links de ejemplo</h4>
+        <ul className="list-disc ml-4">
+        {data.wish.exampleUrls.split("\n").map(url => {
+          return (
+            <li>
+              <a href={url}>{url}</a>
+            </li>
+          );
+        })}
+        </ul>
+        
+      </div>
+      }
+
       <hr className="my-4" />
 
       <div>
