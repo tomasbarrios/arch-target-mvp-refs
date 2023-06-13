@@ -1,12 +1,13 @@
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { Form, useCatch, useLoaderData, useActionData } from "@remix-run/react";
+import { Form, useActionData, useLoaderData } from "@remix-run/react";
 import * as React from "react";
 import invariant from "tiny-invariant";
 
 import { updateWish } from "~/models/wish.server";
 import { requireUserId } from "~/session.server";
 import { getWish } from "~/models/wish.server";
+import { validateURLString } from "~/urls";
 
 export async function loader({ request, params }: LoaderArgs) {
   const userId = await requireUserId(request);
@@ -25,18 +26,37 @@ export async function action({ request }: ActionArgs) {
   const formData = await request.formData();
   const title = formData.get("title");
   const body = formData.get("body");
+  const exampleUrls = formData.get("exampleUrls");
   const id = formData.get("id");
 
   if (typeof title !== "string" || title.length === 0) {
     return json(
-      { errors: { title: "Title is required", body: null } },
+      { errors: { title: "Title is required", body: null, exampleUrls: null } },
       { status: 400 }
     );
   }
 
   if (typeof body !== "string" || body.length === 0) {
     return json(
-      { errors: { title: null, body: "Body is required" } },
+      { errors: { title: null, body: "Body is required", exampleUrls: null } },
+      { status: 400 }
+    );
+  }
+
+  if (
+    typeof exampleUrls !== "string" ||
+    (exampleUrls.length > 0 && !validateURLString(exampleUrls))
+  ) {
+    return json(
+      {
+        errors: {
+          title: null,
+          body: null,
+          exampleUrls:
+            "Links deben válidos y uno por linea. También verifica que comienzan con http o https",
+          noteId: null,
+        },
+      },
       { status: 400 }
     );
   }
@@ -44,12 +64,19 @@ export async function action({ request }: ActionArgs) {
   if (typeof id !== "string" || id.length === 0) {
     console.log("ID", { id });
     return json(
-      { errors: { title: null, body: null, id: "id is required" } },
+      {
+        errors: {
+          title: null,
+          body: null,
+          exampleUrls: null,
+          id: "id is required",
+        },
+      },
       { status: 400 }
     );
   }
 
-  const wish = await updateWish({ id, title, body });
+  const wish = await updateWish({ id, title, body, exampleUrls });
 
   return redirect(`/wishes/${wish.id}`);
 }
@@ -60,12 +87,15 @@ export default function NewWishPage() {
 
   const titleRef = React.useRef<HTMLInputElement>(null);
   const bodyRef = React.useRef<HTMLTextAreaElement>(null);
+  const exampleUrlsRef = React.useRef<HTMLTextAreaElement>(null);
 
   React.useEffect(() => {
     if (actionData?.errors?.title) {
       titleRef.current?.focus();
     } else if (actionData?.errors?.body) {
       bodyRef.current?.focus();
+    } else if (actionData?.errors?.exampleUrls) {
+      exampleUrlsRef.current?.focus();
     }
   }, [actionData]);
 
@@ -103,6 +133,7 @@ export default function NewWishPage() {
         )}
       </div>
 
+      {/* BODY start */}
       <div>
         <label className="flex w-full flex-col gap-1">
           <span>Body: </span>
@@ -124,6 +155,31 @@ export default function NewWishPage() {
           </div>
         )}
       </div>
+      {/* BODY end */}
+
+      {/* URLs */}
+      <div>
+        <label className="flex w-full flex-col gap-1">
+          <span>Links de ejemplo (opcional): </span>
+          <textarea
+            defaultValue={data.wish.exampleUrls || ""}
+            ref={exampleUrlsRef}
+            name="exampleUrls"
+            rows={8}
+            className="w-full flex-1 rounded-md border-2 border-blue-500 px-3 py-2 text-lg leading-6"
+            aria-invalid={actionData?.errors?.exampleUrls ? true : undefined}
+            aria-errormessage={
+              actionData?.errors?.exampleUrls ? "exampleUrls-error" : undefined
+            }
+          />
+        </label>
+        {actionData?.errors?.exampleUrls && (
+          <div className="pt-1 text-red-700" id="exampleUrls-error">
+            {actionData.errors.exampleUrls}
+          </div>
+        )}
+      </div>
+      {/* URLs end */}
 
       <div className="text-right">
         <button
@@ -135,20 +191,4 @@ export default function NewWishPage() {
       </div>
     </Form>
   );
-}
-
-export function ErrorBoundary({ error }: { error: Error }) {
-  console.error(error);
-
-  return <div>An unexpected error occurred: {error.message}</div>;
-}
-
-export function CatchBoundary() {
-  const caught = useCatch();
-
-  if (caught.status === 404) {
-    return <div>Wish not found</div>;
-  }
-
-  throw new Error(`Unexpected caught response with status: ${caught.status}`);
 }

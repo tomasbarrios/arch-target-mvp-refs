@@ -1,9 +1,19 @@
 ## VsCode Recommended Extensions
 
-| Name | Status | vscode name |
-| ------ | ------ | ------ |
-| Prettier | ✅ |  esbenp.prettier-vscode 
-Eslint Prettier | ? | rvest.vs-code-prettier-eslint
+| Name            | Status | vscode name                   |
+| --------------- | ------ | ----------------------------- |
+| Prettier        | ✅     | esbenp.prettier-vscode        |
+| Eslint Prettier | ?      | rvest.vs-code-prettier-eslint |
+
+Provides:
+
+- Format
+  - ✅ by running `npm run format`
+  - ✅ on save (partial ❌)
+
+Not yet implemented
+
+- ...
 
 # Tailwind
 

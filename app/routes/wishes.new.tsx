@@ -7,7 +7,7 @@ import * as React from "react";
 import { createWish } from "~/models/wish.server";
 import { requireUserId } from "~/session.server";
 import { getDefaultNoteForWish, createWishGroup } from "~/models/note.server";
-import { validateURLString } from '~/urls';
+import { validateURLString } from "~/urls";
 
 export async function loader({ request, params }: LoaderArgs) {
   console.log("WE HERE?");
@@ -39,15 +39,22 @@ export async function action({ request }: ActionArgs) {
   // console.log({formData}, "HHHH")
   const title = formData.get("title");
   const body = formData.get("body");
-  const noteId = formData.get("noteId");
   const exampleUrls = formData.get("exampleUrls");
+  const noteId = formData.get("noteId");
 
   console.log("ERRRRRRR0");
   console.log({ title, body, noteId, exampleUrls });
 
   if (typeof title !== "string" || title.length === 0) {
     return json(
-      { errors: { title: "Title is required", body: null, exampleUrls: null, noteId: null } },
+      {
+        errors: {
+          title: "Title is required",
+          body: null,
+          exampleUrls: null,
+          noteId: null,
+        },
+      },
       { status: 400 }
     );
   }
@@ -55,7 +62,14 @@ export async function action({ request }: ActionArgs) {
 
   if (typeof body !== "string" || body.length === 0) {
     return json(
-      { errors: { title: null, body: "Body is required", exampleUrls: null, noteId: null } },
+      {
+        errors: {
+          title: null,
+          body: "Body is required",
+          exampleUrls: null,
+          noteId: null,
+        },
+      },
       { status: 400 }
     );
   }
@@ -63,9 +77,20 @@ export async function action({ request }: ActionArgs) {
   // console.log('typeof exampleUrls !== "string"',typeof exampleUrls !== "string")
   // console.log('typeof exampleUrls !== "string"', exampleUrls.length >= 0)
   // console.log('typeof exampleUrls !== "string"', exampleUrls.length)
-  if (typeof exampleUrls !== "string" || (exampleUrls.length > 0 && !validateURLString(exampleUrls))) {
+  if (
+    typeof exampleUrls !== "string" ||
+    (exampleUrls.length > 0 && !validateURLString(exampleUrls))
+  ) {
     return json(
-      { errors: { title: null, body: null, exampleUrls: "Links deben válidos y uno por linea. También verifica que comienzan con http o https", noteId: null } },
+      {
+        errors: {
+          title: null,
+          body: null,
+          exampleUrls:
+            "Links deben válidos y uno por linea. También verifica que comienzan con http o https",
+          noteId: null,
+        },
+      },
       { status: 400 }
     );
   }
@@ -94,7 +119,12 @@ export async function action({ request }: ActionArgs) {
   if (!listToAssign) {
     throw new Error("Could not find a valid list to assign");
   }
-  const wish = await createWish({ title, body, exampleUrls, noteId: listToAssign.id });
+  const wish = await createWish({
+    title,
+    body,
+    exampleUrls,
+    noteId: listToAssign.id,
+  });
 
   return redirect(`/wishes/${wish.id}`);
 }
@@ -149,6 +179,7 @@ export default function NewWishPage() {
         )}
       </div>
 
+      {/* BODY start */}
       <div>
         <label className="flex w-full flex-col gap-1">
           <span>Body: </span>
@@ -169,6 +200,7 @@ export default function NewWishPage() {
           </div>
         )}
       </div>
+      {/* BODY end */}
 
       {/* URLs */}
       <div>

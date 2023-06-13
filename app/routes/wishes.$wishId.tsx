@@ -1,6 +1,6 @@
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { Form, Link, useCatch, useLoaderData } from "@remix-run/react";
+import { Form, Link, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
 import { deleteWish, getWishWithNote } from "~/models/wish.server";
 
@@ -35,7 +35,24 @@ export default function WishDetailsPage() {
     <>
       <div>
         <h3 className="text-2xl font-bold">{data.wish.title}</h3>
+
         <p className="py-6">{data.wish.body}</p>
+
+        {data.wish.exampleUrls && (
+          <div>
+            <h4>Links de ejemplo</h4>
+            <ul className="ml-4 list-disc">
+              {data.wish.exampleUrls.split("\n").map((url) => {
+                return (
+                  <li>
+                    <a href={url}>{url}</a>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        )}
+
         <hr className="my-4" />
       </div>
 
@@ -63,20 +80,4 @@ export default function WishDetailsPage() {
       </div>
     </>
   );
-}
-
-export function ErrorBoundary({ error }: { error: Error }) {
-  console.error(error);
-
-  return <div>An unexpected error occurred: {error.message}</div>;
-}
-
-export function CatchBoundary() {
-  const caught = useCatch();
-
-  if (caught.status === 404) {
-    return <div>Wish not found</div>;
-  }
-
-  throw new Error(`Unexpected caught response with status: ${caught.status}`);
 }

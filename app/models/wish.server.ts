@@ -11,7 +11,13 @@ export function getWish({
   noteId?: Note["id"];
 }) {
   return prisma.wish.findFirst({
-    select: { id: true, body: true, title: true, exampleUrls: true, noteId: true },
+    select: {
+      id: true,
+      body: true,
+      title: true,
+      exampleUrls: true,
+      noteId: true,
+    },
     where: { id },
   });
 }
@@ -53,7 +59,13 @@ export function getWishWithNote({
   noteId?: Note["id"];
 }) {
   return prisma.wish.findUnique({
-    select: { id: true, body: true, title: true, noteId: true },
+    select: {
+      id: true,
+      body: true,
+      title: true,
+      exampleUrls: true,
+      noteId: true,
+    },
     where: { id },
     // include: {
     //   note: true,
@@ -142,7 +154,8 @@ export function updateWish({
   id,
   body,
   title,
-}: Pick<Wish, "id" | "body" | "title">) {
+  exampleUrls,
+}: Pick<Wish, "id" | "body" | "title" | "exampleUrls">) {
   return prisma.wish.update({
     where: {
       id,
@@ -150,6 +163,7 @@ export function updateWish({
     data: {
       title,
       body,
+      exampleUrls,
     },
   });
 }
