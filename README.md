@@ -1,3 +1,10 @@
+## VsCode Recommended Extensions
+
+| Name | Status | vscode name |
+| ------ | ------ | ------ |
+| Prettier | ✅ |  esbenp.prettier-vscode 
+Eslint Prettier | ? | rvest.vs-code-prettier-eslint
+
 # Tailwind
 
 https://tailwindcss.com/docs/adding-custom-styles#adding-base-styles
