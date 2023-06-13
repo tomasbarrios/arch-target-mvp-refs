@@ -1,5 +1,4 @@
 import type { Note, Wish } from "@prisma/client";
-import { userInfo } from "os";
 
 import { prisma } from "~/db.server";
 
@@ -28,12 +27,14 @@ export function getWishListItems({ noteId }: { noteId: Note["id"] | null }) {
 export function createWish({
   body,
   title,
+  exampleUrls,
   noteId,
-}: Pick<Wish, "body" | "title"> & { noteId: Note["id"] }) {
+}: Pick<Wish, "body" | "title" | "exampleUrls"> & { noteId: Note["id"] }) {
   return prisma.wish.create({
     data: {
       title,
       body,
+      exampleUrls,
       noteId,
     },
   });
