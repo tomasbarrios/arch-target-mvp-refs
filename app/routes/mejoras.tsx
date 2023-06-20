@@ -15,8 +15,14 @@ export default function ImprovementsPage() {
   ];
 
   const suggestionsToReview = `
-    Contexto: Usuaria se asigna como voluntaria
+    Contexto: Usuaria acepta ser voluntaria
     - Sería lindo que aparezca un mensaje de texto o gráfico tipo: Gracias por asignarte este deseo! Un abrazo de Camila,Tomás y la bebé💖 Algo simpático que lo haga más amigable y cercano
+
+    Contexto: En la lista 
+    - Desafio/Reto: Debería ser limitado quien accede a cumplir un deseo, hoy esta abierto a cualquier persona
+
+    Contexto: En la lista, cuando estoy viendo un deseo, y se muestra el email de la persona que se asigno como voluntaria
+    - Propuesta: Sería mejor que se vea un nombre en vez del email
     `;
 
   return (
