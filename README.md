@@ -1,3 +1,7 @@
+Components (External-ish)
+
+https://ui.shadcn.com/docs/components/alert
+https://icons.radix-ui.com/
 ## VsCode Recommended Extensions
 
 | Name            | Status | vscode name                   |

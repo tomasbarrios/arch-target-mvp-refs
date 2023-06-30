@@ -112,7 +112,12 @@ export default function AllWishListsPage() {
           <hr />
 
           {data.wishLists.length === 0 ? (
-            <p className="p-4">No hay listas aún</p>
+            <div>
+              <p className="p-4">No hay listas aún
+              
+              </p>
+              <p>Si crees que esto es un error, solicita el enlace de la lista nuevamente.</p>
+            </div>
           ) : (
             <ol>
               {data.wishLists.map((wl) => (

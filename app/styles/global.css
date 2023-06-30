@@ -1,0 +1,11 @@
+summary {
+  cursor: pointer;
+}
+
+a {
+  text-decoration: underline;
+}
+
+.c-list a {
+    text-decoration: inherit;
+}

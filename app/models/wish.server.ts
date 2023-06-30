@@ -95,6 +95,9 @@ export function getWishAlreadyVolunteered({ wishId }: { wishId: string }) {
         include: {
           user: true,
         },
+        orderBy: {
+          assignedAt: 'asc',
+        },
       },
     },
   });

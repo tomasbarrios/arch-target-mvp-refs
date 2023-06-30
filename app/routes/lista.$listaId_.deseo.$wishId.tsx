@@ -1,6 +1,11 @@
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { Form, useCatch, useLoaderData } from "@remix-run/react";
+import {
+  Form,
+  isRouteErrorResponse,
+  useRouteError,
+  useLoaderData,
+} from "@remix-run/react";
 import invariant from "tiny-invariant";
 import {
   getWish,
@@ -8,10 +13,62 @@ import {
   isUserVolunteer,
   assignVolunteer,
 } from "~/models/wish.server";
+// import {showDate} from "@/lib/date"
 // import { getUsers } from "~/models/user.server";
+import {
+  RocketIcon,
+  ExclamationTriangleIcon,
+  CircleIcon,
+} from "@radix-ui/react-icons";
+// import {
+//   Card,
+//   CardContent,
+//   CardDescription,
+//   CardFooter,
+//   CardHeader,
+//   CardTitle,
+// } from "@/components/ui/card";
+// import { Input } from "@/components/ui/input";
+// import { Label } from "@/components/ui/label";
+
+import { Alert, AlertDescription, AlertTitle } from "~/ui/alert";
+
 import { requireUserId } from "~/session.server";
 
 import Text from "../shared/Text";
+// import { Alert } from "@/components/ui/alert";
+
+// default: short
+
+function showDate(date: Date) {
+  // https://stackoverflow.com/questions/66590691/typescript-type-string-is-not-assignable-to-type-numeric-2-digit-in-d
+
+  let options = {
+    // weekday: "long",
+    // year: "numeric", // not addingthis will result in
+    // month: "long",
+    // day: "numeric",
+    timeZone: "America/Santiago",
+    // timeZoneName: "short",
+  };
+  let options2 = {};
+  // const defaultOptions = {
+  //   ...options,
+  //   ...options2,
+  // };
+  const dateFormat = new Intl.DateTimeFormat(undefined, options);
+  const usedOptions = dateFormat.resolvedOptions();
+
+  // console.log({ calendar: usedOptions.calendar });
+  // // "chinese"
+
+  // console.log({ numberingSystem: usedOptions.numberingSystem });
+  // // "arab"
+
+  console.log({ timeZone: usedOptions.timeZone });
+
+  return dateFormat.format(date);
+}
 
 export async function loader({ request, params }: LoaderArgs) {
   invariant(params.wishId, "wishId not found");
@@ -22,7 +79,7 @@ export async function loader({ request, params }: LoaderArgs) {
   }
   const userId = await requireUserId(request);
 
-  const wishThatHasVolunteer = await getWishAlreadyVolunteered({
+  const wishWithVolunteers = await getWishAlreadyVolunteered({
     wishId: wish.id,
   });
   const isCurrentUserAVolunteer = await isUserVolunteer({
@@ -30,15 +87,15 @@ export async function loader({ request, params }: LoaderArgs) {
     userId,
   });
 
-  console.log("isCurrentUserAVolunteer", { wishThatHasVolunteer });
+  console.log("isCurrentUserAVolunteer", { wishWithVolunteers });
   // console.log("wishHasCurrentUserAsVolunteer", {isUserVolunteer})
 
   return json({
     wish: {
       ...wish,
-      hasWishAlreadyVolunteer: !!wishThatHasVolunteer,
+      hasWishAlreadyVolunteer: !!wishWithVolunteers,
       isCurrentUserAVolunteer: isCurrentUserAVolunteer,
-      volunteers: wishThatHasVolunteer?.volunteers,
+      volunteers: wishWithVolunteers?.volunteers,
     },
   });
 }
@@ -81,7 +138,7 @@ export default function WishDetailsPage() {
 
       <div>
         {/* Lista de voluntarios */}
-        {data.wish.hasWishAlreadyVolunteer && data.wish.volunteers && (
+        {data.wish.hasWishAlreadyVolunteer && data.wish.volunteers ? (
           <>
             <details>
               <summary>
@@ -89,47 +146,86 @@ export default function WishDetailsPage() {
                 voluntaria(s). 🧙🏻‍♀️ Haz click para ver quienes son
               </summary>
               <br />
-              <h3>Lista de voluntarias</h3>
+              <h2>Lista de voluntarias</h2>
               <ol className="list-inside list-decimal">
                 {data.wish.volunteers?.map((v, i) => (
-                  <li>
-                    {v.user.email}, el pasado {v.assignedAt}
+                  <li key={v.user.id}>
+                    {v.user.username || v.user.email}{" "}
+                    <i> --- {showDate(new Date(v.assignedAt))}</i>
                   </li>
                 ))}
               </ol>
             </details>
             <br />
           </>
+        ) : (
+          <>
+            <p>Este deseo aún no tiene voluntaria(s). Se tu la primera</p>
+            <br />
+          </>
         )}
 
         {data.wish.isCurrentUserAVolunteer ? (
           <Form method="post">
-            <p>
-              {" "}
-              <b>Eres voluntaria</b> para cumplir este deseo. Muchas gracias
-            </p>
-            <br />
-            <p>
+            {/* variant="default" */}
+
+            <Alert>
+              <RocketIcon className="h-4 w-4" />
+              <AlertTitle>Tu Estado: Voluntaria</AlertTitle>
+
+              <AlertDescription>
+                <br />
+
+                <p>
+                  {" "}
+                  Actualmente{" "}
+                  <b>
+                    <u>ya eres</u> voluntaria
+                  </b>{" "}
+                  para cumplir este deseo. Muchas gracias!
+                </p>
+
+                <br />
+                <details>
+                  <summary>Haz click aqui para cambiar tu estado</summary>
+
+                  <Alert variant="destructive">
+                    <ExclamationTriangleIcon className="h-4 w-4" />
+
+                    <AlertTitle>Salir de lista de Voluntarias</AlertTitle>
+
+                    <AlertDescription>
+                      <p>
+                        (Se quitará tu nombre la lista)
+                        <button
+                          type="submit"
+                          className="rounded bg-blue-500  px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400"
+                        >
+                          Ya NO QUIERO ser voluntaria
+                        </button>{" "}
+                      </p>
+                    </AlertDescription>
+                  </Alert>
+                </details>
+              </AlertDescription>
+            </Alert>
+          </Form>
+        ) : (
+          <Form method="post">
+            <Alert>
+              <CircleIcon className="h-4 w-4" />
+              <AlertTitle>Tu Estado: NO Voluntaria</AlertTitle>
+              <br />
+              <h3>Anotate oficialmente para cumplir este deseo</h3>
+              <br />
               <button
                 type="submit"
                 className="rounded bg-blue-500  px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400"
               >
-                Ya NO QUIERO ser voluntaria
+                Asignarme para cumplirlo
               </button>{" "}
-              (Se quitará tu nombre la lista)
-            </p>
-          </Form>
-        ) : (
-          <Form method="post">
-            <p>Anotate oficialmente para cumplir este deseo</p>
-            <br />
-            <button
-              type="submit"
-              className="rounded bg-blue-500  px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400"
-            >
-              Asignarme para cumplirlo
-            </button>{" "}
-            (Se mostrará tu nombre en la lista)
+              (Se mostrará tu nombre en la lista)
+            </Alert>
           </Form>
         )}
       </div>
@@ -137,18 +233,20 @@ export default function WishDetailsPage() {
   );
 }
 
-export function ErrorBoundary({ error }: { error: Error }) {
-  console.error(error);
+export function ErrorBoundary() {
+  const error = useRouteError();
 
-  return <div>An unexpected error occurred: {error.message}</div>;
-}
-
-export function CatchBoundary() {
-  const caught = useCatch();
-
-  if (caught.status === 404) {
-    return <div>Wish not found</div>;
+  if (error instanceof Error) {
+    return <div>An unexpected error occurred: {error.message}</div>;
   }
 
-  throw new Error(`Unexpected caught response with status: ${caught.status}`);
+  if (!isRouteErrorResponse(error)) {
+    return <h1>Unknown Error</h1>;
+  }
+
+  if (error.status === 404) {
+    return <div>Note not found</div>;
+  }
+
+  return <div>An unexpected error occurred: {error.statusText}</div>;
 }
