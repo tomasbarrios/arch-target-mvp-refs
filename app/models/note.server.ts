@@ -100,6 +100,58 @@ export function getAllWishLists() {
   });
 }
 
+export function getAllWishListsForUser(user: User) {
+  if (!user.latestKnownUrls) {
+    return null
+  }
+  const serializableSeparator = "\n"
+  
+  const removeNotNeeded = (orig: string, ) => {
+    const serializeKey = "list"
+    if (orig.startsWith(serializeKey)) {
+      console.log("startsWith(serializeKey", orig.slice(serializeKey.length))
+      return orig.slice(serializeKey.length)
+    } else {
+      return null
+    }
+  }
+
+  function removeCharacter(str: string, character: string) {
+    const regex = new RegExp(character, "g");
+    return str.replace(regex, "");
+  }
+
+  const userIsOnlyAllowedToList = user
+    .latestKnownUrls
+    .split(serializableSeparator)
+    .map((current) => {
+      const validAndTrimmedValue = removeNotNeeded(current)
+      if ( validAndTrimmedValue !== null) {
+        console.log("ADDD", removeCharacter(validAndTrimmedValue,"\n"), {validAndTrimmedValue})
+        const toAdd = removeCharacter(validAndTrimmedValue,"\n")
+        return toAdd
+      } 
+    })
+    // .filter(el => el !== undefined) // Remove undefined values
+    .filter((el): el is string => el !== undefined); // The way typescript likes it
+
+console.log({getAllWishListsForUser: userIsOnlyAllowedToList})
+    if(userIsOnlyAllowedToList.length === 0 ){
+      return null
+    }
+  return prisma.note.findMany({
+    select: { id: true, title: true },
+    where: {
+      id: {
+        in: userIsOnlyAllowedToList,
+      },
+      wish: {
+        some: {},
+      },
+    },
+  });
+}
+
 export function updateNote({
   id,
   body,

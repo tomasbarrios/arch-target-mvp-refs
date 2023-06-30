@@ -76,13 +76,14 @@ export async function createUserSession({
   remember: boolean;
   redirectTo: string;
 }) {
+  console.log("createUserSession", {redirectTo})
   const session = await getSession(request);
   session.set(USER_SESSION_KEY, userId);
   return redirect(redirectTo, {
     headers: {
       "Set-Cookie": await sessionStorage.commitSession(session, {
         maxAge: remember
-          ? 60 * 60 * 24 * 7 // 7 days
+          ? 60 * 60 * 24 * 14 // 14 days
           : undefined,
       }),
     },

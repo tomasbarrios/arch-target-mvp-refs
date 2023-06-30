@@ -6,20 +6,53 @@ import { requireUserId } from "~/session.server";
 import { getOrganization } from "~/models/organization.server";
 import { getWishListItemsWithVolunteerCount } from "~/models/la-lista-pa.server";
 import { getWishListAsNote } from "~/models/note.server";
+import { getUserById, updateKnownUrls } from "~/models/user.server";
 
+/**
+ * TODO1: This loads the wishlist, but lista/$listaId lo hace tb, es decir dos veces XO
+ *  
+ * @param param0 
+ * @returns 
+ */
 export async function loader({ request, params }: LoaderArgs) {
   const userId = await requireUserId(request);
+  const user = await getUserById(userId)
   const organization = await getOrganization({ userId });
 
   if (!params.listaId) throw new Error("No listId provided");
 
+  if(! 
+    (
+      // user?.latestKnownUrls && 
+      user?.latestKnownUrls?.includes(params.listaId)
+    ) 
+  ) {
+    console.log(`
+    User knows the url, but not yet in his known registry
+    TODO: PLEASE ADD TO REGISTRY (DONE!)
+    
+    `
+    )
+    const addKnownUrl = function(original: string, toAdd: string) {
+      console.log({original, toAdd})
+      if(original.includes(toAdd)) {
+        throw new Error("Why you doing this!")
+      }
+      // if(isValid(toAdd))
+      const serializableSeparator = "\n"
+
+      return original.concat(serializableSeparator).concat(toAdd)
+    }
+    await updateKnownUrls(userId, addKnownUrl(user?.latestKnownUrls || "" ,`list${params.listaId}`))
+  }
+
   const wishListItems = await getWishListItemsWithVolunteerCount({
     noteId: params.listaId,
   });
-  console.log("getWishListItemsWithVolunteerCount", { wishListItems });
+  // console.log("getWishListItemsWithVolunteerCount", { wishListItems });
   const note = await getWishListAsNote({ id: params.listaId });
 
-  console.log({ organization, list: "hey", note });
+  console.log({ organization, list: "hey" });
   return json({
     wishListItems: wishListItems.map((w) => {
       // console.log({wwwww: w._count})

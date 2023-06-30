@@ -84,6 +84,18 @@ export async function updateUserInfo(id: User["id"], username: string) {
   });
 }
 
+export async function updateKnownUrls(id: User["id"], latestKnownUrls: string) {
+  console.log({latestKnownUrls})
+  return prisma.user.update({
+    where: {
+      id,
+    },
+    data: {
+      latestKnownUrls
+    },
+  });
+}
+
 export function getUserListItems({ userId }: { userId: User["id"] }) {
   return prisma.user.findMany({
     where: { id: userId },

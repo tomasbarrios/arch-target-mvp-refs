@@ -1,27 +1,46 @@
 import type { LoaderArgs } from "@remix-run/node";
-import { json } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import { Form, Link, NavLink, Outlet, useLoaderData } from "@remix-run/react";
 import { requireUserId } from "~/session.server";
-// import { useUser } from "~/utils";
+import { useUser } from "~/utils";
+import type { User } from "~/models/user.server";
+
 import { getOrganization } from "~/models/organization.server";
-import { getAllWishLists } from "~/models/note.server";
+import { getAllWishListsForUser } from "~/models/note.server";
 import { getUserById } from "~/models/user.server";
 
 export async function loader({ request, params }: LoaderArgs) {
   const userId = await requireUserId(request);
-  const userInfo = await getUserById(userId);
+  const user = await getUserById(userId);
   const organization = await getOrganization({ userId });
 
-  const wishLists = await getAllWishLists();
+  if (!user?.latestKnownUrls) {
+    // XXX: Verify that is allowed to see this list
+    console.log("WHAT", { params })
+    return json({
+      wishLists: [],
+      organization,
+      user
+    });
+  } else {
 
-  console.log({userInfo})
+    // redirect("listas")
+    // throw new Error(`NO CAN DO${Object.entries(user)}`,)
+    // todo, this will fuck up current users, no URL yet they have.
+
+    // THis can totally happen to "good"" users
+
+  }
+
+  const wishLists = await getAllWishListsForUser(user);
+
 
   const host =
     request.headers.get("X-Forwarded-Host") ?? request.headers.get("host");
   return json({
-    wishLists: wishLists.map((w) => ({ ...w, url: `/lista/${w.id}` })),
+    wishLists:(wishLists || []).map((w) => ({ ...w, url: `/lista/${w.id}` })),
     organization,
-    userInfo
+    user
   });
 }
 
@@ -30,6 +49,13 @@ type Message = {
   action: string,
 }
 
+const checkUsername = function(user: User, messagesState: Message[]) {
+  if (user.username === null) {
+    messagesState.push({ text: "No has guardado tu nombre aún!", action: "/me" })
+  }
+
+}
+// console.log({ user })
 // const addMessage = ({message, action}: Message) => {
 //   return (
 //     <p className="bg-green">
@@ -42,10 +68,9 @@ export default function AllWishListsPage() {
   const data = useLoaderData<typeof loader>();
 
   const messages: Message[] = []
+  const user = useUser()
 
-  if(data.userInfo?.username === null) {
-    messages.push({text: "No has guardado tu nombre aún!", action: "/me"})
-  }
+  checkUsername(user, messages)
 
   return (
     <div className="flex h-full min-h-screen flex-col">
@@ -62,21 +87,21 @@ export default function AllWishListsPage() {
             Logout
           </button>
         </Form>
-        
+
 
       </header>
 
-        {/* MESSAGES */}
-        {messages && messages.length > 0 &&
-          <ul  className="bg-green-800 text-white my-1">
-            {messages.map(m =>
-              (<li>
-                <span>{m.text}</span> <a href={m.action}>Entra aqui para definirlo</a>
-              </li>)
-            )}
-          </ul>
-        }
-        {/* MESSAGES end */}
+      {/* MESSAGES */}
+      {messages && messages.length > 0 &&
+        <ul className="bg-green-800 text-white my-1">
+          {messages.map(m =>
+          (<li>
+            <span>{m.text}</span> <a href={m.action}>Entra aqui para definirlo</a>
+          </li>)
+          )}
+        </ul>
+      }
+      {/* MESSAGES end */}
 
       <main>
         <div>

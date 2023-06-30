@@ -16,6 +16,7 @@ model User {
   notes               Note[]
   password            Password?
   organizations       UsersOnOrganizations[]
+  latestKnownUrls     String?
   wishesVolunteered   UsersOnWishVolunteers[]
 }
 
