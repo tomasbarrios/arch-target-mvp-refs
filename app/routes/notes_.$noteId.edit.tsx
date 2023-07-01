@@ -26,7 +26,7 @@ export const loader = async ({ params, request }: LoaderArgs) => {
 };
 
 export async function action({ request }: ActionArgs) {
-  const userId = await requireUserId(request);
+  // const userId = await requireUserId(request);
 
   const formData = await request.formData();
   const title = formData.get("title");

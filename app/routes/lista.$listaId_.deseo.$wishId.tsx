@@ -51,7 +51,7 @@ function showDate(date: Date) {
     timeZone: "America/Santiago",
     // timeZoneName: "short",
   };
-  let options2 = {};
+  // let options2 = {};
   // const defaultOptions = {
   //   ...options,
   //   ...options2,
@@ -125,7 +125,7 @@ export default function WishDetailsPage() {
           <ul className="ml-4 list-disc">
             {data.wish.exampleUrls.split("\n").map((url) => {
               return (
-                <li>
+                <li key={url}>
                   <a href={url}>{url}</a>
                 </li>
               );

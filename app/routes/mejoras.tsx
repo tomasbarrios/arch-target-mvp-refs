@@ -48,12 +48,12 @@ export default function ImprovementsPage() {
           <ul>
             {suggestionsDone.map((item) => {
               return (
-                <li>
+                <li key={item.context}>
                   <br />
 
                   <h3>{item.context}</h3>
                   {item.doneChanges.map((change, i) => (
-                    <p>{change}</p>
+                    <p key={change}>{change}</p>
                   ))}
                   <br />
 

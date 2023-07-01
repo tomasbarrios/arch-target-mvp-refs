@@ -44,7 +44,7 @@ export default function WishDetailsPage() {
             <ul className="ml-4 list-disc">
               {data.wish.exampleUrls.split("\n").map((url) => {
                 return (
-                  <li>
+                  <li key={url}>
                     <a href={url}>{url}</a>
                   </li>
                 );

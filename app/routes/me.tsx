@@ -45,7 +45,7 @@ export async function action({ request }: ActionArgs) {
   }
 
 
-  const user = await updateUserInfo(userId, username);
+  await updateUserInfo(userId, username);
 
   return redirect(`/me`);
 }

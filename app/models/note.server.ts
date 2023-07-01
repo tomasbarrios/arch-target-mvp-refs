@@ -131,6 +131,7 @@ export function getAllWishListsForUser(user: User) {
         const toAdd = removeCharacter(validAndTrimmedValue,"\n")
         return toAdd
       } 
+      return null
     })
     // .filter(el => el !== undefined) // Remove undefined values
     .filter((el): el is string => el !== undefined); // The way typescript likes it

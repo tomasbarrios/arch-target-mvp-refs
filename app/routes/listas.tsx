@@ -1,6 +1,6 @@
 import type { LoaderArgs } from "@remix-run/node";
-import { json, redirect } from "@remix-run/node";
-import { Form, Link, NavLink, Outlet, useLoaderData } from "@remix-run/react";
+import { json } from "@remix-run/node";
+import { Form, Link, useLoaderData } from "@remix-run/react";
 import { requireUserId } from "~/session.server";
 import { useUser } from "~/utils";
 import type { User } from "~/models/user.server";
@@ -35,8 +35,8 @@ export async function loader({ request, params }: LoaderArgs) {
   const wishLists = await getAllWishListsForUser(user);
 
 
-  const host =
-    request.headers.get("X-Forwarded-Host") ?? request.headers.get("host");
+  // const host =
+  //   request.headers.get("X-Forwarded-Host") ?? request.headers.get("host");
   return json({
     wishLists:(wishLists || []).map((w) => ({ ...w, url: `/lista/${w.id}` })),
     organization,
@@ -95,7 +95,7 @@ export default function AllWishListsPage() {
       {messages && messages.length > 0 &&
         <ul className="bg-green-800 text-white my-1">
           {messages.map(m =>
-          (<li>
+          (<li key={m.text}>
             <span>{m.text}</span> <a href={m.action}>Entra aqui para definirlo</a>
           </li>)
           )}

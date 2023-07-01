@@ -4,13 +4,11 @@ import { Form, useActionData, useLoaderData } from "@remix-run/react";
 import * as React from "react";
 import invariant from "tiny-invariant";
 
-import { updateWish } from "~/models/wish.server";
-import { requireUserId } from "~/session.server";
-import { getWish } from "~/models/wish.server";
+import { updateWish, getWish } from "~/models/wish.server";
 import { validateURLString } from "~/urls";
 
 export async function loader({ request, params }: LoaderArgs) {
-  const userId = await requireUserId(request);
+  // const userId = await requireUserId(request);
   invariant(params.wishId, "wishId not found");
 
   const wish = await getWish({ id: params.wishId });
@@ -21,7 +19,7 @@ export async function loader({ request, params }: LoaderArgs) {
 }
 
 export async function action({ request }: ActionArgs) {
-  const userId = await requireUserId(request);
+  // const userId = await requireUserId(request);
 
   const formData = await request.formData();
   const title = formData.get("title");
