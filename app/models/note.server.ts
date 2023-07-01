@@ -105,8 +105,8 @@ export function getAllWishListsForUser(user: User) {
     return null
   }
   const serializableSeparator = "\n"
-  
-  const removeNotNeeded = (orig: string, ) => {
+
+  const removeNotNeeded = (orig: string,) => {
     const serializeKey = "list"
     if (orig.startsWith(serializeKey)) {
       console.log("startsWith(serializeKey", orig.slice(serializeKey.length))
@@ -126,20 +126,20 @@ export function getAllWishListsForUser(user: User) {
     .split(serializableSeparator)
     .map((current) => {
       const validAndTrimmedValue = removeNotNeeded(current)
-      if ( validAndTrimmedValue !== null) {
-        console.log("ADDD", removeCharacter(validAndTrimmedValue,"\n"), {validAndTrimmedValue})
-        const toAdd = removeCharacter(validAndTrimmedValue,"\n")
+      if (validAndTrimmedValue !== null) {
+        console.log("ADDD", removeCharacter(validAndTrimmedValue, "\n"), { validAndTrimmedValue })
+        const toAdd = removeCharacter(validAndTrimmedValue, "\n")
         return toAdd
-      } 
+      }
       return null
     })
-    // .filter(el => el !== undefined) // Remove undefined values
+    .filter(el => el !== null && el !== undefined)
     .filter((el): el is string => el !== undefined); // The way typescript likes it
 
-console.log({getAllWishListsForUser: userIsOnlyAllowedToList})
-    if(userIsOnlyAllowedToList.length === 0 ){
-      return null
-    }
+  console.log({ userIsOnlyAllowedToList })
+  if (userIsOnlyAllowedToList.length === 0) {
+    return null
+  }
   return prisma.note.findMany({
     select: { id: true, title: true },
     where: {
