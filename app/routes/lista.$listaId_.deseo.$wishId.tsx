@@ -109,6 +109,13 @@ export async function action({ request, params }: ActionArgs) {
   return redirect("");
 }
 
+const showUsername = (user: any) => {
+  const showFirst = (str: string, index: number) => {
+    return str.slice(0,index)
+  }
+  return user.username || showFirst(user.email, 8) + "***"
+}
+
 export default function WishDetailsPage() {
   console.log("Rendering WishListPage Wish");
   const data = useLoaderData<typeof loader>();
@@ -150,7 +157,7 @@ export default function WishDetailsPage() {
               <ol className="list-inside list-decimal">
                 {data.wish.volunteers?.map((v, i) => (
                   <li key={v.user.id}>
-                    {v.user.username || v.user.email}{" "}
+                    {showUsername(v.user)}
                     <i> --- {showDate(new Date(v.assignedAt))}</i>
                   </li>
                 ))}
