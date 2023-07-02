@@ -1,4 +1,9 @@
-Components (External-ish)
+## Rollback
+
+https://community.fly.io/t/manual-rollback-to-earlier-version/4586/3
+fly releases --image
+
+## Components (External-ish)
 
 https://ui.shadcn.com/docs/components/alert
 https://icons.radix-ui.com/
