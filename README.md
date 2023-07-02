@@ -7,12 +7,14 @@ fly releases --image
 
 https://ui.shadcn.com/docs/components/alert
 https://icons.radix-ui.com/
+
 ## VsCode Recommended Extensions
 
-| Name            | Status | vscode name                   |
-| --------------- | ------ | ----------------------------- |
-| Prettier        | ✅     | esbenp.prettier-vscode        |
-| Eslint Prettier | ?      | rvest.vs-code-prettier-eslint |
+| Name            | Status | vscode name                   | Notes                                                       |
+| --------------- | ------ | ----------------------------- | ----------------------------------------------------------- |
+| Prettier        | ✅     | esbenp.prettier-vscode        |                                                             |
+| Eslint Prettier | ✅     | rvest.vs-code-prettier-eslint |                                                             |
+| Eslint          | ✅     | dbaeumer.vscode-eslint        | Dependency for Eslint prettier. Shows all errors in editor |
 
 Provides:
 
