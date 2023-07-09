@@ -54,7 +54,7 @@ export function getUser({
 }
 
 export async function updateUser(email: User["email"], password: string) {
-  console.log({email, password})
+  console.log({ email, password });
   const hashedPassword = await bcrypt.hash(password, 10);
 
   return prisma.user.update({
@@ -72,26 +72,26 @@ export async function updateUser(email: User["email"], password: string) {
 }
 
 export async function updateUserInfo(id: User["id"], username: string) {
-  console.log({username})
+  console.log({ username });
 
   return prisma.user.update({
     where: {
       id,
     },
     data: {
-      username
+      username,
     },
   });
 }
 
 export async function updateKnownUrls(id: User["id"], latestKnownUrls: string) {
-  console.log({latestKnownUrls})
+  console.log({ latestKnownUrls });
   return prisma.user.update({
     where: {
       id,
     },
     data: {
-      latestKnownUrls
+      latestKnownUrls,
     },
   });
 }

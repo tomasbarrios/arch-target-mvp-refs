@@ -10,40 +10,42 @@ import { getUserById, updateKnownUrls } from "~/models/user.server";
 
 /**
  * TODO1: This loads the wishlist, but lista/$listaId lo hace tb, es decir dos veces XO
- *  
- * @param param0 
- * @returns 
+ *
+ * @param param0
+ * @returns
  */
 export async function loader({ request, params }: LoaderArgs) {
   const userId = await requireUserId(request);
-  const user = await getUserById(userId)
+  const user = await getUserById(userId);
   const organization = await getOrganization({ userId });
 
   if (!params.listaId) throw new Error("No listId provided");
 
-  if(! 
-    (
-      // user?.latestKnownUrls && 
+  if (
+    !(
+      // user?.latestKnownUrls &&
       user?.latestKnownUrls?.includes(params.listaId)
-    ) 
+    )
   ) {
     console.log(`
     User knows the url, but not yet in his known registry
     TODO: PLEASE ADD TO REGISTRY (DONE!)
     
-    `
-    )
-    const addKnownUrl = function(original: string, toAdd: string) {
-      console.log({original, toAdd})
-      if(original.includes(toAdd)) {
-        throw new Error("Why you doing this!")
+    `);
+    const addKnownUrl = function (original: string, toAdd: string) {
+      console.log({ original, toAdd });
+      if (original.includes(toAdd)) {
+        throw new Error("Why you doing this!");
       }
       // if(isValid(toAdd))
-      const serializableSeparator = "\n"
+      const serializableSeparator = "\n";
 
-      return original.concat(serializableSeparator).concat(toAdd)
-    }
-    await updateKnownUrls(userId, addKnownUrl(user?.latestKnownUrls || "" ,`list${params.listaId}`))
+      return original.concat(serializableSeparator).concat(toAdd);
+    };
+    await updateKnownUrls(
+      userId,
+      addKnownUrl(user?.latestKnownUrls || "", `list${params.listaId}`)
+    );
   }
 
   const wishListItems = await getWishListItemsWithVolunteerCount({
@@ -94,7 +96,7 @@ export default function WishListPageLayout() {
       </header>
 
       <main className="flex h-full bg-white">
-        <div className="h-full w-80 border-r bg-gray-50 c-list">
+        <div className="c-list h-full w-80 border-r bg-gray-50">
           {data.wishListItems.length === 0 ? (
             <p className="p-4">No wishs yet</p>
           ) : (

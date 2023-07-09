@@ -4,10 +4,10 @@ export default {
   darkMode: ["class"],
   content: [
     "./app/**/*.{js,jsx,ts,tsx}",
-    './pages/**/*.{ts,tsx}',
-    './@/components/**/*.{ts,tsx}',
-    './src/**/*.{ts,tsx}',
-	],
+    "./pages/**/*.{ts,tsx}",
+    "./@/components/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
+  ],
   theme: {
     container: {
       center: true,
@@ -75,4 +75,3 @@ export default {
   },
   plugins: [require("tailwindcss-animate")],
 } satisfies Config;
-

@@ -111,10 +111,10 @@ export async function action({ request, params }: ActionArgs) {
 
 const showUsername = (user: any) => {
   const showFirst = (str: string, index: number) => {
-    return str.slice(0,index)
-  }
-  return user.username || showFirst(user.email, 8) + "***"
-}
+    return str.slice(0, index);
+  };
+  return user.username || showFirst(user.email, 8) + "***";
+};
 
 export default function WishDetailsPage() {
   console.log("Rendering WishListPage Wish");

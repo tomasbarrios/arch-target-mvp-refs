@@ -102,43 +102,44 @@ export function getAllWishLists() {
 
 export function getAllWishListsForUser(user: User) {
   if (!user.latestKnownUrls) {
-    return null
+    return null;
   }
-  const serializableSeparator = "\n"
+  const serializableSeparator = "\n";
 
-  const removeNotNeeded = (orig: string,) => {
-    const serializeKey = "list"
+  const removeNotNeeded = (orig: string) => {
+    const serializeKey = "list";
     if (orig.startsWith(serializeKey)) {
-      console.log("startsWith(serializeKey", orig.slice(serializeKey.length))
-      return orig.slice(serializeKey.length)
+      console.log("startsWith(serializeKey", orig.slice(serializeKey.length));
+      return orig.slice(serializeKey.length);
     } else {
-      return null
+      return null;
     }
-  }
+  };
 
   function removeCharacter(str: string, character: string) {
     const regex = new RegExp(character, "g");
     return str.replace(regex, "");
   }
 
-  const userIsOnlyAllowedToList = user
-    .latestKnownUrls
+  const userIsOnlyAllowedToList = user.latestKnownUrls
     .split(serializableSeparator)
     .map((current) => {
-      const validAndTrimmedValue = removeNotNeeded(current)
+      const validAndTrimmedValue = removeNotNeeded(current);
       if (validAndTrimmedValue !== null) {
-        console.log("ADDD", removeCharacter(validAndTrimmedValue, "\n"), { validAndTrimmedValue })
-        const toAdd = removeCharacter(validAndTrimmedValue, "\n")
-        return toAdd
+        console.log("ADDD", removeCharacter(validAndTrimmedValue, "\n"), {
+          validAndTrimmedValue,
+        });
+        const toAdd = removeCharacter(validAndTrimmedValue, "\n");
+        return toAdd;
       }
-      return null
+      return null;
     })
-    .filter(el => el !== null && el !== undefined)
+    .filter((el) => el !== null && el !== undefined)
     .filter((el): el is string => el !== undefined); // The way typescript likes it
 
-  console.log({ userIsOnlyAllowedToList })
+  console.log({ userIsOnlyAllowedToList });
   if (userIsOnlyAllowedToList.length === 0) {
-    return null
+    return null;
   }
   return prisma.note.findMany({
     select: { id: true, title: true },

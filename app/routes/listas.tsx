@@ -16,45 +16,43 @@ export async function loader({ request, params }: LoaderArgs) {
 
   if (!user?.latestKnownUrls) {
     // XXX: Verify that is allowed to see this list
-    console.log("WHAT", { params })
+    console.log("WHAT", { params });
     return json({
       wishLists: [],
       organization,
-      user
+      user,
     });
   } else {
-
     // redirect("listas")
     // throw new Error(`NO CAN DO${Object.entries(user)}`,)
     // todo, this will fuck up current users, no URL yet they have.
-
     // THis can totally happen to "good"" users
-
   }
 
   const wishLists = await getAllWishListsForUser(user);
 
-
   // const host =
   //   request.headers.get("X-Forwarded-Host") ?? request.headers.get("host");
   return json({
-    wishLists:(wishLists || []).map((w) => ({ ...w, url: `/lista/${w.id}` })),
+    wishLists: (wishLists || []).map((w) => ({ ...w, url: `/lista/${w.id}` })),
     organization,
-    user
+    user,
   });
 }
 
 type Message = {
-  text: string,
-  action: string,
-}
+  text: string;
+  action: string;
+};
 
-const checkUsername = function(user: User, messagesState: Message[]) {
+const checkUsername = function (user: User, messagesState: Message[]) {
   if (user.username === null) {
-    messagesState.push({ text: "No has guardado tu nombre aún!", action: "/me" })
+    messagesState.push({
+      text: "No has guardado tu nombre aún!",
+      action: "/me",
+    });
   }
-
-}
+};
 // console.log({ user })
 // const addMessage = ({message, action}: Message) => {
 //   return (
@@ -67,10 +65,10 @@ const checkUsername = function(user: User, messagesState: Message[]) {
 export default function AllWishListsPage() {
   const data = useLoaderData<typeof loader>();
 
-  const messages: Message[] = []
-  const user = useUser()
+  const messages: Message[] = [];
+  const user = useUser();
 
-  checkUsername(user, messages)
+  checkUsername(user, messages);
 
   return (
     <div className="flex h-full min-h-screen flex-col">
@@ -87,20 +85,19 @@ export default function AllWishListsPage() {
             Logout
           </button>
         </Form>
-
-
       </header>
 
       {/* MESSAGES */}
-      {messages && messages.length > 0 &&
-        <ul className="bg-green-800 text-white my-1">
-          {messages.map(m =>
-          (<li key={m.text}>
-            <span>{m.text}</span> <a href={m.action}>Entra aqui para definirlo</a>
-          </li>)
-          )}
+      {messages && messages.length > 0 && (
+        <ul className="my-1 bg-green-800 text-white">
+          {messages.map((m) => (
+            <li key={m.text}>
+              <span>{m.text}</span>{" "}
+              <a href={m.action}>Entra aqui para definirlo</a>
+            </li>
+          ))}
         </ul>
-      }
+      )}
       {/* MESSAGES end */}
 
       <main>
@@ -113,10 +110,11 @@ export default function AllWishListsPage() {
 
           {data.wishLists.length === 0 ? (
             <div>
-              <p className="p-4">No hay listas aún
-              
+              <p className="p-4">No hay listas aún</p>
+              <p>
+                Si crees que esto es un error, solicita el enlace de la lista
+                nuevamente.
               </p>
-              <p>Si crees que esto es un error, solicita el enlace de la lista nuevamente.</p>
             </div>
           ) : (
             <ol>

@@ -18,14 +18,14 @@ export async function loader({ request, params }: LoaderArgs) {
 }
 
 function containsOnlyLetters(input: string): boolean {
-  return Array.from(input).every((char) =>
-    (char >= "a" && char <= "z") || (char >= "A" && char <= "Z")
+  return Array.from(input).every(
+    (char) => (char >= "a" && char <= "z") || (char >= "A" && char <= "Z")
   );
 }
 
 const validateUsername = (username: string) => {
-  return containsOnlyLetters(username)
-}
+  return containsOnlyLetters(username);
+};
 
 export async function action({ request }: ActionArgs) {
   const userId = await requireUserId(request);
@@ -43,7 +43,6 @@ export async function action({ request }: ActionArgs) {
       { status: 400 }
     );
   }
-
 
   await updateUserInfo(userId, username);
 
@@ -94,11 +93,8 @@ export default function UserPersonalInfoPage() {
             {actionData.errors.username}
           </div>
         )}
-        <div>
-          solo letras, sin espacios
-        </div>
+        <div>solo letras, sin espacios</div>
       </div>
-
 
       <div className="text-right">
         <button

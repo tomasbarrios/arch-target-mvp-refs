@@ -10,10 +10,10 @@ https://icons.radix-ui.com/
 
 ## VsCode Recommended Extensions
 
-| Name            | Status | vscode name                   | Notes                                                       |
-| --------------- | ------ | ----------------------------- | ----------------------------------------------------------- |
-| Prettier        | ✅     | esbenp.prettier-vscode        |                                                             |
-| Eslint Prettier | ✅     | rvest.vs-code-prettier-eslint |                                                             |
+| Name            | Status | vscode name                   | Notes                                                      |
+| --------------- | ------ | ----------------------------- | ---------------------------------------------------------- |
+| Prettier        | ✅     | esbenp.prettier-vscode        |                                                            |
+| Eslint Prettier | ✅     | rvest.vs-code-prettier-eslint |                                                            |
 | Eslint          | ✅     | dbaeumer.vscode-eslint        | Dependency for Eslint prettier. Shows all errors in editor |
 
 Provides:
