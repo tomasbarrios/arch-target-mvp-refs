@@ -5,7 +5,10 @@ import {
   isRouteErrorResponse,
   useRouteError,
   useLoaderData,
+  useLocation, // can delete safely, not using currently
 } from "@remix-run/react";
+import { useState } from "react";
+
 import invariant from "tiny-invariant";
 import {
   getWish,
@@ -33,7 +36,7 @@ import {
 
 import { Alert, AlertDescription, AlertTitle } from "~/ui/alert";
 
-import { requireUserId } from "~/session.server";
+import { requireUserId, commitSession, getSession } from "~/session.server";
 
 import Text from "../shared/Text";
 // import { Alert } from "@/components/ui/alert";
@@ -71,13 +74,31 @@ function showDate(date: Date) {
 }
 
 export async function loader({ request, params }: LoaderArgs) {
-  invariant(params.wishId, "wishId not found");
+  invariant(params.wishId, "wishId s not found");
 
   const wish = await getWish({ id: params.wishId });
   if (!wish) {
     throw new Response("Not Found", { status: 404 });
   }
+
+  // USER
+
   const userId = await requireUserId(request);
+  const session = await getSession(request);
+
+  const globalMessage = session.get("globalMessage");
+  let additional: {} = {};
+  // VERY IMPORTANT, these clears out the flash messages, if any
+  // if not changing this, the message wont dessapear when clicking on other wishes 
+  if (session && globalMessage) {
+    additional = {
+      headers: {
+        "Set-Cookie": await commitSession(session),
+      },
+    };
+  }
+
+  //WISH
 
   const wishWithVolunteers = await getWishAlreadyVolunteered({
     wishId: wish.id,
@@ -97,16 +118,40 @@ export async function loader({ request, params }: LoaderArgs) {
       isCurrentUserAVolunteer: isCurrentUserAVolunteer,
       volunteers: wishWithVolunteers?.volunteers,
     },
-  });
+    globalMessage
+  },additional);
 }
 
 export async function action({ request, params }: ActionArgs) {
   invariant(params.wishId, "wishId not found");
   const userId = await requireUserId(request);
 
+  const session = await getSession(request);
+  session.flash("globalMessage", "Ha quedado confirmado que eres voluntaria! Muuuuuchas gracias ❤️");
   await assignVolunteer({ wishId: params.wishId, userId });
 
-  return redirect("");
+  // OK? then ...
+
+  const redirectToURL = new URL(request.url).pathname;
+  const searchParams = new URLSearchParams([["redirectTo", redirectToURL]]);
+
+  const redirectTo =
+    searchParams.get("redirectTo") || `/lista/${params.listaId}`;
+  console.log("REDIRECTREDIRECTREDIRECT", { redirectTo });
+  // console.log("session flash", { msg: session.get("globalMessage") });
+  const additionalOpts = {
+    headers: {
+      "Set-Cookie": await commitSession(session),
+    },
+  };
+  // console.log("headers", { additionalOpts });
+
+  return redirect(redirectTo, additionalOpts);
+  // return redirect("/", {
+  //   // headers: {
+  //   //   "Set-Cookie": await commitSession(session)
+  //   // }
+  // });
 }
 
 const showUsername = (user: any) => {
@@ -117,11 +162,25 @@ const showUsername = (user: any) => {
 };
 
 export default function WishDetailsPage() {
+
   console.log("Rendering WishListPage Wish");
   const data = useLoaderData<typeof loader>();
 
+  const { globalMessage } = data;
+  // const user = useUser()
+  const location = useLocation();
+  const [savedLocation] = useState(location.key);
+
   return (
     <div>
+
+{/* THIS WILL NOT SHOW */}
+{location.key === savedLocation && <p>{globalMessage}</p>}
+
+{/* THIS WILL SHOW */}
+      {globalMessage && <p className="debug color-primary-100">normal: {globalMessage}</p>}
+
+
       <h3 className="text-2xl font-bold">{data.wish.title}</h3>
 
       <Text className="py-3">{data.wish.body}</Text>
@@ -147,7 +206,7 @@ export default function WishDetailsPage() {
         {/* Lista de voluntarios */}
         {data.wish.hasWishAlreadyVolunteer && data.wish.volunteers ? (
           <>
-            <details>
+            <details open>
               <summary>
                 Este deseo ya tiene ({data.wish.volunteers.length})
                 voluntaria(s). 🧙🏻‍♀️ Haz click para ver quienes son
@@ -221,15 +280,16 @@ export default function WishDetailsPage() {
           <Form method="post">
             <Alert>
               <CircleIcon className="h-4 w-4" />
-              <AlertTitle>Tu Estado: NO Voluntaria</AlertTitle>
+              <AlertTitle>Tu Estado: En espiritu</AlertTitle>
               <br />
               <h3>Anotate oficialmente para cumplir este deseo</h3>
+              
               <br />
               <button
                 type="submit"
                 className="rounded bg-blue-500  px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400"
               >
-                Asignarme para cumplirlo
+                Asignarme como voluntaria para cumplirlo 🧙🏻‍♀️ 
               </button>{" "}
               (Se mostrará tu nombre en la lista)
             </Alert>

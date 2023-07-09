@@ -1,3 +1,11 @@
+### 
+Flash messages like RAILS
+https://github.com/remix-run/remix/discussions/2125
+
+# Introduction of flaggedAs
+
+- importante | time | secondary (?)
+
 ## Rollback
 
 https://community.fly.io/t/manual-rollback-to-earlier-version/4586/3

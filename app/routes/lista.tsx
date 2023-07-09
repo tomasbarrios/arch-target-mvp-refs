@@ -1,7 +1,18 @@
 import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Form, Link, NavLink, Outlet, useLoaderData } from "@remix-run/react";
-import { requireUserId } from "~/session.server";
+import {
+  Form,
+  Link,
+  NavLink,
+  Outlet,
+  useLoaderData,
+  useLocation, //
+} from "@remix-run/react";
+import { useState } from "react";
+
+import { requireUserId, getSession
+  // , commitSession
+ } from "~/session.server";
 // import { useUser } from "~/utils";
 import { getOrganization } from "~/models/organization.server";
 import { getWishListItemsWithVolunteerCount } from "~/models/la-lista-pa.server";
@@ -21,6 +32,9 @@ export async function loader({ request, params }: LoaderArgs) {
 
   if (!params.listaId) throw new Error("No listId provided");
 
+  /**
+   * latestKnownUrls allows to see lists
+   */
   if (
     !(
       // user?.latestKnownUrls &&
@@ -48,6 +62,19 @@ export async function loader({ request, params }: LoaderArgs) {
     );
   }
 
+  const session = await getSession(request);
+
+  const globalMessage = session.get("globalMessage");
+  let additional: {} = {};
+  // if (session) {
+  //   additional = {
+  //     headers: {
+  //       "Set-Cookie": await commitSession(session),
+  //     },
+  //   };
+  // }
+  console.log("ADD TO JSON", { additional, globalMessage });
+
   const wishListItems = await getWishListItemsWithVolunteerCount({
     noteId: params.listaId,
   });
@@ -66,17 +93,27 @@ export async function loader({ request, params }: LoaderArgs) {
     }),
     note,
     organization,
-  });
+    globalMessage,
+    // ...additional,
+  }, 
+  additional);
 }
 
 export default function WishListPageLayout() {
   console.log("Rendering WishListPageLayout");
 
   const data = useLoaderData<typeof loader>();
+  const { globalMessage } = data;
   // const user = useUser()
+  const location = useLocation();
+  const [savedLocation] = useState(location.key);
+  console.log({globalMessage1:globalMessage})
+  console.log({"location.key === savedLocation":location.key === savedLocation})
+  console.log({locationKey: location.key, savedLocation})
 
   return (
     <div className="flex h-full min-h-screen flex-col">
+
       <header className="flex items-center justify-between bg-slate-800 p-4 text-white">
         <h1 className="text-3xl font-bold">
           <Link to="/listas">Listas</Link>

@@ -24,6 +24,10 @@ export async function getSession(request: Request) {
   return sessionStorage.getSession(cookie);
 }
 
+export async function commitSession(session: any) {
+  return sessionStorage.commitSession(session);
+}
+
 export async function getUserId(
   request: Request
 ): Promise<User["id"] | undefined> {
