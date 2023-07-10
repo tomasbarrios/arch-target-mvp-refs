@@ -119,7 +119,8 @@ export async function loader({ request, params }: LoaderArgs) {
       volunteers: wishWithVolunteers?.volunteers,
     },
     globalMessage
-  },additional);
+  },
+  additional);
 }
 
 export async function action({ request, params }: ActionArgs) {

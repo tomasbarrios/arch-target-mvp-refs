@@ -9,3 +9,12 @@ a {
 .c-list a {
   text-decoration: inherit;
 }
+
+ /* Flags */
+
+.wishFlag-container i {
+  top: -11px;
+  right: -11px;
+  position: absolute;
+    
+}

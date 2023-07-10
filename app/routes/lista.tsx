@@ -91,6 +91,10 @@ export async function loader({ request, params }: LoaderArgs) {
   additional);
 }
 
+const stylesForFlags: {[key: string]: {}} = {
+  parent: { position: "relative" }
+}
+
 export default function WishListPageLayout() {
   console.log("Rendering WishListPageLayout");
 
@@ -103,6 +107,22 @@ export default function WishListPageLayout() {
   console.log({"location.key === savedLocation":location.key === savedLocation})
   console.log({locationKey: location.key, savedLocation})
 
+  const WishFlag = ({variant}: {variant: string}) => {
+    console.log({variant})
+    const variantToIcon: {[key: string]: string} = {
+      "important": "🔝"
+    }
+    if(!Object.keys(variantToIcon).includes(variant)) {
+      return null
+    }
+    console.log({variat: variantToIcon[variant]})
+    return (
+      <div className={"wishFlag-container"}>
+
+        <i>{variantToIcon[variant]}</i>
+      </div>
+    )
+  }
   return (
     <div className="flex h-full min-h-screen flex-col">
 
@@ -138,10 +158,21 @@ export default function WishListPageLayout() {
                     }
                     to={wish.url}
                   >
-                    📝 {wish.title}
-                    {wish.volunteersCount > 0
-                      ? ` (${wish.volunteersCount})`
-                      : ""}
+                    
+                    <div style={stylesForFlags.parent}>
+
+                      {wish.flaggedAs?.split("\n").map(f => {
+                        return <WishFlag key={wish.id+f} variant={f}/>
+                      })}
+                      📝 {wish.title}
+                      {wish.volunteersCount > 0
+                        ? ` (${wish.volunteersCount})`
+                        : ""}
+
+                    </div>
+                      
+                    
+                    {/* {wish.flaggedAs} */}
                   </NavLink>
                 </li>
               ))}

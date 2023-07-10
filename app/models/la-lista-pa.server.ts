@@ -23,6 +23,7 @@ export function getWishListItemsWithVolunteerCount({
       id: true,
       title: true,
       noteId: true,
+      flaggedAs: true,
       _count: {
         select: {
           volunteers: true,

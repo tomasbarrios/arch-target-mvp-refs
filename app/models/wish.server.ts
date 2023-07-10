@@ -4,6 +4,8 @@ import { prisma } from "~/db.server";
 
 export type { Wish, User, UsersOnWishVolunteers } from "@prisma/client";
 
+export const flags = ["important", "ok2ndHand", "done"];
+
 export function getWish({
   id,
   noteId,
@@ -34,13 +36,15 @@ export function createWish({
   body,
   title,
   exampleUrls,
+  flaggedAs,
   noteId,
-}: Pick<Wish, "body" | "title" | "exampleUrls"> & { noteId: Note["id"] }) {
+}: Pick<Wish, "body" | "title" | "exampleUrls" | "flaggedAs"> & { noteId: Note["id"] }) {
   return prisma.wish.create({
     data: {
       title,
       body,
       exampleUrls,
+      flaggedAs,
       noteId,
     },
   });

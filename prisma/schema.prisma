@@ -109,6 +109,8 @@ model Wish {
   noteId      String?
   note        Note?    @relation(fields: [noteId], references: [id], onDelete: Cascade)
   volunteers  UsersOnWishVolunteers[]
+  flaggedAs   String?
+  
 }
 
 model UsersOnWishVolunteers {
