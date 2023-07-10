@@ -35,6 +35,16 @@ export default function WishListPage() {
       {/**
        * If not fulfilled yet, offer to fulfill
        */}
+      <footer className={"text-center"}>
+      <br />  
+      <br />  
+      <br />  
+      Sugerencias? Mira algunas <a href="/mejoras">
+          mejoras propuestas</a> por nuestras usuarias
+      <br />  
+
+    </footer>
+      <br />  
     </div>
   );
 }

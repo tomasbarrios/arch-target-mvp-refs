@@ -41,7 +41,7 @@ export default function ImprovementsPage() {
 
       <main className="container">
         <div>
-          <h2>Historial de mejoras y sugerencias realizadas</h2>
+          <h2>Historial de mejoras y sugerencias <b>YA realizadas</b></h2>
 
           <ul>
             {suggestionsDone.map((item) => {
@@ -67,7 +67,7 @@ export default function ImprovementsPage() {
         <br />
         <div>
           <hr />
-          <h2>Sugerencias de usuarias (pendientes por evaluar)</h2>
+          <h2>Sugerencias de usuarias <b>(pendientes por hacer)</b></h2>
 
           <Text>{suggestionsToReview}</Text>
 
@@ -86,12 +86,14 @@ export default function ImprovementsPage() {
                 `}
           </Text>
         </div>
-
+        <br />
         <p>Quieres sugerir algo?</p>
         <p>
           Escribe a{" "}
           <a href="mailto:tomasbarrios@gmail.com">tomasbarrios@gmail.com</a>
         </p>
+        <br />
+
       </main>
     </div>
   );

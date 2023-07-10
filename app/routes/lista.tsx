@@ -18,6 +18,7 @@ import { getOrganization } from "~/models/organization.server";
 import { getWishListItemsWithVolunteerCount } from "~/models/la-lista-pa.server";
 import { getWishListAsNote } from "~/models/note.server";
 import { getUserById, updateKnownUrls } from "~/models/user.server";
+import { addWithSeparator } from "~/utils-serialize";
 
 /**
  * TODO1: This loads the wishlist, but lista/$listaId lo hace tb, es decir dos veces XO
@@ -31,34 +32,25 @@ export async function loader({ request, params }: LoaderArgs) {
   const organization = await getOrganization({ userId });
 
   if (!params.listaId) throw new Error("No listId provided");
-
+  
   /**
    * latestKnownUrls allows to see lists
+   * 
    */
+  const hasVisitedBefore = user?.latestKnownUrls?.includes(params.listaId)
   if (
     !(
-      // user?.latestKnownUrls &&
-      user?.latestKnownUrls?.includes(params.listaId)
+      hasVisitedBefore
     )
   ) {
-    console.log(`
-    User knows the url, but not yet in his known registry
-    TODO: PLEASE ADD TO REGISTRY (DONE!)
-    
-    `);
-    const addKnownUrl = function (original: string, toAdd: string) {
-      console.log({ original, toAdd });
-      if (original.includes(toAdd)) {
-        throw new Error("Why you doing this!");
-      }
-      // if(isValid(toAdd))
-      const serializableSeparator = "\n";
+    const addWithSerializer = addWithSeparator("\n")
+    const updatedSerializedKnownUrls = addWithSerializer(user?.latestKnownUrls || "", `list${params.listaId}`)
 
-      return original.concat(serializableSeparator).concat(toAdd);
-    };
+    // User knows the url (arrived here), 
+    // but not yet in his known registry
     await updateKnownUrls(
       userId,
-      addKnownUrl(user?.latestKnownUrls || "", `list${params.listaId}`)
+      updatedSerializedKnownUrls
     );
   }
 
