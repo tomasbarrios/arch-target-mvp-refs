@@ -1,3 +1,5 @@
+## Confetti
+https://codepen.io/bonarhyme/pen/ZEoMaea
 ### 
 Flash messages like RAILS
 https://github.com/remix-run/remix/discussions/2125

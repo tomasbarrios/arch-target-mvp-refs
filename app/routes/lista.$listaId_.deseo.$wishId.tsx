@@ -1,4 +1,4 @@
-import type { ActionArgs, LoaderArgs } from "@remix-run/node";
+import type { ActionArgs, LoaderArgs, LinksFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import {
   Form,
@@ -22,6 +22,7 @@ import {
   RocketIcon,
   ExclamationTriangleIcon,
   CircleIcon,
+  CheckCircledIcon
 } from "@radix-ui/react-icons";
 // import {
 //   Card,
@@ -35,13 +36,30 @@ import {
 // import { Label } from "@/components/ui/label";
 
 import { Alert, AlertDescription, AlertTitle } from "~/ui/alert";
+// import { Confetti } from "~/shared/Confetti";
 
 import { requireUserId, commitSession, getSession } from "~/session.server";
+import styles from "~/styles/deseo.css";
 
-import Text from "../shared/Text";
+import { Confetti, links as confettiLinks } from "~/shared/Confetti";
+
+console.log({ confettiLinks }, "http://localhost:3000/" + confettiLinks);
+
+export const links: LinksFunction = () => {
+  return [
+    // ...tileGridLinks(),
+    // ...productTileLinks(),
+    // ...productDetailsLinks(),
+    ...confettiLinks(),
+    { rel: "stylesheet", href: styles },
+  ];
+};
+
+// import Text from "../shared/Text";
 // import { Alert } from "@/components/ui/alert";
 
 // default: short
+
 
 function showDate(date: Date) {
   // https://stackoverflow.com/questions/66590691/typescript-type-string-is-not-assignable-to-type-numeric-2-digit-in-d
@@ -89,7 +107,7 @@ export async function loader({ request, params }: LoaderArgs) {
   const globalMessage = session.get("globalMessage");
   let additional: {} = {};
   // VERY IMPORTANT, these clears out the flash messages, if any
-  // if not changing this, the message wont dessapear when clicking on other wishes 
+  // if not changing this, the message wont dessapear when clicking on other wishes
   if (session && globalMessage) {
     additional = {
       headers: {
@@ -111,16 +129,18 @@ export async function loader({ request, params }: LoaderArgs) {
   console.log("isCurrentUserAVolunteer", { wishWithVolunteers });
   // console.log("wishHasCurrentUserAsVolunteer", {isUserVolunteer})
 
-  return json({
-    wish: {
-      ...wish,
-      hasWishAlreadyVolunteer: !!wishWithVolunteers,
-      isCurrentUserAVolunteer: isCurrentUserAVolunteer,
-      volunteers: wishWithVolunteers?.volunteers,
+  return json(
+    {
+      wish: {
+        ...wish,
+        hasWishAlreadyVolunteer: !!wishWithVolunteers,
+        isCurrentUserAVolunteer: isCurrentUserAVolunteer,
+        volunteers: wishWithVolunteers?.volunteers,
+      },
+      globalMessage,
     },
-    globalMessage
-  },
-  additional);
+    additional
+  );
 }
 
 export async function action({ request, params }: ActionArgs) {
@@ -128,7 +148,7 @@ export async function action({ request, params }: ActionArgs) {
   const userId = await requireUserId(request);
 
   const session = await getSession(request);
-  session.flash("globalMessage", "Ha quedado confirmado que eres voluntaria! Muuuuuchas gracias ❤️");
+  session.flash("globalMessage", "Eres voluntaria para este deseo! Muuuuuchas gracias ❤️");
   await assignVolunteer({ wishId: params.wishId, userId });
 
   // OK? then ...
@@ -163,7 +183,6 @@ const showUsername = (user: any) => {
 };
 
 export default function WishDetailsPage() {
-
   console.log("Rendering WishListPage Wish");
   const data = useLoaderData<typeof loader>();
 
@@ -174,17 +193,23 @@ export default function WishDetailsPage() {
 
   return (
     <div>
+      {/* THIS WILL NOT SHOW */}
+      {location.key === savedLocation && <p>{globalMessage}</p>}
 
-{/* THIS WILL NOT SHOW */}
-{location.key === savedLocation && <p>{globalMessage}</p>}
+      {/* THIS WILL SHOW */}
+      {globalMessage && (
+        <Alert className="mb-6">
+          <CheckCircledIcon className="h-4 w-4" />
+          <AlertTitle>Se guardó correctamente</AlertTitle>
 
-{/* THIS WILL SHOW */}
-      {globalMessage && <p className="debug color-primary-100">normal: {globalMessage}</p>}
-
+          <AlertDescription>
+            {globalMessage}
+          </AlertDescription>
+        </Alert>
+      )}
+      {globalMessage && <Confetti />}
 
       <h3 className="text-2xl font-bold">{data.wish.title}</h3>
-
-      <Text className="py-3">{data.wish.body}</Text>
 
       {data.wish.exampleUrls && (
         <div>
@@ -284,13 +309,12 @@ export default function WishDetailsPage() {
               <AlertTitle>Tu Estado: En espiritu</AlertTitle>
               <br />
               <h3>Anotate oficialmente para cumplir este deseo</h3>
-              
               <br />
               <button
                 type="submit"
                 className="rounded bg-blue-500  px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400"
               >
-                Asignarme como voluntaria para cumplirlo 🧙🏻‍♀️ 
+                Asignarme como voluntaria para cumplirlo 🧙🏻‍♀️
               </button>{" "}
               (Se mostrará tu nombre en la lista)
             </Alert>

@@ -6,6 +6,7 @@ a {
   text-decoration: underline;
 }
 
+/* 3 css y ya no me acuerdo bien para que es esto */
 .c-list a {
   text-decoration: inherit;
 }
@@ -17,4 +18,13 @@ a {
   right: -11px;
   position: absolute;
     
+}
+
+/** USer for
+
+- Confetti 
+ */
+
+ .noClick {
+  pointer-events: none;
 }
