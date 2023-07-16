@@ -22,7 +22,7 @@ import {
   RocketIcon,
   ExclamationTriangleIcon,
   CircleIcon,
-  CheckCircledIcon
+  CheckCircledIcon,
 } from "@radix-ui/react-icons";
 // import {
 //   Card,
@@ -61,7 +61,6 @@ export const links: LinksFunction = () => {
 // import { Alert } from "@/components/ui/alert";
 
 // default: short
-
 
 function showDate(date: Date) {
   // https://stackoverflow.com/questions/66590691/typescript-type-string-is-not-assignable-to-type-numeric-2-digit-in-d
@@ -150,7 +149,10 @@ export async function action({ request, params }: ActionArgs) {
   const userId = await requireUserId(request);
 
   const session = await getSession(request);
-  session.flash("globalMessage", "Eres voluntaria para este deseo! Muuuuuchas gracias ❤️");
+  session.flash(
+    "globalMessage",
+    "Eres voluntaria para este deseo! Muuuuuchas gracias ❤️"
+  );
   await assignVolunteer({ wishId: params.wishId, userId });
 
   // OK? then ...
@@ -187,13 +189,13 @@ const showUsername = (user: any) => {
 export default function WishDetailsPage() {
   console.log("Rendering WishListPage Wish");
   const data = useLoaderData<typeof loader>();
-  
+
   const validFlags = {
-    important: "important"
-  }
-  const separator = "\n"
-  const wishFlags = data.wish.flaggedAs?.split(separator)
-  
+    important: "important",
+    done: "done",
+  };
+  const separator = "\n";
+  const wishFlags = data.wish.flaggedAs?.split(separator);
 
   const { globalMessage } = data;
   // const user = useUser()
@@ -211,14 +213,17 @@ export default function WishDetailsPage() {
           <CheckCircledIcon className="h-4 w-4" />
           <AlertTitle>Se guardó correctamente</AlertTitle>
 
-          <AlertDescription>
-            {globalMessage}
-          </AlertDescription>
+          <AlertDescription>{globalMessage}</AlertDescription>
         </Alert>
       )}
       {globalMessage && <Confetti />}
 
       <h3 className="text-2xl font-bold">{data.wish.title}</h3>
+      {wishFlags?.some((wf) => wf.startsWith(validFlags.done)) && (
+        <div>
+          <b>✅ Deseo cumplido</b>: Ya hay suficientes de este regalo! 🎊🥳
+        </div>
+      )}
 
       <Text className="py-3">{data.wish.body}</Text>
 
@@ -237,11 +242,12 @@ export default function WishDetailsPage() {
         </div>
       )}
 
-      { wishFlags?.some(wf => wf.startsWith(validFlags.important)) && 
-      <i>
-        <b>🔝 Proridad Top</b>: Este deseo esta marcado como prioritario
-      </i>
-}
+      {wishFlags?.some((wf) => wf.startsWith(validFlags.important)) && (
+        <div>
+          <b>🔝 Proridad Top</b>: Este deseo está marcado como prioritario
+        </div>
+      )}
+      
 
       <hr className="my-4" />
 

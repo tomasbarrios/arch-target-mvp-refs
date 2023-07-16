@@ -10,9 +10,11 @@ import {
 } from "@remix-run/react";
 import { useState } from "react";
 
-import { requireUserId, getSession
+import {
+  requireUserId,
+  getSession,
   // , commitSession
- } from "~/session.server";
+} from "~/session.server";
 // import { useUser } from "~/utils";
 import { getOrganization } from "~/models/organization.server";
 import { getWishListItemsWithVolunteerCount } from "~/models/la-lista-pa.server";
@@ -32,26 +34,22 @@ export async function loader({ request, params }: LoaderArgs) {
   const organization = await getOrganization({ userId });
 
   if (!params.listaId) throw new Error("No listId provided");
-  
+
   /**
    * latestKnownUrls allows to see lists
-   * 
+   *
    */
-  const hasVisitedBefore = user?.latestKnownUrls?.includes(params.listaId)
-  if (
-    !(
-      hasVisitedBefore
-    )
-  ) {
-    const addWithSerializer = addWithSeparator("\n")
-    const updatedSerializedKnownUrls = addWithSerializer(user?.latestKnownUrls || "", `list${params.listaId}`)
-
-    // User knows the url (arrived here), 
-    // but not yet in his known registry
-    await updateKnownUrls(
-      userId,
-      updatedSerializedKnownUrls
+  const hasVisitedBefore = user?.latestKnownUrls?.includes(params.listaId);
+  if (!hasVisitedBefore) {
+    const addWithSerializer = addWithSeparator("\n");
+    const updatedSerializedKnownUrls = addWithSerializer(
+      user?.latestKnownUrls || "",
+      `list${params.listaId}`
     );
+
+    // User knows the url (arrived here),
+    // but not yet in his known registry
+    await updateKnownUrls(userId, updatedSerializedKnownUrls);
   }
 
   const session = await getSession(request);
@@ -74,26 +72,28 @@ export async function loader({ request, params }: LoaderArgs) {
   const note = await getWishListAsNote({ id: params.listaId });
 
   console.log({ organization, list: "hey" });
-  return json({
-    wishListItems: wishListItems.map((w) => {
-      // console.log({wwwww: w._count})
-      return {
-        ...w,
-        url: `/lista/${params.listaId}/deseo/${w.id}`,
-        volunteersCount: w._count.volunteers,
-      };
-    }),
-    note,
-    organization,
-    globalMessage,
-    // ...additional,
-  }, 
-  additional);
+  return json(
+    {
+      wishListItems: wishListItems.map((w) => {
+        // console.log({wwwww: w._count})
+        return {
+          ...w,
+          url: `/lista/${params.listaId}/deseo/${w.id}`,
+          volunteersCount: w._count.volunteers,
+        };
+      }),
+      note,
+      organization,
+      globalMessage,
+      // ...additional,
+    },
+    additional
+  );
 }
 
-const stylesForFlags: {[key: string]: {}} = {
-  parent: { position: "relative" }
-}
+const stylesForFlags: { [key: string]: {} } = {
+  parent: { position: "relative" },
+};
 
 export default function WishListPageLayout() {
   console.log("Rendering WishListPageLayout");
@@ -103,29 +103,33 @@ export default function WishListPageLayout() {
   // const user = useUser()
   const location = useLocation();
   const [savedLocation] = useState(location.key);
-  console.log({globalMessage1:globalMessage})
-  console.log({"location.key === savedLocation":location.key === savedLocation})
-  console.log({locationKey: location.key, savedLocation})
+  console.log({ globalMessage1: globalMessage });
+  console.log({
+    "location.key === savedLocation": location.key === savedLocation,
+  });
+  console.log({ locationKey: location.key, savedLocation });
 
-  const WishFlag = ({variant}: {variant: string}) => {
-    console.log({variant})
-    const variantToIcon: {[key: string]: string} = {
-      "important": "🔝"
+  const validFlags = {
+    important: "important",
+    done: "done",
+  };
+  const WishFlag = ({ variant }: { variant: string }) => {
+    console.log({ variant });
+    const variantToIcon: { [key: string]: string } = {
+      important: "🔝",
+    };
+    if (!Object.keys(variantToIcon).includes(variant)) {
+      return null;
     }
-    if(!Object.keys(variantToIcon).includes(variant)) {
-      return null
-    }
-    console.log({variat: variantToIcon[variant]})
+    console.log({ variat: variantToIcon[variant] });
     return (
       <div className={"wishFlag-container"}>
-
         <i>{variantToIcon[variant]}</i>
       </div>
-    )
-  }
+    );
+  };
   return (
     <div className="flex h-full min-h-screen flex-col">
-
       <header className="flex items-center justify-between bg-slate-800 p-4 text-white">
         <h1 className="text-3xl font-bold">
           <Link to="/listas">Listas</Link>
@@ -150,32 +154,46 @@ export default function WishListPageLayout() {
             <p className="p-4">No wishs yet</p>
           ) : (
             <ol>
-              {data.wishListItems.map((wish) => (
-                <li key={wish.id}>
-                  <NavLink
-                    className={({ isActive }) =>
-                      `block border-b p-4 text-xl ${isActive ? "bg-white" : ""}`
-                    }
-                    to={wish.url}
-                  >
-                    
-                    <div style={stylesForFlags.parent}>
+              {data.wishListItems.map((wish) => {
+                const wishFlags = wish.flaggedAs?.split("\n") || [];
+                const isDone = wishFlags.some((wf) =>
+                  wf.startsWith(validFlags.done)
+                );
+                return (
+                  <li key={wish.id}>
+                    <NavLink
+                      className={({ isActive }) =>
+                        `block border-b p-4 text-xl ${
+                          isActive ? "bg-white" : ""
+                        }`
+                      }
+                      to={wish.url}
+                    >
+                      <div style={stylesForFlags.parent}>
+                        {wishFlags.map((f) => {
+                          return <WishFlag key={wish.id + f} variant={f} />;
+                        })}
 
-                      {wish.flaggedAs?.split("\n").map(f => {
-                        return <WishFlag key={wish.id+f} variant={f}/>
-                      })}
-                      📝 {wish.title}
-                      {wish.volunteersCount > 0
-                        ? ` (${wish.volunteersCount})`
-                        : ""}
+                        {isDone ? `✅ ` : `📝 `}
 
-                    </div>
-                      
-                    
-                    {/* {wish.flaggedAs} */}
-                  </NavLink>
-                </li>
-              ))}
+                        {isDone ? (
+                          <span style={{ textDecoration: "line-through" }}>
+                          {wish.title}
+                        </span>
+                        ) : (
+                          `${wish.title}`
+                        )}
+
+                        {wish.volunteersCount > 0
+                          ? ` (${wish.volunteersCount})`
+                          : ""}
+                      </div>
+
+                      {/* {wish.flaggedAs} */}
+                    </NavLink>
+                  </li>
+                );
+              })}
             </ol>
           )}
         </div>
