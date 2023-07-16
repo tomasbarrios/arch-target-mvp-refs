@@ -187,6 +187,13 @@ const showUsername = (user: any) => {
 export default function WishDetailsPage() {
   console.log("Rendering WishListPage Wish");
   const data = useLoaderData<typeof loader>();
+  
+  const validFlags = {
+    important: "important"
+  }
+  const separator = "\n"
+  const wishFlags = data.wish.flaggedAs?.split(separator)
+  
 
   const { globalMessage } = data;
   // const user = useUser()
@@ -229,6 +236,12 @@ export default function WishDetailsPage() {
           </ul>
         </div>
       )}
+
+      { wishFlags?.some(wf => wf.startsWith(validFlags.important)) && 
+      <i>
+        <b>🔝 Proridad Top</b>: Este deseo esta marcado como prioritario
+      </i>
+}
 
       <hr className="my-4" />
 
