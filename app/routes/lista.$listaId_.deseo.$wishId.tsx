@@ -39,6 +39,8 @@ import { Alert, AlertDescription, AlertTitle } from "~/ui/alert";
 // import { Confetti } from "~/shared/Confetti";
 
 import { requireUserId, commitSession, getSession } from "~/session.server";
+import Text from "../shared/Text";
+
 import styles from "~/styles/deseo.css";
 
 import { Confetti, links as confettiLinks } from "~/shared/Confetti";
@@ -210,6 +212,8 @@ export default function WishDetailsPage() {
       {globalMessage && <Confetti />}
 
       <h3 className="text-2xl font-bold">{data.wish.title}</h3>
+
+      <Text className="py-3">{data.wish.body}</Text>
 
       {data.wish.exampleUrls && (
         <div>
