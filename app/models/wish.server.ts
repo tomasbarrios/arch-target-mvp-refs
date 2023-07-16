@@ -18,6 +18,7 @@ export function getWish({
       body: true,
       title: true,
       exampleUrls: true,
+      flaggedAs: true,
       noteId: true,
     },
     where: { id },
@@ -162,7 +163,8 @@ export function updateWish({
   body,
   title,
   exampleUrls,
-}: Pick<Wish, "id" | "body" | "title" | "exampleUrls">) {
+  flaggedAs,
+}: Pick<Wish, "id" | "body" | "title" | "exampleUrls" | "flaggedAs">) {
   return prisma.wish.update({
     where: {
       id,
@@ -171,6 +173,7 @@ export function updateWish({
       title,
       body,
       exampleUrls,
+      flaggedAs
     },
   });
 }
