@@ -3,7 +3,7 @@ import { json, redirect } from "@remix-run/node";
 import { Form, Link, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
 import { deleteWish, getWishWithNote } from "~/models/wish.server";
-
+import Button from "~/shared/Button";
 export async function loader({ request, params }: LoaderArgs) {
   invariant(params.wishId, "wishId not found");
 
@@ -68,15 +68,21 @@ export default function WishDetailsPage() {
       <div>
         <hr className="my-4" />
 
-        <Form method="post">
-          <button
-            type="submit"
-            className="rounded bg-blue-500  px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400"
-          >
-            Delete
-          </button>
+        <Form method="post" className="flex">
+          <div className="mr-1 ">
+            <Button>
+              <Link to="edit">Editar</Link>
+            </Button>
+          </div>
+          <div className="flex-grow text-right">
+            <Button
+              type="submit"
+              confirmPrompt={"Seguro deseas borrar este deseo?"}
+            >
+              Borrar
+            </Button>
+          </div>
         </Form>
-        <Link to="edit">Editar</Link>
       </div>
     </>
   );
