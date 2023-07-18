@@ -22,6 +22,37 @@ import { getWishListAsNote } from "~/models/note.server";
 import { getUserById, updateKnownUrls } from "~/models/user.server";
 import { addWithSeparator } from "~/utils-serialize";
 
+
+/**
+ * Ordena un arreglo segun las siguietnes reglas
+ * 
+ * 1. No completadas y TOP
+ * 2. No completadas
+ * 3. Completadas
+ * @param objeto1 
+ * @param objeto2 
+ * @returns 
+ */
+function comparador(objeto1: any, objeto2: any) {
+  var anotaciones1 = objeto1.flaggedAs;
+  var anotaciones2 = objeto2.flaggedAs;
+
+  if (anotaciones1?.includes("done") && !anotaciones2?.includes("done")) {
+    return 1; // objeto2 va primero si objeto1 tiene anotaciones ?.includes(
+  } else if (!anotaciones1?.includes("done") && anotaciones2?.includes("done")) {
+    return -1; // objeto1 va primero si objeto2 tiene anotaciones "done"
+  } else if (anotaciones1?.includes("important")) {
+    return -1; // objeto1 va primero si tiene "important"
+  } else if (anotaciones2?.includes("important")) {
+    return 1; // objeto2 va primero si tiene "important"
+  } else if (anotaciones1 === "" && anotaciones2 !== "") {
+    return -1; // objeto1 va primero si objeto2 tiene anotaciones distintas de ""
+  } else if (anotaciones1 !== "" && anotaciones2 === "") {
+    return 1; // objeto2 va primero si objeto1 tiene anotaciones distintas de ""
+  } else {
+    return 0; // mantén el orden actual
+  }
+}
 /**
  * TODO1: This loads the wishlist, but lista/$listaId lo hace tb, es decir dos veces XO
  *
@@ -68,6 +99,10 @@ export async function loader({ request, params }: LoaderArgs) {
   const wishListItems = await getWishListItemsWithVolunteerCount({
     noteId: params.listaId,
   });
+
+  console.log("wishListItems",{wishListItems});
+
+  wishListItems?.sort(comparador);
   // console.log("getWishListItemsWithVolunteerCount", { wishListItems });
   const note = await getWishListAsNote({ id: params.listaId });
 
@@ -178,8 +213,8 @@ export default function WishListPageLayout() {
 
                         {isDone ? (
                           <span style={{ textDecoration: "line-through" }}>
-                          {wish.title}
-                        </span>
+                            {wish.title}
+                          </span>
                         ) : (
                           `${wish.title}`
                         )}
