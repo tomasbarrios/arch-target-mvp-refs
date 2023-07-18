@@ -58,10 +58,12 @@ export default function WishDetailsPage() {
 
       {data.url && (
         <div>
-          <p>Comparte este deseo con tus amigxs usando el siguiente link</p>
+          <p>Comparte esta lista de deseos usando el siguiente link</p>
           <br />
 
-          <p>{data.url}</p>
+          <p>
+            <a href={data.url}>{data.url}</a>
+          </p>
         </div>
       )}
 
