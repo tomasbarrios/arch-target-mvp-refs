@@ -20,6 +20,7 @@ export function getWish({
       exampleUrls: true,
       flaggedAs: true,
       noteId: true,
+      maxQuantity: true,
     },
     where: { id },
   });
@@ -164,7 +165,8 @@ export function updateWish({
   title,
   exampleUrls,
   flaggedAs,
-}: Pick<Wish, "id" | "body" | "title" | "exampleUrls" | "flaggedAs">) {
+  maxQuantity,
+}: Pick<Wish, "id" | "body" | "title" | "exampleUrls" | "flaggedAs" | "maxQuantity">) {
   return prisma.wish.update({
     where: {
       id,
@@ -173,7 +175,8 @@ export function updateWish({
       title,
       body,
       exampleUrls,
-      flaggedAs
+      flaggedAs,
+      maxQuantity
     },
   });
 }

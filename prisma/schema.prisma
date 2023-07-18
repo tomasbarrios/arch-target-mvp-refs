@@ -110,7 +110,7 @@ model Wish {
   note        Note?    @relation(fields: [noteId], references: [id], onDelete: Cascade)
   volunteers  UsersOnWishVolunteers[]
   flaggedAs   String?
-  
+  maxQuantity Int?     @default(1)
 }
 
 model UsersOnWishVolunteers {
@@ -118,6 +118,7 @@ model UsersOnWishVolunteers {
   wishId         String
   assignedAt     DateTime     @default(now())
   assignedBy     String
+  quantity       Int          @default(1)
   wish           Wish         @relation(fields: [wishId], references: [id])
   user           User         @relation(fields: [userId], references: [id])
 

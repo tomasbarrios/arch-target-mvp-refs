@@ -28,9 +28,9 @@ export async function action({ request }: ActionArgs) {
   const body = formData.get("body");
   const exampleUrls = formData.get("exampleUrls");
   const flaggedAs = validFlags.map(f => {
-    return formData.get("flaggedAs_"+f) == "on" ? f : null;
+    return formData.get("flaggedAs_" + f) == "on" ? f : null;
   })
-  .filter(f => f !== null);
+    .filter(f => f !== null);
   const id = formData.get("id");
 
   if (typeof title !== "string" || title.length === 0) {
@@ -99,15 +99,16 @@ export async function action({ request }: ActionArgs) {
     }
     // return null
   });
-  
 
-  const wish = await updateWish({ 
+
+  const wish = await updateWish({
     id,
     title,
     body,
     flaggedAs: flaggedAs.length > 0 ? flaggedAs.join("\n") : null,
-    exampleUrls
-   });
+    exampleUrls,
+    maxQuantity: null
+  });
 
   return redirect(`/wishes/${wish.id}`);
 }

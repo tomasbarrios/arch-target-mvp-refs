@@ -5,9 +5,10 @@ import {
   isRouteErrorResponse,
   useRouteError,
   useLoaderData,
-  useLocation, // can delete safely, not using currently
+  useLocation,
+  useActionData, // can delete safely, not using currently
 } from "@remix-run/react";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 import invariant from "tiny-invariant";
 import {
@@ -44,6 +45,7 @@ import Text from "../shared/Text";
 import styles from "~/styles/deseo.css";
 
 import { Confetti, links as confettiLinks } from "~/shared/Confetti";
+import Button from "~/shared/Button";
 
 console.log({ confettiLinks }, "http://localhost:3000/" + confettiLinks);
 
@@ -127,6 +129,11 @@ export async function loader({ request, params }: LoaderArgs) {
     userId,
   });
 
+  if (isCurrentUserAVolunteer) {
+    const res = wishWithVolunteers?.volunteers.find((v) => v.userId === userId);
+    console.log({ res });
+  }
+
   console.log("isCurrentUserAVolunteer", { wishWithVolunteers });
   // console.log("wishHasCurrentUserAsVolunteer", {isUserVolunteer})
 
@@ -137,6 +144,7 @@ export async function loader({ request, params }: LoaderArgs) {
         hasWishAlreadyVolunteer: !!wishWithVolunteers,
         isCurrentUserAVolunteer: isCurrentUserAVolunteer,
         volunteers: wishWithVolunteers?.volunteers,
+        currentUserWishVolunteeringInfo: { quantity: 1 },
       },
       globalMessage,
     },
@@ -146,15 +154,45 @@ export async function loader({ request, params }: LoaderArgs) {
 
 export async function action({ request, params }: ActionArgs) {
   invariant(params.wishId, "wishId not found");
+
+  const formData = await request.formData();
+  const quantity = formData.get("quantity");
+
+  console.log("QUANTITYQUANTITY ANTES", { quantity });
+
+  if (typeof quantity !== "string" || quantity.length === 0) {
+    return json(
+      {
+        errors: {
+          quantity: "Cantidad debe ser válida",
+        },
+      },
+      { status: 400 }
+    );
+  } else if (Number(quantity) <= 0) {
+    return json(
+      {
+        errors: {
+          quantity: "Cantidad debe ser mayor que 0",
+        },
+      },
+      { status: 400 }
+    );
+  }
+
   const userId = await requireUserId(request);
+  console.log("QUANTITYQUANTITY QUANTITY QUANTITY", { quantity });
+
+  await assignVolunteer({
+    wishId: params.wishId,
+    userId,
+  });
 
   const session = await getSession(request);
   session.flash(
     "globalMessage",
     "Eres voluntaria para este deseo! Muuuuuchas gracias ❤️"
   );
-  await assignVolunteer({ wishId: params.wishId, userId });
-
   // OK? then ...
 
   const redirectToURL = new URL(request.url).pathname;
@@ -169,14 +207,7 @@ export async function action({ request, params }: ActionArgs) {
       "Set-Cookie": await commitSession(session),
     },
   };
-  // console.log("headers", { additionalOpts });
-
   return redirect(redirectTo, additionalOpts);
-  // return redirect("/", {
-  //   // headers: {
-  //   //   "Set-Cookie": await commitSession(session)
-  //   // }
-  // });
 }
 
 const showUsername = (user: any) => {
@@ -190,6 +221,9 @@ export default function WishDetailsPage() {
   console.log("Rendering WishListPage Wish");
   const data = useLoaderData<typeof loader>();
 
+  const actionData = useActionData<typeof action>();
+  const quantityRef = useRef<HTMLInputElement>(null);
+
   const validFlags = {
     important: "important",
     done: "done",
@@ -201,6 +235,19 @@ export default function WishDetailsPage() {
   // const user = useUser()
   const location = useLocation();
   const [savedLocation] = useState(location.key);
+
+  const sumFn = (accumulator: any, currentObject: any) =>
+    accumulator + currentObject.quantity;
+
+  const compromisedQuotaByVolunteers = data.wish?.volunteers?.reduce(sumFn, 0);
+  const pendingQuota =
+    (data.wish.maxQuantity || 1) - compromisedQuotaByVolunteers;
+
+  useEffect(() => {
+    if (actionData?.errors?.quantity) {
+      quantityRef.current?.focus();
+    }
+  }, [actionData]);
 
   return (
     <div>
@@ -219,11 +266,6 @@ export default function WishDetailsPage() {
       {globalMessage && <Confetti />}
 
       <h3 className="text-2xl font-bold">{data.wish.title}</h3>
-      {wishFlags?.some((wf) => wf.startsWith(validFlags.done)) && (
-        <div>
-          <b>✅ Deseo cumplido</b>: Ya hay suficientes de este regalo! 🎊🥳
-        </div>
-      )}
 
       <Text className="py-3">{data.wish.body}</Text>
 
@@ -247,9 +289,15 @@ export default function WishDetailsPage() {
           <b>🔝 Proridad Top</b>: Este deseo está marcado como prioritario
         </div>
       )}
-      
 
       <hr className="my-4" />
+      {wishFlags?.some((wf) => wf.startsWith(validFlags.done)) && (
+        <div>
+          <b>✅ Deseo cumplido</b>: La meta se alcanzó! 🎊🥳
+          <br />
+          <br />
+        </div>
+      )}
 
       <div>
         {/* Lista de voluntarios */}
@@ -300,6 +348,16 @@ export default function WishDetailsPage() {
                   para cumplir este deseo. Muchas gracias!
                 </p>
 
+                <p>
+                  Estoy comprometida con{" "}
+                  <input
+                    type="number"
+                    defaultValue={
+                      data.wish.currentUserWishVolunteeringInfo.quantity
+                    }
+                  />
+                </p>
+
                 <br />
                 <details>
                   <summary>Haz click aqui para cambiar tu estado</summary>
@@ -330,16 +388,57 @@ export default function WishDetailsPage() {
             <Alert>
               <CircleIcon className="h-4 w-4" />
               <AlertTitle>Tu Estado: En espiritu</AlertTitle>
-              <br />
-              <h3>Anotate oficialmente para cumplir este deseo</h3>
-              <br />
-              <button
-                type="submit"
-                className="rounded bg-blue-500  px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400"
-              >
-                Asignarme como voluntaria para cumplirlo 🧙🏻‍♀️
-              </button>{" "}
-              (Se mostrará tu nombre en la lista)
+                <br />
+              <details>
+                <summary>
+                  Anotate oficialmente para cumplir este deseo
+                  {/* <br />
+                  <Button
+                    // type="submit"
+                    className="rounded bg-blue-500  px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400"
+                  >
+                    Asignarme como voluntaria para cumplirlo 🧙🏻‍♀️
+                  </Button>{" "} */}
+                </summary>
+                <br />
+                <br />
+
+                <p>Define la cantidad y confirma</p>
+                <br />
+                <label htmlFor="quantity">
+                  Cantidad
+                  <input
+                    ref={quantityRef}
+                    // className="ml-2"
+                    name="quantity"
+                    type="number"
+                    defaultValue={1}
+                    className="flex-1 rounded-md border-2 border-blue-500 px-3 text-lg leading-loose"
+                    aria-invalid={
+                      actionData?.errors?.quantity ? true : undefined
+                    }
+                    aria-errormessage={
+                      actionData?.errors?.quantity ? "noteId-error" : undefined
+                    }
+                  />
+                </label>
+                {actionData?.errors?.quantity && (
+                  <div className="pt-1 text-red-700" id="quantity-error">
+                    {actionData.errors.quantity}
+                  </div>
+                )}
+                {pendingQuota > 0 && <p>(Aun faltan) {pendingQuota}</p>}
+                <br />
+                <br />
+
+                <Button
+                  type="submit"
+                  className="rounded bg-blue-500  px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400"
+                >
+                  Confirmar
+                </Button>{" "}
+                (Se mostrará tu nombre en la lista)
+              </details>
             </Alert>
           </Form>
         )}
