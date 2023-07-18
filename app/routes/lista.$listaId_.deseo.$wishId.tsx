@@ -20,10 +20,10 @@ import {
 // import {showDate} from "@/lib/date"
 // import { getUsers } from "~/models/user.server";
 import {
-  RocketIcon,
   ExclamationTriangleIcon,
   CircleIcon,
   CheckCircledIcon,
+  HeartFilledIcon,
 } from "@radix-ui/react-icons";
 // import {
 //   Card,
@@ -305,8 +305,8 @@ export default function WishDetailsPage() {
           <>
             <details open>
               <summary>
-                Este deseo ya tiene ({data.wish.volunteers.length})
-                voluntaria(s). 🧙🏻‍♀️ Haz click para ver quienes son
+                Este deseo tiene ({data.wish.volunteers.length}) voluntaria(s).
+                🧙🏻‍♀️
               </summary>
               <br />
               <h2>Lista de voluntarias</h2>
@@ -333,7 +333,7 @@ export default function WishDetailsPage() {
             {/* variant="default" */}
 
             <Alert>
-              <RocketIcon className="h-4 w-4" />
+              <HeartFilledIcon className="h-4 w-4" />
               <AlertTitle>Tu Estado: Voluntaria</AlertTitle>
 
               <AlertDescription>
@@ -341,22 +341,11 @@ export default function WishDetailsPage() {
 
                 <p>
                   {" "}
-                  Actualmente{" "}
-                  <b>
-                    <u>ya eres</u> voluntaria
-                  </b>{" "}
-                  para cumplir este deseo. Muchas gracias!
+                  Actualmente <b>eres voluntaria</b> para cumplir este deseo 
+                  con {data.wish.currentUserWishVolunteeringInfo.quantity} unidad(es).
+                  Muchas gracias!
                 </p>
-
-                <p>
-                  Estoy comprometida con{" "}
-                  <input
-                    type="number"
-                    defaultValue={
-                      data.wish.currentUserWishVolunteeringInfo.quantity
-                    }
-                  />
-                </p>
+                <br />
 
                 <br />
                 <details>
@@ -388,17 +377,10 @@ export default function WishDetailsPage() {
             <Alert>
               <CircleIcon className="h-4 w-4" />
               <AlertTitle>Tu Estado: En espiritu</AlertTitle>
-                <br />
+              <br />
               <details>
                 <summary>
-                  Anotate oficialmente para cumplir este deseo
-                  {/* <br />
-                  <Button
-                    // type="submit"
-                    className="rounded bg-blue-500  px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400"
-                  >
-                    Asignarme como voluntaria para cumplirlo 🧙🏻‍♀️
-                  </Button>{" "} */}
+                  Anotate como voluntaria para cumplir este deseo
                 </summary>
                 <br />
                 <br />
@@ -409,7 +391,6 @@ export default function WishDetailsPage() {
                   Cantidad
                   <input
                     ref={quantityRef}
-                    // className="ml-2"
                     name="quantity"
                     type="number"
                     defaultValue={1}
@@ -435,9 +416,8 @@ export default function WishDetailsPage() {
                   type="submit"
                   className="rounded bg-blue-500  px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400"
                 >
-                  Confirmar
-                </Button>{" "}
-                (Se mostrará tu nombre en la lista)
+                  Confirmar como voluntaria 🧙🏻‍♀️
+                </Button>
               </details>
             </Alert>
           </Form>
