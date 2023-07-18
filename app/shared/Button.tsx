@@ -8,12 +8,12 @@ type AdditionalProps = {
 
   type MyComponentProps = ButtonHTMLAttributes<HTMLButtonElement> & AdditionalProps;
   
-  export default function Button(props: MyComponentProps) {
+  export default function Button({confirmPrompt, ...props}: MyComponentProps) {
     const defaultStyles: Object = {
     };
     const confirmAction = (ev: React.MouseEvent<HTMLButtonElement>) => {
-        if(props.confirmPrompt) {
-            if(confirm(props.confirmPrompt)) {
+        if(confirmPrompt) {
+            if(window.confirm(confirmPrompt)) {
                 return ev
             } else {
                 ev.preventDefault()
