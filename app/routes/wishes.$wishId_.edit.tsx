@@ -26,6 +26,7 @@ export async function action({ request }: ActionArgs) {
   const formData = await request.formData();
   const title = formData.get("title");
   const body = formData.get("body");
+  const maxQuantity = formData.get("maxQuantity");
   const exampleUrls = formData.get("exampleUrls");
   const flaggedAs = validFlags.map(f => {
     return formData.get("flaggedAs_" + f) == "on" ? f : null;
@@ -35,14 +36,26 @@ export async function action({ request }: ActionArgs) {
 
   if (typeof title !== "string" || title.length === 0) {
     return json(
-      { errors: { title: "Title is required", body: null, exampleUrls: null, flaggedAs: null } },
+      { errors: { title: "Title is required", body: null, maxQuantity: null, exampleUrls: null, flaggedAs: null } },
       { status: 400 }
     );
   }
 
   if (typeof body !== "string" || body.length === 0) {
     return json(
-      { errors: { title: null, body: "Body is required", exampleUrls: null, flaggedAs: null } },
+      { errors: { title: null, body: "Body is required", maxQuantity: null, exampleUrls: null, flaggedAs: null } },
+      { status: 400 }
+    );
+  }
+
+  if (typeof maxQuantity !== "string" || maxQuantity.length === 0) {
+    return json(
+      { errors: { title: null, body: null, maxQuantity: "Cantidad debe ser válida", exampleUrls: null, flaggedAs: null } },
+      { status: 400 }
+    );
+  } else if (Number(maxQuantity) <= 0) {
+    return json(
+      { errors: { title: null, body: null, maxQuantity: "Cantidad debe ser mayor que 0", exampleUrls: null, flaggedAs: null } },
       { status: 400 }
     );
   }
@@ -56,6 +69,7 @@ export async function action({ request }: ActionArgs) {
         errors: {
           title: null,
           body: null,
+          maxQuantity: null,
           exampleUrls:
             "Links deben válidos y uno por linea. También verifica que comienzan con http o https",
           flaggedAs: null,
@@ -73,6 +87,7 @@ export async function action({ request }: ActionArgs) {
         errors: {
           title: null,
           body: null,
+          maxQuantity: null,
           exampleUrls: null,
           flaggedAs: null,
           id: "id is required",
@@ -107,7 +122,7 @@ export async function action({ request }: ActionArgs) {
     body,
     flaggedAs: flaggedAs.length > 0 ? flaggedAs.join("\n") : null,
     exampleUrls,
-    maxQuantity: null
+    maxQuantity: Number(maxQuantity)
   });
 
   return redirect(`/wishes/${wish.id}`);
@@ -119,6 +134,7 @@ export default function NewWishPage() {
 
   const titleRef = React.useRef<HTMLInputElement>(null);
   const bodyRef = React.useRef<HTMLTextAreaElement>(null);
+  const maxQuantityRef = React.useRef<HTMLTextAreaElement>(null);
   const exampleUrlsRef = React.useRef<HTMLTextAreaElement>(null);
   const flaggedAsRef = React.useRef<HTMLInputElement>(null);
 
@@ -127,6 +143,8 @@ export default function NewWishPage() {
       titleRef.current?.focus();
     } else if (actionData?.errors?.body) {
       bodyRef.current?.focus();
+    } else if (actionData?.errors?.maxQuantity) {
+      maxQuantityRef.current?.focus();
     } else if (actionData?.errors?.exampleUrls) {
       exampleUrlsRef.current?.focus();
     } else if (actionData?.errors?.flaggedAs) {
@@ -194,6 +212,31 @@ export default function NewWishPage() {
         )}
       </div>
       {/* BODY end */}
+
+      {/* QUANTITY */}
+      <div>
+        <label className="flex w-full flex-col gap-1">
+          <span>Cantidad: </span>
+
+          <input
+            ref={titleRef}
+            defaultValue={data.wish.maxQuantity || 0}
+            name="maxQuantity"
+            className="flex-1 rounded-md border-2 border-blue-500 px-3 text-lg leading-loose"
+            aria-invalid={actionData?.errors?.maxQuantity ? true : undefined}
+            aria-errormessage={
+              actionData?.errors?.maxQuantity ? "maxQuantity-error" : undefined
+            }
+          />
+        </label>
+        {actionData?.errors?.maxQuantity && (
+          <div className="pt-1 text-red-700" id="maxQuantity-error">
+            {actionData.errors.maxQuantity}
+          </div>
+        )}
+      </div>
+      {/* QUANTITY end */}
+
 
       {/* URLs */}
       <div>
