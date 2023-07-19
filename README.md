@@ -1,3 +1,8 @@
+
+#COLORS
+
+https://pink.appwrite.io/foundations/colors
+
 ## Confetti
 https://codepen.io/bonarhyme/pen/ZEoMaea
 ### 
