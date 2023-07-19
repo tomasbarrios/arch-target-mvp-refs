@@ -23,6 +23,25 @@ export default function ImprovementsPage() {
     - Propuesta: Sería mejor que se vea un nombre en vez del email
     `;
 
+    /**
+     * Ideas HIDDEN or TOORGANIZE (freewrite)
+     * 
+     * - Permitir markdown en el body del deseo
+     * - YO: Hacer A/B testing para activar o desactivar (agregar complejidad a la UI vs simplificar)
+     * --- De esta se puede hacer analytics para entender que tiene mejor ENTENDIMIENTO
+     * --- Ejemplo: Sacar/Poner feature Quantity > 1
+     * 
+     * - YO: Escribit/erditar deseo: Tarjar cosas. ~~tarjar~~
+     * - PATO BARRIOS: Lo de la cantidad no se entiende bien --> Porque tengo que comprar 250 pañales?
+     * -- Slider?
+     * -- % completado?
+     * Explicar que ese es el total
+     * 
+     * Otras mas escalables
+     * ------------------
+     * - Hacer una lista de estas cosas y transformarla en algo "votable", cosa de que los usuarios puedan proponer u opinar sobre lo que se debería hacer.
+     * 
+     */
   return (
     <div className="flex h-full min-h-screen flex-col">
       <header className="flex items-center justify-between bg-slate-800 p-4 text-white">

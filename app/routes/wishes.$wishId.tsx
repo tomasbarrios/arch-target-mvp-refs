@@ -16,7 +16,8 @@ export async function loader({ request, params }: LoaderArgs) {
   console.log();
   return json({
     wish,
-    url: wish.noteId ? `${host}/lista/${wish.noteId}` : "undefined",
+    path: wish.noteId ? `/lista/${wish.noteId}` : "undefined",
+    url: host 
   });
 }
 
@@ -24,6 +25,7 @@ export async function action({ request, params }: ActionArgs) {
   invariant(params.wishId, "wishId not found");
 
   await deleteWish({ id: params.wishId });
+  
 
   return redirect("/wishes");
 }
@@ -62,7 +64,7 @@ export default function WishDetailsPage() {
           <br />
 
           <p>
-            <a href={data.url}>{data.url}</a>
+            <a href={data.path}>{data.url+data.path}</a>
           </p>
         </div>
       )}

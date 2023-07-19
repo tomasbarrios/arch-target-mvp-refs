@@ -24,6 +24,7 @@ import {
   CircleIcon,
   CheckCircledIcon,
   HeartFilledIcon,
+  PersonIcon,
 } from "@radix-ui/react-icons";
 // import {
 //   Card,
@@ -131,7 +132,9 @@ export async function loader({ request, params }: LoaderArgs) {
 
   let currentUserWishVolunteeringInfo = null;
   if (isCurrentUserAVolunteer) {
-    currentUserWishVolunteeringInfo = wishWithVolunteers?.volunteers.find((v) => v.userId === userId);
+    currentUserWishVolunteeringInfo = wishWithVolunteers?.volunteers.find(
+      (v) => v.userId === userId
+    );
   }
 
   console.log("isCurrentUserAVolunteer", { wishWithVolunteers });
@@ -189,7 +192,7 @@ export async function action({ request, params }: ActionArgs) {
   const session = await getSession(request);
   session.flash(
     "globalMessage",
-    "Eres voluntaria para este deseo! Muuuuuchas gracias ❤️"
+    "Gracias por sumarte para que este deseo sea una realidad ❤️"
   );
   // OK? then ...
 
@@ -237,15 +240,58 @@ export default function WishDetailsPage() {
   const sumFn = (accumulator: any, currentObject: any) =>
     accumulator + currentObject.quantity;
 
-  const compromisedQuotaByVolunteers = data.wish?.volunteers?.reduce(sumFn, 0);
+  console.log("TYPE", data.wish.volunteers);
+  const compromisedQuotaByVolunteers = (data.wish?.volunteers || []).reduce(
+    sumFn,
+    0
+  );
   const pendingQuota =
-    (data.wish.maxQuantity || 1) - compromisedQuotaByVolunteers;
+    data.wish.volunteers !== undefined && data.wish.volunteers.length >= 1
+      ? (Number(data.wish.maxQuantity) || 1) - compromisedQuotaByVolunteers
+      : undefined;
 
+  console.log("pendingQuota", {
+    pendingQuota,
+    numberMax: Number(data.wish.maxQuantity),
+    compromisedQuotaByVolunteers,
+  });
   useEffect(() => {
     if (actionData?.errors?.quantity) {
       quantityRef.current?.focus();
     }
   }, [actionData]);
+
+  console.log({ wwww: data.wish, pendingQuota });
+  const shouldShowQuantityDisclaimer =
+    data.wish.maxQuantity && data.wish.maxQuantity > 1;
+
+  const QuantityBanner = (
+    <>
+      <br />
+      <Alert className="mb-6">
+        <span className="flex">
+          <PersonIcon className="h-4 w-4" />
+          <PersonIcon className="h-4 w-4" />
+          <PersonIcon className="h-4 w-4" />
+        </span>
+        {/* <PersonIcon className="h-4 w-4" /> */}
+        <AlertTitle>
+          <div className="flex">Deseo colaborativo</div>
+        </AlertTitle>
+
+        <AlertDescription>
+          <p>
+            Este deseo tiene como meta {data.wish.maxQuantity}{" "}
+            <i>"{data.wish.title}". </i>
+          </p>
+          <p>Puedes ser voluntaria junto con otras personas.</p>
+          <p>
+            <b>La cantidad la defines tu ;)</b>
+          </p>
+        </AlertDescription>
+      </Alert>
+    </>
+  );
 
   return (
     <div>
@@ -254,9 +300,9 @@ export default function WishDetailsPage() {
 
       {/* THIS WILL SHOW */}
       {globalMessage && (
-        <Alert className="mb-6">
+        <Alert variant="success" className="mb-6">
           <CheckCircledIcon className="h-4 w-4" />
-          <AlertTitle>Se guardó correctamente</AlertTitle>
+          <AlertTitle>Perfecto! Quedaste registrada como voluntaria</AlertTitle>
 
           <AlertDescription>{globalMessage}</AlertDescription>
         </Alert>
@@ -270,6 +316,15 @@ export default function WishDetailsPage() {
       <h3 className="text-2xl font-bold">{data.wish.title}</h3>
 
       <Text className="py-3">{data.wish.body}</Text>
+
+      {shouldShowQuantityDisclaimer && (
+        <div>
+          <p>
+            <b>Cantidad total</b> (meta): {data.wish.maxQuantity}{" "}
+          </p>
+          <br />
+        </div>
+      )}
 
       {data.wish.exampleUrls && (
         <div>
@@ -288,10 +343,14 @@ export default function WishDetailsPage() {
 
       {wishFlags?.some((wf) => wf.startsWith(validFlags.important)) && (
         <div>
-          <b>🔝 Proridad Top</b>: Este deseo está marcado como prioritario
+          <b>🔝 Proridad Top</b>: Deseo prioritario
         </div>
       )}
 
+      {shouldShowQuantityDisclaimer && (
+        <div>{shouldShowQuantityDisclaimer}</div>
+      )}
+      {shouldShowQuantityDisclaimer && QuantityBanner}
       <hr className="my-4" />
       {wishFlags?.some((wf) => wf.startsWith(validFlags.done)) && (
         <div>
@@ -307,8 +366,7 @@ export default function WishDetailsPage() {
           <>
             <details>
               <summary>
-                Este deseo tiene {data.wish.volunteers.length} voluntaria(s).
-                🧙🏻‍♀️
+                Este deseo tiene {data.wish.volunteers.length} voluntaria(s). 🧙🏻‍♀️
               </summary>
               <br />
               <h2>Lista de voluntarias</h2>
@@ -349,9 +407,9 @@ export default function WishDetailsPage() {
                   Estas anotada con{" "}
                   <b>
                     {data.wish.currentUserWishVolunteeringInfo?.quantity}{" "}
-                    unidad(es)</b>.
-                  
-                  
+                    unidad(es)
+                  </b>
+                  .
                 </p>
                 <br />
 
@@ -384,49 +442,58 @@ export default function WishDetailsPage() {
           <Form method="post">
             <Alert>
               <CircleIcon className="h-4 w-4" />
-              <AlertTitle>Tu Estado: En espiritu</AlertTitle>
-              <br />
-              <details>
-                <summary>
-                  Anotate como voluntaria para cumplir este deseo
-                </summary>
+              <AlertTitle>Anotate como voluntaria</AlertTitle>
+              <AlertDescription>
                 <br />
-                <br />
+                <details>
+                  <summary>
+                    <span>Define la cantidad y confirma</span>
+                  </summary>
+                  <br />
+                  <hr />
+                  <br />
 
-                <p>Define la cantidad y confirma</p>
-                <br />
-                <label htmlFor="quantity">
-                  Cantidad
-                  <input
-                    ref={quantityRef}
-                    name="quantity"
-                    type="number"
-                    defaultValue={1}
-                    className="flex-1 rounded-md border-2 border-blue-500 px-3 text-lg leading-loose"
-                    aria-invalid={
-                      actionData?.errors?.quantity ? true : undefined
-                    }
-                    aria-errormessage={
-                      actionData?.errors?.quantity ? "noteId-error" : undefined
-                    }
-                  />
-                </label>
-                {actionData?.errors?.quantity && (
-                  <div className="pt-1 text-red-700" id="quantity-error">
-                    {actionData.errors.quantity}
-                  </div>
-                )}
-                {pendingQuota > 0 && <p>(Aun faltan) {pendingQuota}</p>}
-                <br />
-                <br />
+                  <br />
+                  <label className="flex w-full flex-col gap-1">
+                    <span>Cantidad</span>
+                    <input
+                      ref={quantityRef}
+                      name="quantity"
+                      type="number"
+                      defaultValue={1}
+                      className="flex-1 rounded-md border-2 border-blue-500 px-3 text-lg leading-loose"
+                      aria-invalid={
+                        actionData?.errors?.quantity ? true : undefined
+                      }
+                      aria-errormessage={
+                        actionData?.errors?.quantity
+                          ? "noteId-error"
+                          : undefined
+                      }
+                    />
+                  </label>
+                  {actionData?.errors?.quantity && (
+                    <div className="pt-1 text-red-700" id="quantity-error">
+                      {actionData.errors.quantity}
+                    </div>
+                  )}
 
-                <Button
-                  type="submit"
-                  className="rounded bg-blue-500  px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400"
-                >
-                  Confirmar como voluntaria 🧙🏻‍♀️
-                </Button>
-              </details>
+                  <br />
+                  {pendingQuota && pendingQuota > 0 && (
+                    <p>
+                    Aun faltan {pendingQuota} para el objetivo total
+                  </p>
+                  )}
+                  <br />
+
+                  <Button
+                    type="submit"
+                    className="rounded bg-blue-500  px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400"
+                  >
+                    Confirmar como voluntaria 🧙🏻‍♀️
+                  </Button>
+                </details>
+              </AlertDescription>
             </Alert>
           </Form>
         )}
