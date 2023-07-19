@@ -99,7 +99,11 @@ export function getWishAlreadyVolunteered({ wishId }: { wishId: string }) {
     include: {
       volunteers: {
         include: {
-          user: true,
+          user: true, // only to get the username (prob we should )
+          /**
+           * TODO: Catch usernames (?)
+           */
+
         },
         orderBy: {
           assignedAt: "asc",
@@ -133,28 +137,28 @@ export async function isUserVolunteer({
   return isUserVolunteer;
 }
 
+
 export function assignVolunteer({
   wishId,
   userId,
+  quantity
 }: {
   wishId: string;
   userId: string;
+  quantity: string;
 }) {
-  console.log({ wishId, userId });
-  return prisma.wish.update({
-    where: {
-      id: wishId,
+  const numberQuantity = Number(quantity)
+  return prisma.usersOnWishVolunteers.upsert({
+    where: { wishId_userId: { wishId, userId } },
+    create: {
+      userId,
+      wishId,
+      assignedBy: userId,
+      quantity: numberQuantity,
     },
-    include: {
-      volunteers: true,
-    },
-    data: {
-      volunteers: {
-        create: {
-          userId,
-          assignedBy: userId,
-        },
-      },
+    update: {
+      assignedBy: userId,
+      quantity: numberQuantity,
     },
   });
 }

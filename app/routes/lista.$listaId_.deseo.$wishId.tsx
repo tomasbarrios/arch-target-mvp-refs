@@ -129,9 +129,9 @@ export async function loader({ request, params }: LoaderArgs) {
     userId,
   });
 
+  let currentUserWishVolunteeringInfo = null;
   if (isCurrentUserAVolunteer) {
-    const res = wishWithVolunteers?.volunteers.find((v) => v.userId === userId);
-    console.log({ res });
+    currentUserWishVolunteeringInfo = wishWithVolunteers?.volunteers.find((v) => v.userId === userId);
   }
 
   console.log("isCurrentUserAVolunteer", { wishWithVolunteers });
@@ -144,7 +144,7 @@ export async function loader({ request, params }: LoaderArgs) {
         hasWishAlreadyVolunteer: !!wishWithVolunteers,
         isCurrentUserAVolunteer: isCurrentUserAVolunteer,
         volunteers: wishWithVolunteers?.volunteers,
-        currentUserWishVolunteeringInfo: { quantity: 1 },
+        currentUserWishVolunteeringInfo,
       },
       globalMessage,
     },
@@ -157,8 +157,6 @@ export async function action({ request, params }: ActionArgs) {
 
   const formData = await request.formData();
   const quantity = formData.get("quantity");
-
-  console.log("QUANTITYQUANTITY ANTES", { quantity });
 
   if (typeof quantity !== "string" || quantity.length === 0) {
     return json(
@@ -181,11 +179,11 @@ export async function action({ request, params }: ActionArgs) {
   }
 
   const userId = await requireUserId(request);
-  console.log("QUANTITYQUANTITY QUANTITY QUANTITY", { quantity });
 
   await assignVolunteer({
     wishId: params.wishId,
     userId,
+    quantity,
   });
 
   const session = await getSession(request);
@@ -263,6 +261,10 @@ export default function WishDetailsPage() {
           <AlertDescription>{globalMessage}</AlertDescription>
         </Alert>
       )}
+      {/* TODO
+        globalMessage could be anything, must have a better condition
+        It will fail if globalMessage exists for another reason
+      */}
       {globalMessage && <Confetti />}
 
       <h3 className="text-2xl font-bold">{data.wish.title}</h3>
@@ -303,9 +305,9 @@ export default function WishDetailsPage() {
         {/* Lista de voluntarios */}
         {data.wish.hasWishAlreadyVolunteer && data.wish.volunteers ? (
           <>
-            <details open>
+            <details>
               <summary>
-                Este deseo tiene ({data.wish.volunteers.length}) voluntaria(s).
+                Este deseo tiene {data.wish.volunteers.length} voluntaria(s).
                 🧙🏻‍♀️
               </summary>
               <br />
@@ -341,9 +343,15 @@ export default function WishDetailsPage() {
 
                 <p>
                   {" "}
-                  Actualmente <b>eres voluntaria</b> para cumplir este deseo 
-                  con {data.wish.currentUserWishVolunteeringInfo.quantity} unidad(es).
-                  Muchas gracias!
+                  Actualmente <b>eres voluntaria</b> para cumplir este deseo.
+                </p>
+                <p>
+                  Estas anotada con{" "}
+                  <b>
+                    {data.wish.currentUserWishVolunteeringInfo?.quantity}{" "}
+                    unidad(es)</b>.
+                  
+                  
                 </p>
                 <br />
 
