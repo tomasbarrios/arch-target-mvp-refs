@@ -32,7 +32,7 @@
     --destructive-foreground: 210 40% 98%;
 
     --color-success-hue: 150;;
-    --success--success: var(--color-success-hue) 100% 37%;
+    --success: var(--color-success-hue) 100% 37%;
     --success-foreground: var(--color-success-hue) 100% 37%;
 
     --ring: 215 20.2% 65.1%;
@@ -67,7 +67,7 @@
 
     --color-success-hue: 150;;
     --success: var(--color-success-hue) 100% 37%;
-    --success-foreground: blue;
+    --success-foreground: var(--color-success-hue) 100% 37%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 85.7% 97.3%;
