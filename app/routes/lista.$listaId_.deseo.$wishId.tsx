@@ -106,19 +106,7 @@ export async function loader({ request, params }: LoaderArgs) {
   // USER
 
   const userId = await requireUserId(request);
-  const session = await getSession(request);
-
-  const globalMessage = session.get("globalMessage");
-  let additional: {} = {};
-  // VERY IMPORTANT, these clears out the flash messages, if any
-  // if not changing this, the message wont dessapear when clicking on other wishes
-  if (session && globalMessage) {
-    additional = {
-      headers: {
-        "Set-Cookie": await commitSession(session),
-      },
-    };
-  }
+  
 
   //WISH
 
@@ -137,8 +125,21 @@ export async function loader({ request, params }: LoaderArgs) {
     );
   }
 
-  console.log("isCurrentUserAVolunteer", { wishWithVolunteers });
+  // console.log("isCurrentUserAVolunteer", { wishWithVolunteers });
   // console.log("wishHasCurrentUserAsVolunteer", {isUserVolunteer})
+
+  const session = await getSession(request);
+
+  const globalMessage = session.get("globalMessage");
+  let additional: {} = {};
+  // VERY IMPORTANT, these clears out the flash messages, if any
+  if (session && globalMessage) {
+    additional = { // if not changing this, the message wont dessapear when clicking on other wishes ("read all messages")
+      headers: {
+        "Set-Cookie": await commitSession(session),
+      },
+    };
+  }
 
   return json(
     {
@@ -195,13 +196,14 @@ export async function action({ request, params }: ActionArgs) {
     "Gracias por sumarte para que este deseo sea una realidad ❤️"
   );
   // OK? then ...
+  // TODO: Disimissable (?)
 
   const redirectToURL = new URL(request.url).pathname;
   const searchParams = new URLSearchParams([["redirectTo", redirectToURL]]);
 
   const redirectTo =
     searchParams.get("redirectTo") || `/lista/${params.listaId}`;
-  console.log("REDIRECTREDIRECTREDIRECT", { redirectTo });
+  // console.log("REDIRECTREDIRECTREDIRECT", { redirectTo });
   // console.log("session flash", { msg: session.get("globalMessage") });
   const additionalOpts = {
     headers: {
@@ -240,7 +242,7 @@ export default function WishDetailsPage() {
   const sumFn = (accumulator: any, currentObject: any) =>
     accumulator + currentObject.quantity;
 
-  console.log("TYPE", data.wish.volunteers);
+  // console.log("TYPE", data.wish.volunteers);
   const compromisedQuotaByVolunteers = (data.wish?.volunteers || []).reduce(
     sumFn,
     0
@@ -250,18 +252,18 @@ export default function WishDetailsPage() {
       ? (Number(data.wish.maxQuantity) || 1) - compromisedQuotaByVolunteers
       : undefined;
 
-  console.log("pendingQuota", {
-    pendingQuota,
-    numberMax: Number(data.wish.maxQuantity),
-    compromisedQuotaByVolunteers,
-  });
+  // console.log("pendingQuota", {
+  //   pendingQuota,
+  //   numberMax: Number(data.wish.maxQuantity),
+  //   compromisedQuotaByVolunteers,
+  // });
   useEffect(() => {
     if (actionData?.errors?.quantity) {
       quantityRef.current?.focus();
     }
   }, [actionData]);
 
-  console.log({ wwww: data.wish, pendingQuota });
+  // console.log({ wwww: data.wish, pendingQuota });
   const shouldShowQuantityDisclaimer =
     data.wish.maxQuantity && data.wish.maxQuantity > 1;
 

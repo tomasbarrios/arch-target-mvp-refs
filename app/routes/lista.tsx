@@ -141,14 +141,14 @@ export default function WishListPageLayout() {
     done: "done",
   };
   const WishFlag = ({ variant }: { variant: string }) => {
-    console.log({ variant });
+    // console.log({ variant });
     const variantToIcon: { [key: string]: string } = {
       important: "🔝",
     };
     if (!Object.keys(variantToIcon).includes(variant)) {
       return null;
     }
-    console.log({ variat: variantToIcon[variant] });
+    // console.log({ variat: variantToIcon[variant] });
     return (
       <div className={"wishFlag-container"}>
         <i>{variantToIcon[variant]}</i>
