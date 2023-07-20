@@ -155,8 +155,12 @@ export default function LoginPage() {
                 Recordar
               </label>
             </div>
+
+          </div>
+          <br />
             <div className="text-center text-sm text-gray-500">
-              No tienes una cuenta?{" "}
+              <b>
+                No tienes una cuenta?{" "}
               <Link
                 className="text-blue-500 underline"
                 to={{
@@ -166,9 +170,9 @@ export default function LoginPage() {
               >
                 Registrate
               </Link>
+                </b>
             </div>
-          </div>
-
+<br />
           <div className="text-center text-sm text-gray-500">
             Olvidaste tu password?{" "}
             <Link
