@@ -6,9 +6,9 @@ import {
   NavLink,
   Outlet,
   useLoaderData,
-  useLocation, //
+  // useLocation, //
 } from "@remix-run/react";
-import { useState } from "react";
+// import { useState } from "react";
 
 import {
   requireUserId,
@@ -22,16 +22,15 @@ import { getWishListAsNote } from "~/models/note.server";
 import { getUserById, updateKnownUrls } from "~/models/user.server";
 import { addWithSeparator } from "~/utils-serialize";
 
-
 /**
  * Ordena un arreglo segun las siguietnes reglas
- * 
+ *
  * 1. No completadas y TOP
  * 2. No completadas
  * 3. Completadas
- * @param objeto1 
- * @param objeto2 
- * @returns 
+ * @param objeto1
+ * @param objeto2
+ * @returns
  */
 function comparador(objeto1: any, objeto2: any) {
   var anotaciones1 = objeto1.flaggedAs;
@@ -39,7 +38,10 @@ function comparador(objeto1: any, objeto2: any) {
 
   if (anotaciones1?.includes("done") && !anotaciones2?.includes("done")) {
     return 1; // objeto2 va primero si objeto1 tiene anotaciones ?.includes(
-  } else if (!anotaciones1?.includes("done") && anotaciones2?.includes("done")) {
+  } else if (
+    !anotaciones1?.includes("done") &&
+    anotaciones2?.includes("done")
+  ) {
     return -1; // objeto1 va primero si objeto2 tiene anotaciones "done"
   } else if (anotaciones1?.includes("important")) {
     return -1; // objeto1 va primero si tiene "important"
@@ -86,44 +88,31 @@ export async function loader({ request, params }: LoaderArgs) {
   const session = await getSession(request);
 
   const globalMessage = session.get("globalMessage");
-  let additional: {} = {};
-  // if (session) {
-  //   additional = {
-  //     headers: {
-  //       "Set-Cookie": await commitSession(session),
-  //     },
-  //   };
-  // }
-  console.log("ADD TO JSON", { additional, globalMessage });
+  // console.log("ADD TO JSON", { additional, globalMessage });
 
   const wishListItems = await getWishListItemsWithVolunteerCount({
     noteId: params.listaId,
   });
 
-  console.log("wishListItems",{wishListItems});
+  // console.log("wishListItems",{wishListItems});
 
   wishListItems?.sort(comparador);
   // console.log("getWishListItemsWithVolunteerCount", { wishListItems });
   const note = await getWishListAsNote({ id: params.listaId });
 
-  console.log({ organization, list: "hey" });
-  return json(
-    {
-      wishListItems: wishListItems.map((w) => {
-        // console.log({wwwww: w._count})
-        return {
-          ...w,
-          url: `/lista/${params.listaId}/deseo/${w.id}`,
-          volunteersCount: w._count.volunteers,
-        };
-      }),
-      note,
-      organization,
-      globalMessage,
-      // ...additional,
-    },
-    additional
-  );
+  // console.log({ organization, list: "hey" });
+  return json({
+    wishListItems: wishListItems.map((w) => {
+      return {
+        ...w,
+        url: `/lista/${params.listaId}/deseo/${w.id}`,
+        volunteersCount: w._count.volunteers,
+      };
+    }),
+    note,
+    organization,
+    globalMessage,
+  });
 }
 
 const stylesForFlags: { [key: string]: {} } = {
@@ -134,15 +123,16 @@ export default function WishListPageLayout() {
   console.log("Rendering WishListPageLayout");
 
   const data = useLoaderData<typeof loader>();
-  const { globalMessage } = data;
+  // const { globalMessage } = data;
   // const user = useUser()
-  const location = useLocation();
-  const [savedLocation] = useState(location.key);
-  console.log({ globalMessage1: globalMessage });
-  console.log({
-    "location.key === savedLocation": location.key === savedLocation,
-  });
-  console.log({ locationKey: location.key, savedLocation });
+  // const location = useLocation();
+  // const [savedLocation] = useState(location.key);
+
+  // console.log({ globalMessage1: globalMessage });
+  // console.log({
+  //   "location.key === savedLocation": location.key === savedLocation,
+  // });
+  // console.log({ locationKey: location.key, savedLocation });
 
   const validFlags = {
     important: "important",
