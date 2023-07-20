@@ -63,7 +63,7 @@ export const action = async ({ request }: ActionArgs) => {
   });
 };
 
-export const meta: V2_MetaFunction = () => [{ title: "Crear una cuenta" }];
+export const meta: V2_MetaFunction = () => [{ title: "Registro" }];
 
 export default function Join() {
   const [searchParams] = useSearchParams();
@@ -83,6 +83,9 @@ export default function Join() {
   return (
     <div className="flex min-h-full flex-col justify-center">
       <div className="mx-auto w-full max-w-md px-8">
+      <h1 className="text-center">
+        Registro de <b>nueva usuaria</b> </h1>
+        <br />
         <Form method="post" className="space-y-6">
           <div>
             <label
@@ -155,7 +158,7 @@ export default function Join() {
                   search: searchParams.toString(),
                 }}
               >
-                Log in
+                Ingresa
               </Link>
             </div>
           </div>

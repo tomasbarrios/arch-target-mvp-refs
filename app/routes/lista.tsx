@@ -1,4 +1,4 @@
-import type { LoaderArgs } from "@remix-run/node";
+import type { LoaderArgs, V2_MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import {
   Form,
@@ -119,6 +119,8 @@ const stylesForFlags: { [key: string]: {} } = {
   parent: { position: "relative" },
 };
 
+export const meta: V2_MetaFunction = () => [{ title: "Lista" }];
+
 export default function WishListPageLayout() {
   console.log("Rendering WishListPageLayout");
 
@@ -153,6 +155,8 @@ export default function WishListPageLayout() {
       </div>
     );
   };
+
+
   return (
     <div className="flex h-full min-h-screen flex-col">
       <header className="flex items-center justify-between bg-slate-800 p-4 text-white">

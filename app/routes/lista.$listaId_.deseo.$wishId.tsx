@@ -48,7 +48,7 @@ import styles from "~/styles/deseo.css";
 import { Confetti, links as confettiLinks } from "~/shared/Confetti";
 import Button from "~/shared/Button";
 
-console.log({ confettiLinks }, "http://localhost:3000/" + confettiLinks);
+// console.log({ confettiLinks }, "http://localhost:3000/" + confettiLinks);
 
 export const links: LinksFunction = () => {
   return [

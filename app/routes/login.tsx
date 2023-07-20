@@ -78,6 +78,12 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-full flex-col justify-center">
       <div className="mx-auto w-full max-w-md px-8">
+        
+        <h1 className="text-center">
+          <b>Ingreso</b>
+        </h1>
+        <br />
+
         <Form method="post" className="space-y-6">
           <div>
             <label
@@ -155,12 +161,11 @@ export default function LoginPage() {
                 Recordar
               </label>
             </div>
-
           </div>
           <br />
-            <div className="text-center text-sm text-gray-500">
-              <b>
-                No tienes una cuenta?{" "}
+          <div className="text-center text-sm text-gray-500">
+            <b>
+              No tienes una cuenta?{" "}
               <Link
                 className="text-blue-500 underline"
                 to={{
@@ -170,9 +175,9 @@ export default function LoginPage() {
               >
                 Registrate
               </Link>
-                </b>
-            </div>
-<br />
+            </b>
+          </div>
+          <br />
           <div className="text-center text-sm text-gray-500">
             Olvidaste tu password?{" "}
             <Link

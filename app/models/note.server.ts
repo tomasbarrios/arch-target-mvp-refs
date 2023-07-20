@@ -109,7 +109,7 @@ export function getAllWishListsForUser(user: User) {
   const removeNotNeeded = (orig: string) => {
     const serializeKey = "list";
     if (orig.startsWith(serializeKey)) {
-      console.log("startsWith(serializeKey", orig.slice(serializeKey.length));
+      // console.log("startsWith(serializeKey", orig.slice(serializeKey.length));
       return orig.slice(serializeKey.length);
     } else {
       return null;
@@ -137,7 +137,7 @@ export function getAllWishListsForUser(user: User) {
     .filter((el) => el !== null && el !== undefined)
     .filter((el): el is string => el !== undefined); // The way typescript likes it
 
-  console.log({ userIsOnlyAllowedToList });
+  // console.log({ userIsOnlyAllowedToList });
   if (userIsOnlyAllowedToList.length === 0) {
     return null;
   }
