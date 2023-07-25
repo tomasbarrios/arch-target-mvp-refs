@@ -106,7 +106,7 @@ export async function loader({ request, params }: LoaderArgs) {
   // USER
 
   const userId = await requireUserId(request);
-  
+
 
   //WISH
 
@@ -135,6 +135,7 @@ export async function loader({ request, params }: LoaderArgs) {
   // VERY IMPORTANT, these clears out the flash messages, if any
   if (session && globalMessage) {
     additional = { // if not changing this, the message wont dessapear when clicking on other wishes ("read all messages")
+      // if you delete the following lines, message wont go away (?)
       headers: {
         "Set-Cookie": await commitSession(session),
       },
@@ -193,7 +194,7 @@ export async function action({ request, params }: ActionArgs) {
   const session = await getSession(request);
   session.flash(
     "globalMessage",
-    "Gracias por sumarte para que este deseo sea una realidad ❤️"
+    "Gracias por sumarte a este deseo ❤️"
   );
   // OK? then ...
   // TODO: Disimissable (?)
@@ -483,8 +484,8 @@ export default function WishDetailsPage() {
                   <br />
                   {pendingQuota && pendingQuota > 0 && (
                     <p>
-                    Aun faltan {pendingQuota} para el objetivo total
-                  </p>
+                      Aun faltan {pendingQuota} para el objetivo total
+                    </p>
                   )}
                   <br />
 

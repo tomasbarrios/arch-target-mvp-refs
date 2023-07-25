@@ -6,13 +6,15 @@ export type { Task } from "@prisma/client";
 
 export function getTask({
   id,
-  noteId,
-}: Pick<Task, "id"> & {
-  noteId?: Note["id"];
+  // userId,
+}: Pick<Task, "id" | "noteId"> & {
+  // userId: User["id"]
 }) {
   return prisma.task.findFirst({
     select: { id: true, body: true, title: true, noteId: true },
-    where: { id },
+    where: {
+      id,
+    },
   });
 }
 
@@ -24,11 +26,16 @@ export function getTaskListItems({ noteId }: { noteId: Note["id"] | null }) {
   });
 }
 
-export function createTask({ body, title }: Pick<Task, "body" | "title">) {
+export function createTask({ body, title, noteId }: Pick<Task, "body" | "title" | "noteId">) {
   return prisma.task.create({
     data: {
       title,
       body,
+      note: {
+        connect: {
+          id: noteId || undefined,
+        },
+      },
     },
   });
 }

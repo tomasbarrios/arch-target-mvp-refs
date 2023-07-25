@@ -1,22 +1,24 @@
 import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Form, Link, NavLink, Outlet, useLoaderData } from "@remix-run/react";
-import { requireUserId } from "~/session.server";
-// import { useUser } from "~/utils";
-import { getOrganization } from "~/models/organization.server";
-import { getTaskListItems } from "~/models/task.server";
 
-export async function loader({ request }: LoaderArgs) {
-  const taskListItems = await getTaskListItems({ noteId: null });
+import { getTaskListItems } from "~/models/task.server";
+import NewTaskPage, { action as taskAction } from "~/components/tasks.new";
+import { requireUserId } from "~/session.server";
+import { useUser } from "~/utils";
+
+export const loader = async ({ request }: LoaderArgs) => {
   const userId = await requireUserId(request);
-  const organization = await getOrganization({ userId });
-  console.log({ organization });
-  return json({ taskListItems, organization });
-}
+  const taskListItems = await getTaskListItems({ noteId: userId });
+  return json({ taskListItems });
+};
+
+export const action = taskAction;
 
 export default function TasksPage() {
+  console.log("Rendering Tasks Layout");
   const data = useLoaderData<typeof loader>();
-  // const user = useUser()
+  const user = useUser();
 
   return (
     <div className="flex h-full min-h-screen flex-col">
@@ -24,10 +26,7 @@ export default function TasksPage() {
         <h1 className="text-3xl font-bold">
           <Link to=".">Tasks</Link>
         </h1>
-        <p>
-          {/* FIXME: Org should bot be optional */}
-          ORG: {data.organization[0]?.name}
-        </p>
+        <p>{user.email}</p>
         <Form action="/logout" method="post">
           <button
             type="submit"
@@ -60,21 +59,18 @@ export default function TasksPage() {
                   >
                     📝 {task.title}
                   </NavLink>
-                  <NavLink
-                    className={({ isActive }) =>
-                      `block border-b p-4 text-xl ${isActive ? "bg-white" : ""}`
-                    }
-                    to={`/notes/${task.noteId}`}
-                  >
-                    ⨾ {task.noteId}
-                  </NavLink>
                 </li>
               ))}
             </ol>
           )}
         </div>
 
+
         <div className="flex-1 p-6">
+          <div className="internal-header">
+            <NewTaskPage/>
+            
+          </div>
           <Outlet />
         </div>
       </main>
