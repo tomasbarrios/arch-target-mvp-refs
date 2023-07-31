@@ -26,9 +26,23 @@ export default function Index() {
                   Lista de deseos
                 </span>
               </h1>
-              <p className="mx-auto mt-6 max-w-lg text-center text-xl text-white sm:max-w-3xl">
+              <h2 className="mx-auto mt-6 max-w-lg text-center text-xl text-white sm:max-w-3xl">
                 Ayudemos(nos) a crear el futuro que queremos
-              </p>
+              </h2>
+
+              {/* <hr /> */}
+
+              <div className="mx-auto mt-6 max-w-lg text-center text-xl text-white sm:max-w-3xl">
+                <div className="bg-black bg-opacity-25 p-4">
+                  <h3 className="mb-4">¿Como funciona?</h3>
+                  <ol className="text-base">
+                    <li>Visualiza tu deseo y escríbelo</li>
+                    <li>Comparte tus deseos y recibe ayuda para cumplirlos</li>
+                  </ol>
+                </div>
+              </div>
+
+              {/* LOGIN START */}
               <div className="mx-auto mt-10 max-w-sm sm:flex sm:max-w-none sm:justify-center">
                 {user ? (
                   <Link
@@ -54,6 +68,9 @@ export default function Index() {
                   </div>
                 )}
               </div>
+
+              {/* LOGIN END */}
+
               {/* <a href="https://remix.run">
                 <img
                   src="https://user-images.githubusercontent.com/1500684/158298926-e45dafff-3544-4b69-96d6-d3bcc33fc76a.svg"

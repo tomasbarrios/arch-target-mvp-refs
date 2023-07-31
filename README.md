@@ -30,7 +30,7 @@ https://icons.radix-ui.com/
 | Prettier        | ✅     | esbenp.prettier-vscode        |                                                            |
 | Eslint Prettier | ✅     | rvest.vs-code-prettier-eslint |                                                            |
 | Eslint          | ✅     | dbaeumer.vscode-eslint        | Dependency for Eslint prettier. Shows all errors in editor |
-
+| XXX | ok | rohit-gohri.format-code-action | Dependency for running format "source.formatDocument"
 Provides:
 
 - Format
