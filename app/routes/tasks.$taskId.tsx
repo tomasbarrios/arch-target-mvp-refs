@@ -10,13 +10,15 @@ import {
 import invariant from "tiny-invariant";
 
 import { deleteTask, getTask } from "~/models/task.server";
-import { requireUserId } from "~/session.server";
+
+// FIXME
+// All this operations could be potentially be executed by any user
+// Tasks are not binded to the user in a mandatory way
 
 export const loader = async ({ params, request }: LoaderArgs) => {
-  const userId = await requireUserId(request);
   invariant(params.taskId, "taskId not found");
 
-  const task = await getTask({ id: params.taskId, userId });
+  const task = await getTask({ id: params.taskId });
   if (!task) {
     throw new Response("Not Found", { status: 404 });
   }
@@ -24,10 +26,9 @@ export const loader = async ({ params, request }: LoaderArgs) => {
 };
 
 export const action = async ({ params, request }: ActionArgs) => {
-  const userId = await requireUserId(request);
   invariant(params.taskId, "taskId not found");
 
-  await deleteTask({ id: params.taskId, userId });
+  await deleteTask({ id: params.taskId });
 
   return redirect("/tasks");
 };

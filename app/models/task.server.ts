@@ -6,10 +6,7 @@ export type { Task } from "@prisma/client";
 
 export function getTask({
   id,
-  // userId,
-}: Pick<Task, "id" | "noteId"> & {
-  // userId: User["id"]
-}) {
+}: Pick<Task, "id">) {
   return prisma.task.findFirst({
     select: { id: true, body: true, title: true, noteId: true },
     where: {
@@ -20,7 +17,6 @@ export function getTask({
 
 export function getTaskListItems({ noteId }: { noteId: Note["id"] | null }) {
   return prisma.task.findMany({
-    // where: { noteId },
     select: { id: true, title: true, noteId: true },
     orderBy: { updatedAt: "desc" },
   });
