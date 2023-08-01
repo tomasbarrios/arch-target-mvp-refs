@@ -113,9 +113,9 @@ async function seed() {
   for (const task of tasks) {
     // await prisma.task.upsert({
     //   where: { title: task.title },
-    await prisma.task.create({
-      data: task,
-    });
+    // await prisma.task.create({
+    //   data: task,
+    // });
   }
 
   const wishes = [
