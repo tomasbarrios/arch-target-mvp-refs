@@ -22,14 +22,18 @@ export function getTaskListItems({ noteId }: { noteId: Note["id"] | null }) {
   });
 }
 
-export function createTask({ body, title, noteId }: Pick<Task, "body" | "title" | "noteId">) {
+export function createTask({
+  body, title, noteId
+}: Pick<Task, "body" | "title"> & {
+  noteId: Note["id"];
+}) {
   return prisma.task.create({
     data: {
       title,
       body,
       note: {
         connect: {
-          id: noteId || undefined,
+          id: noteId,
         },
       },
     },
