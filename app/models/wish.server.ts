@@ -1,8 +1,8 @@
-import type { Note, Wish } from "@prisma/client";
+import type { Note, User, Wish } from "@prisma/client";
 
 import { prisma } from "~/db.server";
 
-export type { Wish, User, UsersOnWishVolunteers } from "@prisma/client";
+export type { User, UsersOnWishVolunteers, Wish } from "@prisma/client";
 
 export const flags = ["important", "ok2ndHand", "done"];
 
@@ -26,9 +26,13 @@ export function getWish({
   });
 }
 
-export function getWishListItems({ noteId }: { noteId: Note["id"] | null }) {
+export function getWishListItems({ userId }: { userId: User["id"] }) {
   return prisma.wish.findMany({
-    // where: { noteId },
+    where: {
+      note: {
+        userId
+      }
+    },
     select: { id: true, title: true, noteId: true },
     orderBy: { updatedAt: "desc" },
   });
@@ -54,7 +58,7 @@ export function createWish({
 
 export function deleteWish({ id }: Pick<Wish, "id">) {
   // XXX this is very bad, un commenting this gets a bug
-  
+
 
   // return prisma.wish.deleteMany({
   //   where: { id },
@@ -62,25 +66,25 @@ export function deleteWish({ id }: Pick<Wish, "id">) {
 
   /**
    * Currento BAD solutiuon: Disable delete
-   * 
+   *
    * Steps to reproduce:
    * 1. Go edit a wish
    * 2. change quantity
    * 3. save
-   * 4. Open to again 
-   
-Error: 
+   * 4. Open to again
+
+Error:
 Invalid `prisma.wish.deleteMany()` invocation in
 /Users/tomas/own/remix/arch-target-mvp-refs/app/models/wish.server.ts:56:17
 
   53 }
-  54 
+  54
   55 export function deleteWish({ id }: Pick<Wish, "id">) {
 → 56   return prisma.wish.deleteMany(
 Foreign key constraint failed on the field: `foreign key`
     at Pn.handleRequestError (/Users/tomas/own/remix/arch-target-mvp-refs/node_modules/@prisma/client/runtime/library.js:171:6929)
     at Pn.handleAndLogRequestError (/Users/tomas/own/remix/arch-tar
-  
+
    */
 }
 

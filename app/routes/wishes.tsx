@@ -1,13 +1,13 @@
 import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Form, Link, NavLink, Outlet, useLoaderData } from "@remix-run/react";
-import { requireUserId } from "~/session.server";
 import { getOrganization } from "~/models/organization.server";
 import { getWishListItems } from "~/models/wish.server";
+import { requireUserId } from "~/session.server";
 
 export async function loader({ request }: LoaderArgs) {
-  const wishListItems = await getWishListItems({ noteId: null });
   const userId = await requireUserId(request);
+  const wishListItems = await getWishListItems({ userId });
   const organization = await getOrganization({ userId });
   console.log({ organization });
   return json({ wishListItems, organization });
@@ -46,7 +46,7 @@ export default function WishesPage() {
           <hr />
 
           {data.wishListItems.length === 0 ? (
-            <p className="p-4">No wishs yet</p>
+            <p className="p-4">No wishes yet</p>
           ) : (
             <ol>
               {data.wishListItems.map((wish) => (
@@ -68,7 +68,7 @@ export default function WishesPage() {
                     to={`/notes/${wish.noteId}`}
                   >
                   ⨾ {wish.noteId}
-                    
+
                   </NavLink> */}
                 </li>
               ))}

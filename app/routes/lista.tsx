@@ -1,24 +1,13 @@
 import type { LoaderArgs, V2_MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import {
-  Form,
-  Link,
-  NavLink,
-  Outlet,
-  useLoaderData,
-  // useLocation, //
-} from "@remix-run/react";
+import { Form, Link, NavLink, Outlet, useLoaderData } from "@remix-run/react";
 // import { useState } from "react";
 
-import {
-  requireUserId,
-  getSession,
-  // , commitSession
-} from "~/session.server";
+import { getSession, requireUserId } from "~/session.server";
 // import { useUser } from "~/utils";
-import { getOrganization } from "~/models/organization.server";
 import { getWishListItemsWithVolunteerCount } from "~/models/la-lista-pa.server";
 import { getWishListAsNote } from "~/models/note.server";
+import { getOrganization } from "~/models/organization.server";
 import { getUserById, updateKnownUrls } from "~/models/user.server";
 import { addWithSeparator } from "~/utils-serialize";
 
@@ -156,7 +145,6 @@ export default function WishListPageLayout() {
     );
   };
 
-
   return (
     <div className="flex h-full min-h-screen flex-col">
       <header className="flex items-center justify-between bg-slate-800 p-4 text-white">
@@ -180,7 +168,7 @@ export default function WishListPageLayout() {
       <main className="flex h-full bg-white">
         <div className="c-list h-full w-80 border-r bg-gray-50">
           {data.wishListItems.length === 0 ? (
-            <p className="p-4">No wishs yet</p>
+            <p className="p-4">No wishes yet</p>
           ) : (
             <ol>
               {data.wishListItems.map((wish) => {
