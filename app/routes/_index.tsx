@@ -3,7 +3,17 @@ import { Link } from "@remix-run/react";
 
 import { useOptionalUser } from "~/utils";
 
-export const meta: V2_MetaFunction = () => [{ title: "Lista de deseos" }];
+export const meta: V2_MetaFunction = () => [
+  { title: "Lista de deseos" },
+  {
+    property: "og:title",
+    content: "Lista de deseos",
+  },
+  {
+    name: "description",
+    content: "Crea listas útiles de tus deseos",
+  },
+];
 
 export default function Index() {
   const user = useOptionalUser();
