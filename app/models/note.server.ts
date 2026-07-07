@@ -146,19 +146,19 @@ export function getAllWishListsForUser(user: User) {
     .filter((el) => el !== null && el !== undefined)
     .filter((el): el is string => el !== undefined); // The way typescript likes it
 
-  // console.log({ userIsOnlyAllowedToList });
-  if (userIsOnlyAllowedToList.length === 0) {
-    return null;
-  }
   return prisma.note.findMany({
     select: { id: true, title: true },
     where: {
-      id: {
-        in: userIsOnlyAllowedToList,
-      },
-      wish: {
-        some: {},
-      },
+      OR: [
+        {
+          id: {
+            in: userIsOnlyAllowedToList,
+          },
+        },
+        {
+          userId: user.id,
+        },
+      ],
     },
   });
 }
