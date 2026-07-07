@@ -18,42 +18,18 @@ import {
   PopoverTrigger,
 } from "~/ui/components/popover";
 
-const frameworks = [
-  {
-    value: "next.js",
-    label: "Next.js",
-  },
-  {
-    value: "sveltekit",
-    label: "SvelteKit",
-  },
-  {
-    value: "nuxt.js",
-    label: "Nuxt.js",
-  },
-  {
-    value: "remix",
-    label: "Remix",
-  },
-  {
-    value: "astro",
-    label: "Astro",
-  },
-];
-
-// export function Combobox({ props }: { props: any }) {
-export function Combobox(props: any) {
+export function Combobox({
+  data,
+  value,
+  onSelect,
+}: {
+  data: { value: string; label: string }[];
+  value?: string;
+  onSelect?: (value: string) => void;
+}) {
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState("");
-  console.log("COMNOBOCX", { props });
-  const list = props.data || frameworks;
+  const list = data || [];
 
-  // const transform = {
-  //   id: "value",
-  //   title: "label"
-  // }
-  console.log("props");
-  console.log("props");
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -64,32 +40,32 @@ export function Combobox(props: any) {
           className="w-[200px] justify-between"
         >
           {value
-            ? list.find((framework: any) => framework.value === value)?.label
+            ? list.find((item) => item.value === value)?.label
             : "Seleccionar otra lista"}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
         <Command>
-          <CommandInput placeholder="Search framework..." />
-          <CommandEmpty>No framework found.</CommandEmpty>
+          <CommandInput placeholder="Buscar lista..." />
+          <CommandEmpty>No encontrada.</CommandEmpty>
           <CommandGroup>
-            {list.map((framework: any) => (
+            {list.map((item) => (
               <CommandItem
-                key={framework.value}
-                onSelect={(currentValue: any) => {
-                  setValue(currentValue === value ? "" : currentValue);
+                key={item.value}
+                onSelect={() => {
+                  const next = item.value === value ? "" : item.value;
                   setOpen(false);
-                  handleOnSelect();
+                  onSelect?.(next);
                 }}
               >
                 <Check
                   className={cn(
                     "mr-2 h-4 w-4",
-                    value === framework.value ? "opacity-100" : "opacity-0"
+                    value === item.value ? "opacity-100" : "opacity-0"
                   )}
                 />
-                {framework.label}
+                {item.label}
               </CommandItem>
             ))}
           </CommandGroup>

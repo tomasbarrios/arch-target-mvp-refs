@@ -155,17 +155,23 @@ export async function action({ request }: ActionArgs) {
   //   { status: 400 }
   // );
 
-  console.log("WHAT");
+  let listToAssign;
 
-  const defaultNote = await getDefaultNoteForWish({ userId });
-  console.log({ defaultNote });
+  if (typeof noteId === "string" && noteId.length > 0) {
+    listToAssign = { id: noteId };
+  } else {
+    const defaultNote = await getDefaultNoteForWish({ userId });
 
-  let firstList = null;
-  if (!defaultNote) {
-    firstList = await createWishGroup({ title: "Mi primera lista 💕", userId });
+    let firstList = null;
+    if (!defaultNote) {
+      firstList = await createWishGroup({
+        title: "Mi primera lista 💕",
+        userId,
+      });
+    }
+
+    listToAssign = defaultNote || firstList;
   }
-
-  let listToAssign = defaultNote || firstList;
 
   if (!listToAssign) {
     throw new Error("Could not find a valid list to assign");
@@ -194,6 +200,10 @@ export default function NewWishPage() {
   const bodyRef = React.useRef<HTMLTextAreaElement>(null);
   const exampleUrlsRef = React.useRef<HTMLTextAreaElement>(null);
   const flaggedAsRef = React.useRef<HTMLInputElement>(null);
+
+  const [selectedNoteId, setSelectedNoteId] = React.useState(
+    data.defaultNote?.id || ""
+  );
 
   React.useEffect(() => {
     if (actionData?.errors?.title) {
@@ -331,13 +341,17 @@ export default function NewWishPage() {
           {data.defaultNote ? (
             <span>
               Se agregara a la <i>Lista de deseos</i>:{" "}
-              <b>{data.defaultNote?.title}</b>
-              {/* <p>{data.defaultNotes?.map((al) => al.title)}</p> */}
+              <b>
+                {data.defaultNotes.find((n) => n.id === selectedNoteId)
+                  ?.title || data.defaultNote?.title}
+              </b>
               <Combobox
                 data={data.defaultNotes.map((el) => ({
                   value: el.id,
                   label: el.title,
                 }))}
+                value={selectedNoteId}
+                onSelect={(val) => setSelectedNoteId(val)}
               />
             </span>
           ) : (
@@ -348,10 +362,9 @@ export default function NewWishPage() {
 
           <input
             ref={noteIdRef}
-            // disabled="true"
             hidden={true}
             readOnly={true}
-            value={data.defaultNote?.id}
+            value={selectedNoteId}
             name="noteId"
             className="flex-1 rounded-md border-2 border-blue-500 px-3 text-lg leading-loose"
             aria-invalid={actionData?.errors?.noteId ? true : undefined}
