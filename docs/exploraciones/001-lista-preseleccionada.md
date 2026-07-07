@@ -4,6 +4,16 @@
 
 Cuando una usuaria crea un deseo, selecciona a qué lista asignarlo. Si crea un segundo deseo, el formulario vuelve a la lista por defecto. La usuaria tiene que volver a seleccionar la misma lista manualmente.
 
+**Estado:** Implementado
+
+## Decisión
+
+**localStorage** vía `useEffect`.
+
+1. Al seleccionar una lista en el Combobox, se escribe `lastWishListId` en `localStorage`.
+2. Al cargar `/wishes/new`, se lee `localStorage` en un `useEffect` y se sobreescribe el valor inicial del servidor si existe.
+3. Sin cookie ni query param: no se justifican para este caso.
+
 ## Opciones consideradas
 
 ### 1. localStorage (frontend)
@@ -26,15 +36,3 @@ Tras crear un wish, la action guarda el `noteId` usado en la sesión (flash cook
 
 **Pros**: Persiste entre sesiones reales, funciona desde cualquier punto de entrada.
 **Contras**: Más complejo, toca infraestructura de sesión, el dato es poco sensible como para justificar server-side.
-
-## Decisión
-
-**localStorage + query param**, con prioridad del query param.
-
-1. Al seleccionar una lista en el Combobox, se escribe `lastWishListId` en `localStorage`.
-2. Al cargar `/wishes/new`, primero se lee `?listaId=`; si no existe, se lee `localStorage`.
-3. La cookie no se justifica: no es un dato sensible ni crítico, y localStorage es suficiente para mejorar la experiencia.
-
-## Estado
-
-Pendiente de implementar.

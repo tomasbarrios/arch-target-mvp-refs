@@ -206,6 +206,11 @@ export default function NewWishPage() {
   );
 
   React.useEffect(() => {
+    const stored = localStorage.getItem("lastWishListId");
+    if (stored) setSelectedNoteId(stored);
+  }, []);
+
+  React.useEffect(() => {
     if (actionData?.errors?.title) {
       titleRef.current?.focus();
     } else if (actionData?.errors?.body) {
@@ -351,7 +356,10 @@ export default function NewWishPage() {
                   label: el.title,
                 }))}
                 value={selectedNoteId}
-                onSelect={(val) => setSelectedNoteId(val)}
+                onSelect={(val) => {
+                  setSelectedNoteId(val);
+                  localStorage.setItem("lastWishListId", val);
+                }}
               />
             </span>
           ) : (
