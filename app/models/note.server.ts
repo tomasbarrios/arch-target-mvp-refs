@@ -1,4 +1,4 @@
-import type { User, Note } from "@prisma/client";
+import type { Note, User } from "@prisma/client";
 
 import { prisma } from "~/db.server";
 
@@ -72,6 +72,15 @@ export function getDefaultNoteForWish({ userId }: Pick<Note, "userId">) {
       wish: {
         some: {},
       },
+    },
+  });
+}
+
+export function getDefaultNotesForWish({ userId }: Pick<Note, "userId">) {
+  return prisma.note.findMany({
+    select: { id: true, title: true },
+    where: {
+      userId,
     },
   });
 }

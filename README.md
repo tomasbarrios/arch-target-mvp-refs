@@ -1,11 +1,17 @@
+## Nice fly docs
 
-#COLORS
+[Como transferir archivos hacia tu instancia](https://community.fly.io/t/overwriting-remote-sqlite-db-with-local-dump/5159/8)
+
+# COLORS
 
 https://pink.appwrite.io/foundations/colors
 
 ## Confetti
+
 https://codepen.io/bonarhyme/pen/ZEoMaea
-### 
+
+###
+
 Flash messages like RAILS
 https://github.com/remix-run/remix/discussions/2125
 
@@ -25,12 +31,13 @@ https://icons.radix-ui.com/
 
 ## VsCode Recommended Extensions
 
-| Name            | Status | vscode name                   | Notes                                                      |
-| --------------- | ------ | ----------------------------- | ---------------------------------------------------------- |
-| Prettier        | ✅     | esbenp.prettier-vscode        |                                                            |
-| Eslint Prettier | ✅     | rvest.vs-code-prettier-eslint |                                                            |
-| Eslint          | ✅     | dbaeumer.vscode-eslint        | Dependency for Eslint prettier. Shows all errors in editor |
-| XXX | ok | rohit-gohri.format-code-action | Dependency for running format "source.formatDocument"
+| Name            | Status | vscode name                    | Notes                                                      |
+| --------------- | ------ | ------------------------------ | ---------------------------------------------------------- |
+| Prettier        | ✅     | esbenp.prettier-vscode         |                                                            |
+| Eslint Prettier | ✅     | rvest.vs-code-prettier-eslint  |                                                            |
+| Eslint          | ✅     | dbaeumer.vscode-eslint         | Dependency for Eslint prettier. Shows all errors in editor |
+| XXX             | ok     | rohit-gohri.format-code-action | Dependency for running format "source.formatDocument"      |
+
 Provides:
 
 - Format
