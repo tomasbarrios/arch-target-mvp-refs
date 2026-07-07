@@ -23,6 +23,11 @@ export async function loader({ request, params }: LoaderArgs) {
 }
 
 const validFlags = ["important", "ok2ndHand", "done"];
+const flagLabels: Record<string, string> = {
+  important: "¿Es importante?",
+  ok2ndHand: "¿Aceptas segunda mano?",
+  done: "¿Ya lo tienes?",
+};
 
 export async function action({ request }: ActionArgs) {
   // const userId = await requireUserId(request);
@@ -211,7 +216,7 @@ export default function NewWishPage() {
         <input name="id" type="hidden" value={data.wish.id} />
 
         <label className="flex w-full flex-col gap-1">
-          <span>Title: </span>
+          <span>Nombre: </span>
 
           <input
             ref={titleRef}
@@ -234,7 +239,7 @@ export default function NewWishPage() {
       {/* BODY start */}
       <div>
         <label className="flex w-full flex-col gap-1">
-          <span>Body: </span>
+          <span>Descripción o detalles: </span>
           <textarea
             defaultValue={data.wish.body}
             ref={bodyRef}
@@ -308,7 +313,7 @@ export default function NewWishPage() {
         validFlags.map((flagName) => {
           return (
             <div key={flagName} className="flex items-center">
-              <h3>Marcar como:</h3>
+              <h3 className="text-sm font-medium">Opciones:</h3>
               <input
                 ref={flaggedAsRef}
                 id={`flaggedAs_${flagName}`}
@@ -325,7 +330,7 @@ export default function NewWishPage() {
                 htmlFor={`flaggedAs_${flagName}`}
                 className="ml-2 block text-sm text-gray-900"
               >
-                {flagName}
+                {flagLabels[flagName] || flagName}
               </label>
               {actionData?.errors?.flaggedAs && (
                 <div className="pt-1 text-red-700" id="flaggedAs-error">

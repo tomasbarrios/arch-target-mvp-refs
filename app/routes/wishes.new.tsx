@@ -14,6 +14,11 @@ import { createWish } from "~/models/wish.server";
 import { requireUserId } from "~/session.server";
 import { validateURLString } from "~/urls";
 const flags = ["important", "ok2ndHand", "done"];
+const flagLabels: Record<string, string> = {
+  important: "¿Es importante?",
+  ok2ndHand: "¿Aceptas segunda mano?",
+  done: "¿Ya lo tienes?",
+};
 
 export async function loader({ request, params }: LoaderArgs) {
   console.log("WE HERE?", { flags });
@@ -240,7 +245,7 @@ export default function NewWishPage() {
     >
       <div>
         <label className="flex w-full flex-col gap-1">
-          <span>Title: </span>
+          <span>Nombre: </span>
           <input
             ref={titleRef}
             name="title"
@@ -261,7 +266,7 @@ export default function NewWishPage() {
       {/* BODY start */}
       <div>
         <label className="flex w-full flex-col gap-1">
-          <span>Body: </span>
+          <span>Descripción o detalles: </span>
           <textarea
             ref={bodyRef}
             name="body"
@@ -309,7 +314,7 @@ export default function NewWishPage() {
         flags.map((flagName) => {
           return (
             <div key={flagName} className="flex items-center">
-              <h3>Marcar como:</h3>
+              <h3 className="text-sm font-medium">Opciones:</h3>
               <input
                 ref={flaggedAsRef}
                 id={`flaggedAs_${flagName}`}
@@ -325,7 +330,7 @@ export default function NewWishPage() {
                 htmlFor={`flaggedAs_${flagName}`}
                 className="ml-2 block text-sm text-gray-900"
               >
-                {flagName}
+                {flagLabels[flagName] || flagName}
               </label>
               {actionData?.errors?.flaggedAs && (
                 <div className="pt-1 text-red-700" id="flaggedAs-error">
