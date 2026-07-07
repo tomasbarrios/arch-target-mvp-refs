@@ -73,6 +73,7 @@ export function getDefaultNoteForWish({ userId }: Pick<Note, "userId">) {
         some: {},
       },
     },
+    orderBy: { createdAt: "desc" },
   });
 }
 
