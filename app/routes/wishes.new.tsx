@@ -13,11 +13,10 @@ import {
 import { createWish } from "~/models/wish.server";
 import { requireUserId } from "~/session.server";
 import { validateURLString } from "~/urls";
-const flags = ["important", "ok2ndHand", "done"];
+const flags = ["important", "ok2ndHand"];
 const flagLabels: Record<string, string> = {
   important: "¿Es importante?",
   ok2ndHand: "¿Aceptas segunda mano?",
-  done: "¿Ya lo tienes?",
 };
 
 export async function loader({ request, params }: LoaderArgs) {
@@ -310,11 +309,11 @@ export default function NewWishPage() {
       {/* URLs end */}
 
       {/* FLAGS */}
-      {flags &&
-        flags.map((flagName) => {
-          return (
+      {flags.length > 0 && (
+        <>
+          <h3 className="text-sm font-medium">Opciones:</h3>
+          {flags.map((flagName) => (
             <div key={flagName} className="flex items-center">
-              <h3 className="text-sm font-medium">Opciones:</h3>
               <input
                 ref={flaggedAsRef}
                 id={`flaggedAs_${flagName}`}
@@ -330,16 +329,18 @@ export default function NewWishPage() {
                 htmlFor={`flaggedAs_${flagName}`}
                 className="ml-2 block text-sm text-gray-900"
               >
-                {flagLabels[flagName] || flagName}
+                {flagLabels[flagName]}
               </label>
-              {actionData?.errors?.flaggedAs && (
-                <div className="pt-1 text-red-700" id="flaggedAs-error">
-                  {actionData.errors.flaggedAs}
-                </div>
-              )}
             </div>
-          );
-        })}
+          ))}
+        </>
+      )}
+
+      {actionData?.errors?.flaggedAs && (
+        <div className="pt-1 text-red-700" id="flaggedAs-error">
+          {actionData.errors.flaggedAs}
+        </div>
+      )}
 
       {/* FLAGS end */}
 

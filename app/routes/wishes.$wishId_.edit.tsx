@@ -22,11 +22,10 @@ export async function loader({ request, params }: LoaderArgs) {
   return json({ wish, defaultNotes });
 }
 
-const validFlags = ["important", "ok2ndHand", "done"];
+const validFlags = ["important", "ok2ndHand"];
 const flagLabels: Record<string, string> = {
   important: "¿Es importante?",
   ok2ndHand: "¿Aceptas segunda mano?",
-  done: "¿Ya lo tienes?",
 };
 
 export async function action({ request }: ActionArgs) {
@@ -42,6 +41,7 @@ export async function action({ request }: ActionArgs) {
       return formData.get("flaggedAs_" + f) == "on" ? f : null;
     })
     .filter((f) => f !== null);
+  if (formData.get("flaggedAs_done") === "on") flaggedAs.push("done");
   const id = formData.get("id");
   const noteId = formData.get("noteId");
 
@@ -236,6 +236,19 @@ export default function NewWishPage() {
         )}
       </div>
 
+      <div className="flex items-center gap-2">
+        <input
+          id="flaggedAs_done"
+          name="flaggedAs_done"
+          type="checkbox"
+          defaultChecked={wishFlags.some((f) => f.startsWith("done"))}
+          className="h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-500"
+        />
+        <label htmlFor="flaggedAs_done" className="text-sm text-gray-900">
+          Marcar como cumplido
+        </label>
+      </div>
+
       {/* BODY start */}
       <div>
         <label className="flex w-full flex-col gap-1">
@@ -309,37 +322,45 @@ export default function NewWishPage() {
       {/* URLs end */}
 
       {/* FLAGS */}
-      {validFlags &&
-        validFlags.map((flagName) => {
-          return (
-            <div key={flagName} className="flex items-center">
-              <h3 className="text-sm font-medium">Opciones:</h3>
-              <input
-                ref={flaggedAsRef}
-                id={`flaggedAs_${flagName}`}
-                defaultChecked={wishFlags.some((f) => f.startsWith(flagName))}
-                name={`flaggedAs_${flagName}`}
-                className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                aria-invalid={actionData?.errors?.flaggedAs ? true : undefined}
-                aria-errormessage={
-                  actionData?.errors?.flaggedAs ? "flaggedAs-error" : undefined
-                }
-                type="checkbox"
-              />
-              <label
-                htmlFor={`flaggedAs_${flagName}`}
-                className="ml-2 block text-sm text-gray-900"
-              >
-                {flagLabels[flagName] || flagName}
-              </label>
-              {actionData?.errors?.flaggedAs && (
-                <div className="pt-1 text-red-700" id="flaggedAs-error">
-                  {actionData.errors.flaggedAs}
-                </div>
-              )}
-            </div>
-          );
-        })}
+      {validFlags.length > 0 && (
+        <>
+          <h3 className="text-sm font-medium">Opciones:</h3>
+          {validFlags.map((flagName) => {
+            return (
+              <div key={flagName} className="flex items-center">
+                <input
+                  ref={flaggedAsRef}
+                  id={`flaggedAs_${flagName}`}
+                  defaultChecked={wishFlags.some((f) => f.startsWith(flagName))}
+                  name={`flaggedAs_${flagName}`}
+                  className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  aria-invalid={
+                    actionData?.errors?.flaggedAs ? true : undefined
+                  }
+                  aria-errormessage={
+                    actionData?.errors?.flaggedAs
+                      ? "flaggedAs-error"
+                      : undefined
+                  }
+                  type="checkbox"
+                />
+                <label
+                  htmlFor={`flaggedAs_${flagName}`}
+                  className="ml-2 block text-sm text-gray-900"
+                >
+                  {flagLabels[flagName]}
+                </label>
+              </div>
+            );
+          })}
+        </>
+      )}
+
+      {actionData?.errors?.flaggedAs && (
+        <div className="pt-1 text-red-700" id="flaggedAs-error">
+          {actionData.errors.flaggedAs}
+        </div>
+      )}
 
       {/* LISTA */}
       <div>
