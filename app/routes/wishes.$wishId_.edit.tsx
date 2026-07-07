@@ -4,18 +4,22 @@ import { Form, useActionData, useLoaderData } from "@remix-run/react";
 import * as React from "react";
 import invariant from "tiny-invariant";
 
+import { Combobox } from "~/components/ui/combobox";
 import { updateWish, getWish } from "~/models/wish.server";
+import { getDefaultNotesForWish } from "~/models/note.server";
+import { requireUserId } from "~/session.server";
 import { validateURLString } from "~/urls";
 
 export async function loader({ request, params }: LoaderArgs) {
-  // const userId = await requireUserId(request);
   invariant(params.wishId, "wishId not found");
 
+  const userId = await requireUserId(request);
   const wish = await getWish({ id: params.wishId });
   if (!wish) {
     throw new Response("Not Found", { status: 404 });
   }
-  return json({ wish });
+  const defaultNotes = await getDefaultNotesForWish({ userId });
+  return json({ wish, defaultNotes });
 }
 
 const validFlags = ["important", "ok2ndHand", "done"];
@@ -28,34 +32,68 @@ export async function action({ request }: ActionArgs) {
   const body = formData.get("body");
   const maxQuantity = formData.get("maxQuantity");
   const exampleUrls = formData.get("exampleUrls");
-  const flaggedAs = validFlags.map(f => {
-    return formData.get("flaggedAs_" + f) == "on" ? f : null;
-  })
-    .filter(f => f !== null);
+  const flaggedAs = validFlags
+    .map((f) => {
+      return formData.get("flaggedAs_" + f) == "on" ? f : null;
+    })
+    .filter((f) => f !== null);
   const id = formData.get("id");
+  const noteId = formData.get("noteId");
 
   if (typeof title !== "string" || title.length === 0) {
     return json(
-      { errors: { title: "Title is required", body: null, maxQuantity: null, exampleUrls: null, flaggedAs: null } },
+      {
+        errors: {
+          title: "Title is required",
+          body: null,
+          maxQuantity: null,
+          exampleUrls: null,
+          flaggedAs: null,
+        },
+      },
       { status: 400 }
     );
   }
 
   if (typeof body !== "string" || body.length === 0) {
     return json(
-      { errors: { title: null, body: "Body is required", maxQuantity: null, exampleUrls: null, flaggedAs: null } },
+      {
+        errors: {
+          title: null,
+          body: "Body is required",
+          maxQuantity: null,
+          exampleUrls: null,
+          flaggedAs: null,
+        },
+      },
       { status: 400 }
     );
   }
 
   if (typeof maxQuantity !== "string" || maxQuantity.length === 0) {
     return json(
-      { errors: { title: null, body: null, maxQuantity: "Cantidad debe ser válida", exampleUrls: null, flaggedAs: null } },
+      {
+        errors: {
+          title: null,
+          body: null,
+          maxQuantity: "Cantidad debe ser válida",
+          exampleUrls: null,
+          flaggedAs: null,
+        },
+      },
       { status: 400 }
     );
   } else if (Number(maxQuantity) <= 0) {
     return json(
-      { errors: { title: null, body: null, maxQuantity: "Cantidad debe ser mayor que 0", exampleUrls: null, flaggedAs: null } },
+      {
+        errors: {
+          title: null,
+          body: null,
+          maxQuantity: "Cantidad debe ser mayor que 0",
+          exampleUrls: null,
+          flaggedAs: null,
+        },
+      },
       { status: 400 }
     );
   }
@@ -97,7 +135,7 @@ export async function action({ request }: ActionArgs) {
     );
   }
 
-  flaggedAs.forEach(flag => {
+  flaggedAs.forEach((flag) => {
     if (typeof flag !== "string" || flag.length == 0) {
       return json(
         {
@@ -115,14 +153,14 @@ export async function action({ request }: ActionArgs) {
     // return null
   });
 
-
   const wish = await updateWish({
     id,
     title,
     body,
     flaggedAs: flaggedAs.length > 0 ? flaggedAs.join("\n") : null,
     exampleUrls,
-    maxQuantity: Number(maxQuantity)
+    maxQuantity: Number(maxQuantity),
+    noteId: typeof noteId === "string" && noteId.length > 0 ? noteId : null,
   });
 
   return redirect(`/wishes/${wish.id}`);
@@ -138,6 +176,10 @@ export default function NewWishPage() {
   const exampleUrlsRef = React.useRef<HTMLTextAreaElement>(null);
   const flaggedAsRef = React.useRef<HTMLInputElement>(null);
 
+  const [selectedNoteId, setSelectedNoteId] = React.useState(
+    data.wish.noteId || ""
+  );
+
   React.useEffect(() => {
     if (actionData?.errors?.title) {
       titleRef.current?.focus();
@@ -152,8 +194,8 @@ export default function NewWishPage() {
     }
   }, [actionData]);
 
-  const separator = "\n"
-  const wishFlags = data.wish.flaggedAs?.split(separator) || []
+  const separator = "\n";
+  const wishFlags = data.wish.flaggedAs?.split(separator) || [];
 
   return (
     <Form
@@ -237,7 +279,6 @@ export default function NewWishPage() {
       </div>
       {/* QUANTITY end */}
 
-
       {/* URLs */}
       <div>
         <label className="flex w-full flex-col gap-1">
@@ -263,36 +304,58 @@ export default function NewWishPage() {
       {/* URLs end */}
 
       {/* FLAGS */}
-      {validFlags && validFlags.map((flagName) => {
-        return (
-          <div key={flagName} className="flex items-center">
-            <h3>Marcar como:</h3>
-            <input
-              ref={flaggedAsRef}
-              id={`flaggedAs_${flagName}`}
-              defaultChecked={(wishFlags.some(f => f.startsWith(flagName)))}
-              name={`flaggedAs_${flagName}`}
-              className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-              aria-invalid={actionData?.errors?.flaggedAs ? true : undefined}
-              aria-errormessage={
-                actionData?.errors?.flaggedAs ? "flaggedAs-error" : undefined
-              }
-              type="checkbox"
-            />
-            <label
-              htmlFor={`flaggedAs_${flagName}`}
-              className="ml-2 block text-sm text-gray-900"
-            >
-              {flagName}
-            </label>
-            {actionData?.errors?.flaggedAs && (
-              <div className="pt-1 text-red-700" id="flaggedAs-error">
-                {actionData.errors.flaggedAs}
-              </div>
-            )}
-          </div>
-        );
-      })}
+      {validFlags &&
+        validFlags.map((flagName) => {
+          return (
+            <div key={flagName} className="flex items-center">
+              <h3>Marcar como:</h3>
+              <input
+                ref={flaggedAsRef}
+                id={`flaggedAs_${flagName}`}
+                defaultChecked={wishFlags.some((f) => f.startsWith(flagName))}
+                name={`flaggedAs_${flagName}`}
+                className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                aria-invalid={actionData?.errors?.flaggedAs ? true : undefined}
+                aria-errormessage={
+                  actionData?.errors?.flaggedAs ? "flaggedAs-error" : undefined
+                }
+                type="checkbox"
+              />
+              <label
+                htmlFor={`flaggedAs_${flagName}`}
+                className="ml-2 block text-sm text-gray-900"
+              >
+                {flagName}
+              </label>
+              {actionData?.errors?.flaggedAs && (
+                <div className="pt-1 text-red-700" id="flaggedAs-error">
+                  {actionData.errors.flaggedAs}
+                </div>
+              )}
+            </div>
+          );
+        })}
+
+      {/* LISTA */}
+      <div>
+        <label className="flex w-full flex-col gap-1">
+          <span>Lista de deseos:</span>
+          <Combobox
+            data={data.defaultNotes.map((el) => ({
+              value: el.id,
+              label: el.title,
+            }))}
+            value={selectedNoteId}
+            onSelect={(val) => setSelectedNoteId(val)}
+          />
+          <input
+            hidden={true}
+            readOnly={true}
+            value={selectedNoteId}
+            name="noteId"
+          />
+        </label>
+      </div>
 
       <div className="text-right">
         <button
