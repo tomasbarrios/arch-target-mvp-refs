@@ -7,7 +7,7 @@
 | `/join`                         | Registro de nueva usuaria               | Público    | → `/login` · Tras registro → `/`                                    |
 | `/newpassword`                  | Restablecer contraseña                  | Público    | → `/login` · Tras cambio → `/`                                      |
 | `/healthcheck`                  | Healthcheck de la DB                    | Público    | — (endpoint API)                                                    |
-| `/mejoras`                      | Mejoras sugeridas y changelog           | Público    | — (página estática)                                                 |
+| `/mejoras`                      | Hoja de Ruta — feedback público y roadmap | Público    | — (página estática)                                                 |
 | `/logout`                       | Cerrar sesión                           | Privado    | → `/`                                                               |
 | `/me`                           | Perfil de usuaria (editar nombre)       | Privado    | → `/me` (self)                                                      |
 | `/listas`                       | Listado de listas de deseos             | Privado    | → `/lista/:listaId`, `/me`, `/logout`                               |
