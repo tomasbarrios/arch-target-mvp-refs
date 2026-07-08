@@ -1,4 +1,4 @@
-import type { User, Note } from "@prisma/client";
+import type { Note, User } from "@prisma/client";
 
 import { prisma } from "~/db.server";
 
@@ -77,6 +77,15 @@ export function getDefaultNoteForWish({ userId }: Pick<Note, "userId">) {
   });
 }
 
+export function getDefaultNotesForWish({ userId }: Pick<Note, "userId">) {
+  return prisma.note.findMany({
+    select: { id: true, title: true },
+    where: {
+      userId,
+    },
+  });
+}
+
 export function createWishGroup({
   title = "Mi primera lista 💕",
   userId,
@@ -138,19 +147,19 @@ export function getAllWishListsForUser(user: User) {
     .filter((el) => el !== null && el !== undefined)
     .filter((el): el is string => el !== undefined); // The way typescript likes it
 
-  // console.log({ userIsOnlyAllowedToList });
-  if (userIsOnlyAllowedToList.length === 0) {
-    return null;
-  }
   return prisma.note.findMany({
     select: { id: true, title: true },
     where: {
-      id: {
-        in: userIsOnlyAllowedToList,
-      },
-      wish: {
-        some: {},
-      },
+      OR: [
+        {
+          id: {
+            in: userIsOnlyAllowedToList,
+          },
+        },
+        {
+          userId: user.id,
+        },
+      ],
     },
   });
 }

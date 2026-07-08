@@ -30,8 +30,8 @@ export function getWishListItems({ userId }: { userId: User["id"] }) {
   return prisma.wish.findMany({
     where: {
       note: {
-        userId
-      }
+        userId,
+      },
     },
     select: { id: true, title: true, noteId: true },
     orderBy: { updatedAt: "desc" },
@@ -44,7 +44,9 @@ export function createWish({
   exampleUrls,
   flaggedAs,
   noteId,
-}: Pick<Wish, "body" | "title" | "exampleUrls" | "flaggedAs"> & { noteId: Note["id"] }) {
+}: Pick<Wish, "body" | "title" | "exampleUrls" | "flaggedAs"> & {
+  noteId: Note["id"];
+}) {
   return prisma.wish.create({
     data: {
       title,
@@ -58,12 +60,9 @@ export function createWish({
 
 export function deleteWish({ id }: Pick<Wish, "id">) {
   // XXX this is very bad, un commenting this gets a bug
-
-
   // return prisma.wish.deleteMany({
   //   where: { id },
   // });
-
   /**
    * Currento BAD solutiuon: Disable delete
    *
@@ -133,7 +132,6 @@ export function getWishAlreadyVolunteered({ wishId }: { wishId: string }) {
           /**
            * TODO: Catch usernames (?)
            */
-
         },
         orderBy: {
           assignedAt: "asc",
@@ -167,17 +165,16 @@ export async function isUserVolunteer({
   return isUserVolunteer;
 }
 
-
 export function assignVolunteer({
   wishId,
   userId,
-  quantity
+  quantity,
 }: {
   wishId: string;
   userId: string;
   quantity: string;
 }) {
-  const numberQuantity = Number(quantity)
+  const numberQuantity = Number(quantity);
   return prisma.usersOnWishVolunteers.upsert({
     where: { wishId_userId: { wishId, userId } },
     create: {
@@ -200,7 +197,11 @@ export function updateWish({
   exampleUrls,
   flaggedAs,
   maxQuantity,
-}: Pick<Wish, "id" | "body" | "title" | "exampleUrls" | "flaggedAs" | "maxQuantity">) {
+  noteId,
+}: Pick<
+  Wish,
+  "id" | "body" | "title" | "exampleUrls" | "flaggedAs" | "maxQuantity"
+> & { noteId?: string | null }) {
   return prisma.wish.update({
     where: {
       id,
@@ -210,7 +211,8 @@ export function updateWish({
       body,
       exampleUrls,
       flaggedAs,
-      maxQuantity
+      maxQuantity,
+      noteId,
     },
   });
 }

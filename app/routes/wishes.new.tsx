@@ -4,18 +4,23 @@ import { Form, useActionData, useLoaderData } from "@remix-run/react";
 
 import * as React from "react";
 
-import { createWish
-  // , flags 
-} from "~/models/wish.server";
+import { Combobox } from "~/components/ui/combobox";
+import {
+  createWishGroup,
+  getDefaultNoteForWish,
+  getDefaultNotesForWish,
+} from "~/models/note.server";
+import { createWish } from "~/models/wish.server";
 import { requireUserId } from "~/session.server";
-import { getDefaultNoteForWish, createWishGroup } from "~/models/note.server";
 import { validateURLString } from "~/urls";
-
-const flags = ["important", "ok2ndHand", "done"];
-
+const flags = ["important", "ok2ndHand"];
+const flagLabels: Record<string, string> = {
+  important: "¿Es importante?",
+  ok2ndHand: "¿Aceptas segunda mano?",
+};
 
 export async function loader({ request, params }: LoaderArgs) {
-  console.log("WE HERE?", {flags});
+  console.log("WE HERE?", { flags });
   // invariant(params.wishId, "wishId not found");
 
   const userId = await requireUserId(request);
@@ -28,12 +33,13 @@ export async function loader({ request, params }: LoaderArgs) {
    * SOL: Note should be dynamically changed
    */
   const defaultNote = await getDefaultNoteForWish({ userId });
-
+  const defaultNotes = await getDefaultNotesForWish({ userId });
+  console.log({ defaultNotes });
   // if (!defaultNote) {
   //   throw new Response("No default note Found", { status: 404 });
   // }
 
-  return json({ defaultNote });
+  return json({ defaultNote, defaultNotes });
   // return null
 }
 
@@ -46,10 +52,11 @@ export async function action({ request }: ActionArgs) {
   const body = formData.get("body");
   const exampleUrls = formData.get("exampleUrls");
   const noteId = formData.get("noteId");
-  const flaggedAs = flags.map(f => {
-    return formData.get("flaggedAs_"+f) == "on" ? f : null;
-  })
-  .filter(f => f !== null);
+  const flaggedAs = flags
+    .map((f) => {
+      return formData.get("flaggedAs_" + f) == "on" ? f : null;
+    })
+    .filter((f) => f !== null);
 
   console.log("ERRRRRRR0");
   console.log({ title, body, noteId, exampleUrls, flaggedAs });
@@ -107,7 +114,7 @@ export async function action({ request }: ActionArgs) {
     );
   }
 
-  flaggedAs.forEach(flag => {
+  flaggedAs.forEach((flag) => {
     if (typeof flag !== "string" || flag.length == 0) {
       return json(
         {
@@ -124,7 +131,7 @@ export async function action({ request }: ActionArgs) {
     }
     // return null
   });
-  
+
   console.log("ERRRRRRR2");
 
   // if (typeof noteId !== "string" || noteId.length === 0) {
@@ -152,17 +159,23 @@ export async function action({ request }: ActionArgs) {
   //   { status: 400 }
   // );
 
-  console.log("WHAT");
+  let listToAssign;
 
-  const defaultNote = await getDefaultNoteForWish({ userId });
-  console.log({ defaultNote });
+  if (typeof noteId === "string" && noteId.length > 0) {
+    listToAssign = { id: noteId };
+  } else {
+    const defaultNote = await getDefaultNoteForWish({ userId });
 
-  let firstList = null;
-  if (!defaultNote) {
-    firstList = await createWishGroup({ title: "Mi primera lista 💕", userId });
+    let firstList = null;
+    if (!defaultNote) {
+      firstList = await createWishGroup({
+        title: "Mi primera lista 💕",
+        userId,
+      });
+    }
+
+    listToAssign = defaultNote || firstList;
   }
-
-  let listToAssign = defaultNote || firstList;
 
   if (!listToAssign) {
     throw new Error("Could not find a valid list to assign");
@@ -181,7 +194,9 @@ export async function action({ request }: ActionArgs) {
 export default function NewWishPage() {
   const data = useLoaderData<typeof loader>();
 
-  console.log("FALGGGGG," , {flags})
+  // const MultiSelect = (props: any) => <Combobox/>;
+
+  console.log("FALGGGGG,", { flags });
   // console.log( "DATAs DATA DATA DATA", data )
   const actionData = useActionData<typeof action>();
   const titleRef = React.useRef<HTMLInputElement>(null);
@@ -190,6 +205,14 @@ export default function NewWishPage() {
   const exampleUrlsRef = React.useRef<HTMLTextAreaElement>(null);
   const flaggedAsRef = React.useRef<HTMLInputElement>(null);
 
+  const [selectedNoteId, setSelectedNoteId] = React.useState(
+    data.defaultNote?.id || ""
+  );
+
+  React.useEffect(() => {
+    const stored = localStorage.getItem("lastWishListId");
+    if (stored) setSelectedNoteId(stored);
+  }, []);
 
   React.useEffect(() => {
     if (actionData?.errors?.title) {
@@ -203,6 +226,12 @@ export default function NewWishPage() {
     }
   }, [actionData]);
 
+  // const alternativeNotes =
+  //   data.defaultNotes.length > 1
+  //     ? [data.defaultNotes[0], data.defaultNotes[0]]
+  //     : null;
+
+  // console.log({ data.defaultNotes });
   return (
     <Form
       method="post"
@@ -215,7 +244,7 @@ export default function NewWishPage() {
     >
       <div>
         <label className="flex w-full flex-col gap-1">
-          <span>Title: </span>
+          <span>Nombre: </span>
           <input
             ref={titleRef}
             name="title"
@@ -236,7 +265,7 @@ export default function NewWishPage() {
       {/* BODY start */}
       <div>
         <label className="flex w-full flex-col gap-1">
-          <span>Body: </span>
+          <span>Descripción o detalles: </span>
           <textarea
             ref={bodyRef}
             name="body"
@@ -280,35 +309,38 @@ export default function NewWishPage() {
       {/* URLs end */}
 
       {/* FLAGS */}
-      {flags && flags.map((flagName) => {
-        return (
-          <div key={flagName} className="flex items-center">
-            <h3>Marcar como:</h3>
-            <input
-              ref={flaggedAsRef}
-              id={`flaggedAs_${flagName}`}
-              name={`flaggedAs_${flagName}`}
-              className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-              aria-invalid={actionData?.errors?.flaggedAs ? true : undefined}
-              aria-errormessage={
-                actionData?.errors?.flaggedAs ? "flaggedAs-error" : undefined
-              }
-              type="checkbox"
-            />
-            <label
-              htmlFor={`flaggedAs_${flagName}`}
-              className="ml-2 block text-sm text-gray-900"
-            >
-              {flagName}
-            </label>
-            {actionData?.errors?.flaggedAs && (
-              <div className="pt-1 text-red-700" id="flaggedAs-error">
-                {actionData.errors.flaggedAs}
-              </div>
-            )}
-          </div>
-        );
-      })}
+      {flags.length > 0 && (
+        <>
+          <h3 className="text-sm font-medium">Opciones:</h3>
+          {flags.map((flagName) => (
+            <div key={flagName} className="flex items-center">
+              <input
+                ref={flaggedAsRef}
+                id={`flaggedAs_${flagName}`}
+                name={`flaggedAs_${flagName}`}
+                className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                aria-invalid={actionData?.errors?.flaggedAs ? true : undefined}
+                aria-errormessage={
+                  actionData?.errors?.flaggedAs ? "flaggedAs-error" : undefined
+                }
+                type="checkbox"
+              />
+              <label
+                htmlFor={`flaggedAs_${flagName}`}
+                className="ml-2 block text-sm text-gray-900"
+              >
+                {flagLabels[flagName]}
+              </label>
+            </div>
+          ))}
+        </>
+      )}
+
+      {actionData?.errors?.flaggedAs && (
+        <div className="pt-1 text-red-700" id="flaggedAs-error">
+          {actionData.errors.flaggedAs}
+        </div>
+      )}
 
       {/* FLAGS end */}
 
@@ -320,7 +352,21 @@ export default function NewWishPage() {
           {data.defaultNote ? (
             <span>
               Se agregara a la <i>Lista de deseos</i>:{" "}
-              <b>{data.defaultNote?.title}</b>
+              <b>
+                {data.defaultNotes.find((n) => n.id === selectedNoteId)
+                  ?.title || data.defaultNote?.title}
+              </b>
+              <Combobox
+                data={data.defaultNotes.map((el) => ({
+                  value: el.id,
+                  label: el.title,
+                }))}
+                value={selectedNoteId}
+                onSelect={(val) => {
+                  setSelectedNoteId(val);
+                  localStorage.setItem("lastWishListId", val);
+                }}
+              />
             </span>
           ) : (
             <span>
@@ -330,10 +376,9 @@ export default function NewWishPage() {
 
           <input
             ref={noteIdRef}
-            // disabled="true"
             hidden={true}
             readOnly={true}
-            value={data.defaultNote?.id}
+            value={selectedNoteId}
             name="noteId"
             className="flex-1 rounded-md border-2 border-blue-500 px-3 text-lg leading-loose"
             aria-invalid={actionData?.errors?.noteId ? true : undefined}

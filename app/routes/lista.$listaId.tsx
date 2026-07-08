@@ -2,6 +2,7 @@ import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import {
   isRouteErrorResponse,
+  Link,
   useLoaderData,
   useRouteError,
 } from "@remix-run/react";
@@ -15,7 +16,7 @@ export async function loader({ request, params }: LoaderArgs) {
 
   const wishList = await getWishListAsNote({ id: params.listaId });
 
-  return json({ wishList });
+  return json({ wishList, listaId: params.listaId });
 }
 
 export default function WishListPage() {
@@ -30,21 +31,28 @@ export default function WishListPage() {
       <Text>{data.wishList.body}</Text>
       <hr className="my-4" />
 
-      <div>Para empezar, selecciona un deseo de la lista 🚀</div>
+      <div>
+        <Link
+          to={`/wishes/new`}
+          className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+        >
+          + Agregar deseo a esta lista
+        </Link>
+      </div>
+      <br />
 
       {/**
        * If not fulfilled yet, offer to fulfill
        */}
       <footer className={"text-center"}>
-      <br />  
-      <br />  
-      <br />  
-      Sugerencias? Mira algunas <a href="/mejoras">
-          mejoras propuestas</a> por nuestras usuarias
-      <br />  
-
-    </footer>
-      <br />  
+        <br />
+        <br />
+        <br />
+        Sugerencias? Mira algunas <a href="/mejoras">mejoras propuestas</a> por
+        nuestras usuarias
+        <br />
+      </footer>
+      <br />
     </div>
   );
 }
