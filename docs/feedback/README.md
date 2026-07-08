@@ -1,6 +1,6 @@
 # Feedback
 
-Registro continuo de ideas, sugerencias y observaciones de usuarios y stakeholders.
+Registro continuo de ideas, sugerencias y observaciones — tanto de usuarios/stakeholders como del equipo.
 
 ## Formato
 
@@ -11,6 +11,8 @@ Cada sesión o fuente de feedback se documenta en un archivo `YYYY-MM-DD-fuente.
 - Ideas en crudo (numeradas)
 - Clústers tentativos al final
 
+Las ideas que nacen del equipo (no de un usuario) usan `fuente = interno-<autor>`, ej. `2026-07-08-interno-tomas.md`. Mismo formato, mismo archivo, sin carpeta aparte.
+
 ## FEEDBACK.md
 
 `FEEDBACK.md` mantiene una tabla con cada feature y su cantidad de ocurrencias a través del tiempo, más una referencia al último feedback procesado.
@@ -18,7 +20,7 @@ Cada sesión o fuente de feedback se documenta en un archivo `YYYY-MM-DD-fuente.
 ## Proceso
 
 1. Al recibir feedback nuevo, crear un archivo `YYYY-MM-DD-fuente.md`.
-2. Actualizar `CONSOLIDADO.md`:
+2. Actualizar `FEEDBACK.md`:
    - Agregar nuevas features a la tabla.
    - Incrementar ocurrencias de features existentes.
    - Actualizar "Último feedback procesado".
