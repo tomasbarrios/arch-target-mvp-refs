@@ -33,6 +33,10 @@ Un invitado que recibe el link de una lista puede explorarla y asignarse un dese
 - Cierre de asignaciones N días antes del evento + confirmación explícita del invitado — `docs/happy-path.md` (pool desde 2026-07-08)
 - Tipos de evento como categoría de la lista (cumpleaños, bautizo, matrimonio, etc.) — `docs/feedback/2026-07-07-camila.md` (pool desde 2026-07-08)
 - Versatilidad: extender el producto más allá de regalos (útiles, propuestas, repositorio comentable) — `docs/feedback/2026-07-07-camila.md` (pool desde 2026-07-08)
+- Mensaje de agradecimiento al asignarse un deseo — `docs/feedback/2026-07-07-camila.md` (pool desde 2026-07-08)
+- Limitar acceso a cumplir un deseo (solo ciertos invitados) — `docs/feedback/2026-07-08-anonimo-mejoras.md` (pool desde 2026-07-08)
+- Mostrar nombre en vez de email del voluntario — `docs/feedback/2026-07-08-anonimo-mejoras.md` (pool desde 2026-07-08)
+- Cantidad intuitiva (slider / % completado) — `docs/feedback/2026-07-07-pato-barrios.md` (pool desde 2026-07-08)
 - Reputación / historial de cumplimiento por usuario — `docs/happy-path.md` (a futuro, baja prioridad; pool desde 2026-07-08)
 - Pool de emergencia: regalos genéricos de respaldo agregados por el dueño — `docs/happy-path.md` (a futuro, baja prioridad; pool desde 2026-07-08)
 
