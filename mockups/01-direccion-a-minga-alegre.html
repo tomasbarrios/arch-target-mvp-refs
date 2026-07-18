@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dirección A — Minga alegre</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:ital,wght@0,400;0,600;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#e8e6e2; font-family:'Nunito',sans-serif; display:flex; justify-content:center; padding:30px 0; }
+  .phone { width:390px; background:#fffdf8; min-height:800px; border-radius:24px; overflow:hidden; box-shadow:0 10px 40px rgba(0,0,0,.15); color:#26333f; }
+
+  .cover { position:relative; height:190px; background:linear-gradient(135deg,#ff5d47 0%,#ff8a3d 55%,#ffb03d 100%); display:flex; align-items:flex-end; padding:20px; }
+  .cover .confetti { position:absolute; inset:0; opacity:.35; font-size:22px; letter-spacing:18px; line-height:2.2; overflow:hidden; }
+  .cover .avatar { width:74px; height:74px; border-radius:50%; background:#ffe8b0; border:4px solid #fffdf8; display:flex; align-items:center; justify-content:center; font-size:34px; position:absolute; bottom:-32px; left:22px; }
+  .datechip { position:absolute; right:16px; bottom:14px; background:#26333f; color:#ffe8b0; font-weight:800; font-size:13px; padding:8px 14px; border-radius:999px; }
+
+  .head { padding:46px 22px 6px; }
+  .head h1 { font-family:'Baloo 2',cursive; font-size:29px; font-weight:800; }
+  .head .sub { color:#8a94a0; font-size:14px; font-weight:600; }
+
+  .welcome { margin:16px 22px; background:#fff4e3; border-radius:16px; padding:16px 18px; font-size:15px; line-height:1.55; }
+  .welcome .who { font-weight:800; font-size:13px; color:#c25b17; margin-bottom:5px; }
+
+  .section { padding:10px 22px 6px; font-family:'Baloo 2',cursive; font-size:18px; font-weight:700; }
+  .card { margin:10px 22px; border:2px solid #f0e8da; border-radius:18px; padding:16px 18px; }
+  .card h3 { font-size:17px; font-weight:800; }
+  .card .nota { font-size:14px; color:#5c6773; font-style:italic; margin:6px 0 10px; }
+  .flex-chip { display:inline-flex; align-items:center; gap:6px; font-size:12.5px; font-weight:800; border-radius:999px; padding:5px 12px; }
+  .flex-exact { background:#26333f; color:#ffe8b0; }
+  .flex-ref { background:#d9f2ec; color:#0d7a63; }
+  .take { float:right; background:#ff5d47; color:#fff; border:none; font-family:'Nunito'; font-weight:800; font-size:14px; padding:10px 18px; border-radius:999px; }
+  .taken { opacity:.75; background:#faf6ee; border-style:dashed; }
+  .taken .who-took { font-size:13.5px; font-weight:800; color:#0d7a63; }
+  .footer-note { text-align:center; color:#8a94a0; font-size:13px; padding:14px 30px 30px; font-weight:600; }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="cover">
+    <div class="confetti">🎈 ✨ 🎂 🎁 ✨ 🎈 🎂 ✨ 🎁 🎈 ✨ 🎂</div>
+    <div class="avatar">📸</div>
+    <div class="datechip">🎂 faltan 43 días</div>
+  </div>
+  <div class="head">
+    <h1>El cumple de Maya</h1>
+    <div class="sub">sábado 30 de agosto</div>
+  </div>
+  <div class="welcome">
+    <div class="who">MAYA TE ESCRIBIÓ:</div>
+    "Hola :) Se viene mi cumple y quise dejarte estas ideas de regalo, de esas que una no cuenta por pudor. Nada es obligación — lo que más quiero es celebrar contigo ese día."
+  </div>
+  <div class="section">Sus deseos</div>
+  <div class="card">
+    <button class="take">Me tinca 🙌</button>
+    <h3>Entradas para Los Bunkers</h3>
+    <p class="nota">"¡Van a tocar en septiembre y me muero por ir!"</p>
+    <span class="flex-chip flex-exact">🎯 Este exacto</span>
+  </div>
+  <div class="card">
+    <button class="take">Me tinca 🙌</button>
+    <h3>Una planta para el balcón</h3>
+    <p class="nota">"Cualquiera menos cactus, porfa 🌵"</p>
+    <span class="flex-chip flex-ref">🌈 Algo como esto</span>
+  </div>
+  <div class="card taken">
+    <h3>Un buen vermut</h3>
+    <p class="nota">"Para la sobremesa del mismo cumple"</p>
+    <span class="who-took">✋ Caro dijo "yo me encargo"</span>
+  </div>
+  <div class="footer-note">2 de 7 deseos ya tienen quien se encargue 💪</div>
+</div>
+</body>
+</html>

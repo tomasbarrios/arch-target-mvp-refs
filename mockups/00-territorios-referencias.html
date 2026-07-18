@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Territorios visuales — Lista de deseos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Newsreader:opsz,ital,wght@6..72,0,400;6..72,0,500;6..72,1,400&family=Baloo+2:wght@500;700;800&family=Nunito:wght@400;700&family=Karla:wght@400;500;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', sans-serif; background: #f2f0ed; color: #333; padding: 40px 20px; }
+  .intro { max-width: 860px; margin: 0 auto 36px; }
+  .intro h1 { font-size: 22px; margin-bottom: 8px; }
+  .intro p { font-size: 14px; color: #666; line-height: 1.5; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 28px; max-width: 1200px; margin: 0 auto; }
+  .territory { border-radius: 16px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,.08); display: flex; flex-direction: column; }
+  .t-label { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; opacity: .65; margin-bottom: 10px; }
+  .t-body { padding: 28px 26px; flex: 1; }
+  .swatches { display: flex; gap: 8px; margin: 18px 0; }
+  .swatch { width: 44px; height: 44px; border-radius: 10px; border: 1px solid rgba(0,0,0,.08); }
+  .refs { padding: 16px 26px; font-size: 13px; border-top: 1px solid rgba(0,0,0,.08); background: rgba(255,255,255,.5); }
+  .refs a { margin-right: 14px; }
+  .btn { display: inline-block; padding: 12px 22px; border-radius: 999px; font-size: 15px; margin-top: 16px; }
+  .msg { font-size: 15px; line-height: 1.55; margin-top: 14px; }
+
+  /* T1 — Invitación de papel */
+  .t1 { background: #faf5ec; color: #4a3728; }
+  .t1 h2 { font-family: 'Fraunces', serif; font-size: 30px; font-weight: 600; }
+  .t1 .msg { font-family: 'Newsreader', serif; font-style: italic; font-size: 17px; }
+  .t1 .btn { background: #b5542d; color: #faf5ec; font-family: 'Fraunces', serif; }
+  .t1 .t-body { border: 1px solid #e0d3bd; margin: 10px; border-radius: 10px; }
+
+  /* T2 — Editorial íntimo */
+  .t2 { background: #ffffff; color: #1c1a17; }
+  .t2 h2 { font-family: 'Newsreader', serif; font-size: 32px; font-weight: 500; letter-spacing: -.01em; }
+  .t2 .msg { color: #55504a; }
+  .t2 .btn { background: #1c1a17; color: #fff; }
+
+  /* T3 — Fiesta */
+  .t3 { background: #fff8e7; color: #2d2440; }
+  .t3 h2 { font-family: 'Baloo 2', cursive; font-size: 30px; font-weight: 800; color: #e0316e; }
+  .t3 .msg { font-family: 'Nunito', sans-serif; }
+  .t3 .btn { background: #ffd23f; color: #2d2440; font-family: 'Baloo 2', cursive; font-weight: 700; box-shadow: 3px 3px 0 #2d2440; border-radius: 14px; }
+
+  /* T4 — Abrazo suave */
+  .t4 { background: #f6f1fb; color: #46405c; }
+  .t4 h2 { font-family: 'Karla', sans-serif; font-size: 28px; font-weight: 700; }
+  .t4 .msg { font-family: 'Karla', sans-serif; }
+  .t4 .btn { background: #a58fd4; color: #fff; font-family: 'Karla', sans-serif; font-weight: 700; }
+</style>
+</head>
+<body>
+  <div class="intro">
+    <h1>4 territorios visuales — reacciona: sí / no / tibio</h1>
+    <p>No son diseños ni propuestas finales: son ánimos distintos aplicados al mismo contenido (el cumpleaños de Maya). Cada uno trae paleta, tipografía, un botón y la voz del mensaje de bienvenida, más referencias reales para mirar.</p>
+  </div>
+  <div class="grid">
+
+    <div class="territory t1">
+      <div class="t-body">
+        <div class="t-label">T1 · Invitación de papel</div>
+        <h2>La lista de Maya 🎂</h2>
+        <div class="swatches">
+          <div class="swatch" style="background:#faf5ec"></div>
+          <div class="swatch" style="background:#e0d3bd"></div>
+          <div class="swatch" style="background:#b5542d"></div>
+          <div class="swatch" style="background:#5c7a5a"></div>
+          <div class="swatch" style="background:#4a3728"></div>
+        </div>
+        <p class="msg">"Hola :) Se viene mi cumple y quise dejarte estas ideas por si te sirven. Nada es obligación — lo que más quiero es celebrar contigo."</p>
+        <span class="btn">Yo me encargo</span>
+      </div>
+      <div class="refs">Cómo se siente: una invitación de matrimonio bien hecha, papel con textura, artesanal.
+        <br>Refs: <a href="https://www.paperlesspost.com">Paperless Post</a> <a href="https://www.minted.com/wedding-invitations">Minted</a></div>
+    </div>
+
+    <div class="territory t2">
+      <div class="t-body">
+        <div class="t-label">T2 · Editorial íntimo</div>
+        <h2>La lista de Maya</h2>
+        <div class="swatches">
+          <div class="swatch" style="background:#ffffff"></div>
+          <div class="swatch" style="background:#f0ede8"></div>
+          <div class="swatch" style="background:#1c1a17"></div>
+          <div class="swatch" style="background:#c26a4a"></div>
+        </div>
+        <p class="msg">"Hola. Se acerca mi cumpleaños y armé esta lista con cosas que me harían ilusión. Son solo ideas — lo importante es que estés ese día."</p>
+        <span class="btn">Yo me encargo</span>
+      </div>
+      <div class="refs">Cómo se siente: revista de tiraje corto, fotos grandes, mucho aire, elegancia sin frialdad.
+        <br>Refs: <a href="https://www.kinfolk.com">Kinfolk</a> <a href="https://www.airbnb.cl">Airbnb</a></div>
+    </div>
+
+    <div class="territory t3">
+      <div class="t-body">
+        <div class="t-label">T3 · Fiesta</div>
+        <h2>¡El cumple de Maya! 🎉</h2>
+        <div class="swatches">
+          <div class="swatch" style="background:#fff8e7"></div>
+          <div class="swatch" style="background:#e0316e"></div>
+          <div class="swatch" style="background:#ffd23f"></div>
+          <div class="swatch" style="background:#2ec4b6"></div>
+          <div class="swatch" style="background:#2d2440"></div>
+        </div>
+        <p class="msg">"¡Holaa! Se viene mi cumple 🥳 Te dejo unas ideas de regalo por si te sirven — cero obligación, pero si te tinca alguna, ¡es tuya!"</p>
+        <span class="btn">¡Yo me encargo! 🙌</span>
+      </div>
+      <div class="refs">Cómo se siente: la invitación que te manda tu amiga por WhatsApp, stickers, memes, color.
+        <br>Refs: <a href="https://partiful.com">Partiful</a> <a href="https://www.duolingo.com">Duolingo</a></div>
+    </div>
+
+    <div class="territory t4">
+      <div class="t-body">
+        <div class="t-label">T4 · Abrazo suave</div>
+        <h2>La lista de Maya 💜</h2>
+        <div class="swatches">
+          <div class="swatch" style="background:#f6f1fb"></div>
+          <div class="swatch" style="background:#e8dff5"></div>
+          <div class="swatch" style="background:#a58fd4"></div>
+          <div class="swatch" style="background:#f2a68c"></div>
+          <div class="swatch" style="background:#46405c"></div>
+        </div>
+        <p class="msg">"Hola :) Pronto es mi cumple y quise compartirte estas ideas. Tómalo con calma, mira tranquilo — cualquier gesto tuyo me hace feliz."</p>
+        <span class="btn">Yo me encargo</span>
+      </div>
+      <div class="refs">Cómo se siente: app que te habla bajito y bonito, bordes redondos, calma cálida.
+        <br>Refs: <a href="https://www.headspace.com">Headspace</a> <a href="https://www.calm.com">Calm</a></div>
+    </div>
+
+  </div>
+</body>
+</html>

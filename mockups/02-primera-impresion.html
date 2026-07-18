@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Primera impresión — la carta de Maya</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Karla:ital,wght@0,400;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#e8e6e2; font-family:'Karla',sans-serif; display:flex; justify-content:center; padding:30px 0; }
+  .phone { width:390px; background:#fffefb; min-height:800px; border-radius:24px; overflow:hidden; box-shadow:0 10px 40px rgba(0,0,0,.15); color:#33302c; display:flex; flex-direction:column; }
+
+  .top { padding:42px 22px 8px; text-align:center; }
+  .polaroid { width:172px; margin:0 auto; background:#fff; padding:11px 11px 30px; box-shadow:0 5px 16px rgba(0,0,0,.18); transform:rotate(-3deg); position:relative; }
+  .polaroid .ph { height:140px; background:#d9c7a7; display:flex; align-items:center; justify-content:center; font-size:46px; }
+  .polaroid .tape { position:absolute; top:-11px; left:50%; transform:translateX(-50%) rotate(2deg); width:76px; height:24px; background:rgba(217,165,20,.45); }
+  .top h1 { font-family:'Caveat',cursive; font-size:42px; font-weight:700; margin-top:18px; }
+  .top .date { font-size:14px; font-weight:700; color:#8a8577; }
+  .top .count { display:inline-block; font-family:'Caveat',cursive; font-size:21px; color:#d64533; transform:rotate(-2deg); margin-top:4px; }
+
+  .letter { margin:24px 22px; background:#faf6ec; border-left:4px solid #d9a514; padding:18px 20px; font-size:15.5px; line-height:1.65; }
+  .letter .sig { font-family:'Caveat',cursive; font-size:24px; margin-top:10px; text-align:right; }
+
+  .cta-wrap { margin:auto 22px 0; padding-bottom:38px; text-align:center; }
+  .cta { display:block; width:100%; background:#33302c; color:#fffefb; border:none; font-family:'Karla'; font-weight:800; font-size:16px; padding:16px; border-radius:4px; }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="top">
+    <div class="polaroid"><div class="tape"></div><div class="ph">📷</div></div>
+    <h1>El cumple de Maya</h1>
+    <div class="date">sábado 30 de agosto</div>
+    <div class="count">¡faltan 43 días!</div>
+  </div>
+  <div class="letter">
+    "Hola :) Se viene mi cumple y quise dejarte estas ideas de regalo, de esas que una no cuenta por pudor. Nada es obligación — lo que más quiero es celebrar contigo ese día."
+    <div class="sig">— Maya</div>
+  </div>
+  <div class="cta-wrap">
+    <button class="cta">Ver sus deseos ✨</button>
+  </div>
+</div>
+</body>
+</html>

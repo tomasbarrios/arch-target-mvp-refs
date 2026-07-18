@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Explorar deseos — El cumple de Maya</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Karla:ital,wght@0,400;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#e8e6e2; font-family:'Karla',sans-serif; display:flex; justify-content:center; padding:30px 0; }
+  .phone { width:390px; background:#fffefb; min-height:800px; border-radius:24px; overflow:hidden; box-shadow:0 10px 40px rgba(0,0,0,.15); color:#33302c; }
+
+  .bar { padding:20px 22px 14px; border-bottom:1.5px solid #e5decf; display:flex; align-items:center; justify-content:space-between; }
+  .bar h1 { font-family:'Caveat',cursive; font-size:28px; font-weight:700; }
+  .bar .count { font-family:'Caveat',cursive; font-size:17px; color:#d64533; transform:rotate(-2deg); }
+
+  .tabs { display:flex; gap:8px; margin:16px 22px 0; }
+  .tab { font-family:'Karla'; font-size:13.5px; font-weight:800; padding:8px 14px; border-radius:999px; border:1.5px solid #e5decf; background:#fffefb; color:#8a8577; }
+  .tab.active { background:#33302c; border-color:#33302c; color:#fffefb; }
+  .star { color:#d9a514; }
+  .fav { position:absolute; left:-8px; top:-10px; font-size:19px; transform:rotate(-12deg); }
+
+  .section { margin:18px 22px 4px; font-family:'Caveat',cursive; font-size:25px; color:#33302c; }
+
+  .card { margin:12px 22px; background:#fff; border:1.5px solid #e5decf; border-radius:6px; padding:16px 18px; position:relative; }
+  .card:nth-child(odd) { transform:rotate(.4deg); }
+  .card:nth-child(even) { transform:rotate(-.3deg); }
+  .card h3 { font-size:16.5px; font-weight:800; padding-right:92px; }
+  .nota { font-family:'Caveat',cursive; font-size:20px; color:#6d675c; margin:4px 0 8px; }
+
+  .meta { display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:10px; }
+  .flex-mark { font-size:12.5px; font-weight:800; letter-spacing:.03em; }
+  .exact { color:#d64533; }
+  .ref { color:#5a7d3b; }
+
+  .price { display:flex; align-items:center; gap:3px; }
+  .price span { width:6px; height:6px; border-radius:50%; border:1.3px solid #8a8577; background:transparent; }
+  .price span.fill { background:#8a8577; border-color:#8a8577; }
+
+  .link { font-size:13px; font-weight:700; color:#33302c; text-decoration:underline dotted; text-underline-offset:3px; }
+
+  .take { float:right; background:#33302c; color:#fffefb; border:none; font-family:'Karla'; font-weight:800; font-size:13.5px; padding:9px 16px; border-radius:4px; }
+
+  .taken { background:#faf8f2; }
+  .taken .stamp { position:absolute; right:14px; top:14px; font-family:'Caveat',cursive; font-size:19px; color:#5a7d3b; transform:rotate(-6deg); border:2px solid #5a7d3b; border-radius:4px; padding:1px 8px; white-space:nowrap; }
+
+  .foot { text-align:center; font-family:'Caveat',cursive; font-size:21px; color:#8a8577; padding:12px 0 28px; }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="bar">
+    <h1>‹ El cumple de Maya</h1>
+    <div class="count">¡faltan 43 días!</div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active">Todos</button>
+    <button class="tab"><span class="star">★</span> Los que más le importan</button>
+  </div>
+
+  <div class="section">Sus deseos ✨</div>
+
+  <div class="card">
+    <span class="fav">⭐</span>
+    <button class="take">Yo me encargo</button>
+    <h3>Entradas para Los Bunkers</h3>
+    <p class="nota">"¡Van a tocar en septiembre y me muero por ir!"</p>
+    <div class="meta">
+      <span class="flex-mark exact">ESTE EXACTO ✓</span>
+      <span class="price"><span class="fill"></span><span class="fill"></span><span></span></span>
+    </div>
+    <a class="link" href="#">ver dónde comprarlo →</a>
+  </div>
+
+  <div class="card">
+    <button class="take">Yo me encargo</button>
+    <h3>La casa de los espíritus, ed. ilustrada</h3>
+    <p class="nota">"La tengo re vieja y ya se me cae a pedazos"</p>
+    <div class="meta">
+      <span class="flex-mark exact">ESTE EXACTO ✓</span>
+      <span class="price"><span class="fill"></span><span></span><span></span></span>
+    </div>
+    <a class="link" href="#">ver dónde comprarlo →</a>
+  </div>
+
+  <div class="card">
+    <button class="take">Yo me encargo</button>
+    <h3>Tetera enlozada</h3>
+    <p class="nota">"Para el té de las cinco, algo bonito y de esas que duran"</p>
+    <div class="meta">
+      <span class="flex-mark ref">ALGO COMO ESTO</span>
+      <span class="price"><span class="fill"></span><span></span><span></span></span>
+    </div>
+    <a class="link" href="#">ver dónde comprarlo →</a>
+  </div>
+
+  <div class="card">
+    <span class="fav">⭐</span>
+    <button class="take">Yo me encargo</button>
+    <h3>Una planta para el balcón</h3>
+    <p class="nota">"Cualquiera menos cactus, porfa 🌵"</p>
+    <div class="meta">
+      <span class="flex-mark ref">ALGO COMO ESTO</span>
+      <span class="price"><span class="fill"></span><span></span><span></span></span>
+    </div>
+  </div>
+
+  <div class="card">
+    <button class="take">Yo me encargo</button>
+    <h3>Audífonos bluetooth</h3>
+    <p class="nota">"Los míos ya no cargan ni a rogarles"</p>
+    <div class="meta">
+      <span class="flex-mark ref">ALGO COMO ESTO</span>
+      <span class="price"><span class="fill"></span><span class="fill"></span><span class="fill"></span></span>
+    </div>
+    <a class="link" href="#">ver dónde comprarlo →</a>
+  </div>
+
+  <div class="card taken">
+    <div class="stamp">lo tiene Caro B.</div>
+    <h3>Un buen vermut</h3>
+    <p class="nota">"Para la sobremesa del mismo cumple"</p>
+    <div class="meta">
+      <span class="flex-mark ref">ALGO COMO ESTO</span>
+      <span class="price"><span class="fill"></span><span></span><span></span></span>
+    </div>
+  </div>
+
+  <div class="card taken">
+    <div class="stamp">lo tiene Rodrigo M.</div>
+    <h3>Clase de cerámica</h3>
+    <p class="nota">"Siempre quise aprender a hacer algo con las manos"</p>
+    <div class="meta">
+      <span class="flex-mark ref">ALGO COMO ESTO</span>
+      <span class="price"><span class="fill"></span><span class="fill"></span><span></span></span>
+    </div>
+  </div>
+
+  <div class="foot">2 de 7 deseos ya tienen quien se encargue 🙌</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dirección B — Calor humano</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,400;0,500;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#e8e6e2; font-family:'Karla',sans-serif; display:flex; justify-content:center; padding:30px 0; }
+  .phone { width:390px; background:#fdfaf4; min-height:800px; border-radius:24px; overflow:hidden; box-shadow:0 10px 40px rgba(0,0,0,.15); color:#2b2b28; }
+
+  .cover { height:230px; background:linear-gradient(180deg, #86a292 0%, #2f5d50 100%); position:relative; display:flex; align-items:flex-end; }
+  .cover .photo-hint { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:52px; opacity:.55; }
+  .cover .veil { width:100%; padding:18px 22px; background:linear-gradient(180deg, transparent, rgba(20,40,34,.75)); color:#fdfaf4; }
+  .cover h1 { font-size:27px; font-weight:800; letter-spacing:-.01em; }
+  .cover .date { font-size:14px; opacity:.9; }
+
+  .countdown { margin:-16px 22px 0; background:#f4a83c; color:#3d2a08; font-weight:800; font-size:14px; text-align:center; border-radius:12px; padding:10px; position:relative; }
+
+  .welcome { margin:20px 22px; font-size:16px; line-height:1.6; }
+  .welcome .who { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+  .welcome .who .mini { width:34px; height:34px; border-radius:50%; background:#2f5d50; color:#fdfaf4; display:flex; align-items:center; justify-content:center; font-weight:800; }
+  .welcome .who span { font-weight:700; font-size:14px; color:#2f5d50; }
+
+  .section { padding:6px 22px; font-size:14px; font-weight:800; text-transform:uppercase; letter-spacing:.08em; color:#8a8577; }
+  .card { margin:10px 22px; background:#fff; border-radius:14px; padding:0; overflow:hidden; box-shadow:0 2px 10px rgba(43,43,40,.06); display:flex; }
+  .card .thumb { width:92px; background:#e7e0d2; display:flex; align-items:center; justify-content:center; font-size:30px; flex-shrink:0; }
+  .card .content { padding:14px 16px; flex:1; }
+  .card h3 { font-size:16.5px; font-weight:800; }
+  .card .nota { font-size:14px; color:#6d675c; font-style:italic; margin:4px 0 8px; }
+  .flex-tag { font-size:12.5px; font-weight:700; color:#2f5d50; }
+  .take { display:block; width:100%; background:none; border:none; border-top:1px solid #f0ead9; color:#2f5d50; font-family:'Karla'; font-weight:800; font-size:14px; padding:10px; }
+  .taken-strip { margin:10px 22px; font-size:14px; color:#6d675c; }
+  .taken-strip b { color:#2f5d50; }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="cover">
+    <div class="photo-hint">📷</div>
+    <div class="veil">
+      <h1>El cumple de Maya</h1>
+      <div class="date">sábado 30 de agosto</div>
+    </div>
+  </div>
+  <div class="countdown">Faltan 43 días 🎂</div>
+  <div class="welcome">
+    <div class="who"><div class="mini">M</div><span>Un mensaje de Maya para ti</span></div>
+    "Hola :) Se viene mi cumple y quise dejarte estas ideas de regalo, de esas que una no cuenta por pudor. Nada es obligación — lo que más quiero es celebrar contigo ese día."
+  </div>
+  <div class="section">Lo que le haría ilusión</div>
+  <div class="card">
+    <div class="thumb">🎫</div>
+    <div class="content">
+      <h3>Entradas para Los Bunkers</h3>
+      <p class="nota">"¡Van a tocar en septiembre y me muero por ir!"</p>
+      <span class="flex-tag">Quiere este exacto</span>
+    </div>
+  </div>
+  <div class="card">
+    <div class="thumb">🪴</div>
+    <div class="content">
+      <h3>Una planta para el balcón</h3>
+      <p class="nota">"Cualquiera menos cactus, porfa 🌵"</p>
+      <span class="flex-tag">Algo como esto — tú eliges</span>
+    </div>
+  </div>
+  <div class="taken-strip">✋ <b>Caro</b> ya se encargó del vermut para la sobremesa.</div>
+</div>
+</body>
+</html>

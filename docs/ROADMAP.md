@@ -39,6 +39,8 @@ Un invitado que recibe el link de una lista puede explorarla y asignarse un dese
 - Cantidad intuitiva (slider / % completado) — `docs/feedback/2026-07-07-pato-barrios.md` (pool desde 2026-07-08)
 - Reputación / historial de cumplimiento por usuario — `docs/happy-path.md` (a futuro, baja prioridad; pool desde 2026-07-08)
 - Pool de emergencia: regalos genéricos de respaldo agregados por el dueño — `docs/happy-path.md` (a futuro, baja prioridad; pool desde 2026-07-08)
+- Modo sorpresa opcional por lista: ocultar asignaciones al dueño y revelarlas entre co-participantes de un regalo grupal para que se coordinen — `docs/handoff-creativo.md` (pool desde 2026-07-18)
+- Aporte parcial / regalo grupal (vaquita): varios invitados se suman a un deseo caro — `docs/handoff-creativo.md`, relacionado con "Cantidad intuitiva" (pool desde 2026-07-18)
 
 ## Criterio de selección
 

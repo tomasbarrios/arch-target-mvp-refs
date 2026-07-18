@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Preview WhatsApp — El cumple de Maya</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Karla:ital,wght@0,400;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#e8e6e2; font-family:'Karla',sans-serif; display:flex; justify-content:center; padding:30px 0; }
+  .phone { width:390px; min-height:800px; border-radius:24px; overflow:hidden; box-shadow:0 10px 40px rgba(0,0,0,.15); color:#33302c; display:flex; flex-direction:column; }
+
+  /* Barra superior estilo WhatsApp */
+  .wa-top { background:#075e54; color:#fff; padding:14px 16px; display:flex; align-items:center; gap:12px; }
+  .wa-avatar { width:38px; height:38px; border-radius:50%; background:#d9c7a7; display:flex; align-items:center; justify-content:center; font-size:18px; }
+  .wa-name { font-size:15.5px; font-weight:700; }
+  .wa-status { font-size:12px; color:#cfe9e4; }
+
+  /* Fondo del chat */
+  .wa-chat {
+    flex:1;
+    background-color:#e5ddd0;
+    background-image:
+      radial-gradient(rgba(0,0,0,.035) 1px, transparent 1px);
+    background-size:14px 14px;
+    padding:16px 12px 24px;
+  }
+  .wa-date { text-align:center; margin:4px 0 14px; }
+  .wa-date span { background:#e1f2fa; color:#6d8894; font-size:11.5px; font-weight:700; padding:4px 10px; border-radius:6px; }
+
+  .bubble-wrap { display:flex; justify-content:flex-end; margin-bottom:10px; }
+  .bubble {
+    max-width:82%;
+    background:#dcf8c6;
+    border-radius:8px 2px 8px 8px;
+    padding:7px 8px 6px;
+    box-shadow:0 1px 1px rgba(0,0,0,.12);
+    position:relative;
+  }
+
+  .link-card {
+    background:#f6fbee;
+    border-radius:6px;
+    overflow:hidden;
+    margin-bottom:6px;
+  }
+  .link-card .photo {
+    background:#faf6ec;
+    padding:14px 0 20px;
+    display:flex;
+    justify-content:center;
+  }
+  .polaroid { width:120px; background:#fff; padding:8px 8px 20px; box-shadow:0 4px 12px rgba(0,0,0,.16); transform:rotate(-2.5deg); position:relative; }
+  .polaroid .ph { height:92px; background:#d9c7a7; display:flex; align-items:center; justify-content:center; font-size:32px; }
+  .polaroid .tape { position:absolute; top:-8px; left:50%; transform:translateX(-50%) rotate(3deg); width:54px; height:17px; background:rgba(217,165,20,.45); }
+  .link-card .info { padding:8px 10px 10px; }
+  .link-card .title { font-weight:800; font-size:14.5px; color:#111b0e; line-height:1.25; }
+  .link-card .sub { font-size:12.5px; color:#5f6d5a; margin-top:3px; line-height:1.35; }
+  .link-card .url { font-size:11px; color:#8a9686; margin-top:6px; text-transform:lowercase; letter-spacing:.01em; }
+
+  .bubble .msg { font-size:14.5px; line-height:1.42; color:#111b0e; padding:2px 4px 0; }
+  .bubble .meta { text-align:right; font-size:10.5px; color:#7d9473; margin-top:2px; padding-right:2px; }
+  .bubble .meta .check { color:#53bdeb; margin-left:2px; }
+
+  .hint {
+    font-family:'Caveat',cursive;
+    font-size:19px;
+    color:#8a8577;
+    text-align:center;
+    margin-top:14px;
+    transform:rotate(-1deg);
+  }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="wa-top">
+    <div class="wa-avatar">🎂</div>
+    <div>
+      <div class="wa-name">Maya</div>
+      <div class="wa-status">en línea</div>
+    </div>
+  </div>
+
+  <div class="wa-chat">
+    <div class="wa-date"><span>HOY</span></div>
+
+    <div class="bubble-wrap">
+      <div class="bubble">
+        <div class="link-card">
+          <div class="photo">
+            <div class="polaroid"><div class="tape"></div><div class="ph">📷</div></div>
+          </div>
+          <div class="info">
+            <div class="title">El cumple de Maya 🎂</div>
+            <div class="sub">Ideas de regalo para el sábado 30 de agosto — mira qué le encantaría recibir.</div>
+            <div class="url">lista-de-deseos.cl/maya</div>
+          </div>
+        </div>
+        <div class="msg">¡Hola! Se viene mi cumple 🎂 y quise dejarte unas ideas de regalo, por si te sirven 💛</div>
+        <div class="meta">11:42 <span class="check">✓✓</span></div>
+      </div>
+    </div>
+
+    <div class="hint">tócala y aparece ✨</div>
+  </div>
+</div>
+</body>
+</html>

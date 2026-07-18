@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Confirmación — ¡la planta es tuya!</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Karla:ital,wght@0,400;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#e8e6e2; font-family:'Karla',sans-serif; display:flex; justify-content:center; padding:30px 0; }
+  .phone { width:390px; background:#fffefb; min-height:800px; border-radius:24px; overflow:hidden; box-shadow:0 10px 40px rgba(0,0,0,.15); color:#33302c; position:relative; }
+
+  /* Confeti por toda la pantalla */
+  .confetti { position:absolute; inset:0; pointer-events:none; overflow:hidden; }
+  .confetti i { position:absolute; top:-14px; width:9px; height:14px; opacity:.9; animation:fall linear infinite; }
+  @keyframes fall {
+    0%   { transform:translateY(-20px) rotate(0deg); }
+    100% { transform:translateY(840px) rotate(720deg); }
+  }
+  .c1 { background:#d64533; } .c2 { background:#d9a514; } .c3 { background:#5a7d3b; } .c4 { background:#d9c7a7; }
+
+  .top { padding:52px 22px 6px; text-align:center; position:relative; }
+  .top .big { font-size:58px; display:inline-block; animation:pop .5s ease; }
+  @keyframes pop { 0% { transform:scale(.3); } 70% { transform:scale(1.15); } 100% { transform:scale(1); } }
+  .top h1 { font-family:'Caveat',cursive; font-size:52px; font-weight:700; margin-top:8px; transform:rotate(-1.5deg); }
+  .top p { font-size:16.5px; line-height:1.5; margin-top:10px; }
+  .top p strong { font-weight:800; }
+
+  .card-wrap { margin:30px 22px 4px; position:relative; }
+  .card { background:#fff; border:1.5px solid #e5decf; border-radius:6px; padding:16px 18px; transform:rotate(.4deg); }
+  .card h3 { font-size:16.5px; font-weight:800; }
+  .nota { font-family:'Caveat',cursive; font-size:20px; color:#6d675c; margin:4px 0 8px; }
+  .flex-mark { font-size:12.5px; font-weight:800; letter-spacing:.03em; color:#5a7d3b; }
+  .stamp { position:absolute; top:-18px; right:-6px; font-family:'Caveat',cursive; font-size:23px; font-weight:700; color:#5a7d3b; background:#fffefb; border:2.5px solid #5a7d3b; border-radius:6px; padding:5px 13px; transform:rotate(-7deg); box-shadow:0 3px 8px rgba(0,0,0,.12); animation:pop .6s ease; }
+
+  .foot { margin:44px 22px 0; text-align:center; }
+  .foot a { display:inline-block; font-weight:800; font-size:14px; color:#33302c; text-decoration:none; border-bottom:2px solid #33302c; padding-bottom:2px; }
+  .nudge { margin:26px 22px 30px; text-align:center; font-size:13px; color:#8a8577; line-height:1.6; }
+  .nudge a { color:#8a8577; text-decoration:underline; text-decoration-color:#d9c7a7; }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="confetti">
+    <i class="c1" style="left:4%;  animation-duration:3.1s; animation-delay:0s;"></i>
+    <i class="c2" style="left:12%; animation-duration:2.6s; animation-delay:.6s;"></i>
+    <i class="c3" style="left:20%; animation-duration:3.4s; animation-delay:.2s;"></i>
+    <i class="c4" style="left:28%; animation-duration:2.8s; animation-delay:1s;"></i>
+    <i class="c1" style="left:36%; animation-duration:3.2s; animation-delay:.4s;"></i>
+    <i class="c2" style="left:44%; animation-duration:2.5s; animation-delay:1.3s;"></i>
+    <i class="c3" style="left:52%; animation-duration:3.6s; animation-delay:.1s;"></i>
+    <i class="c4" style="left:60%; animation-duration:2.9s; animation-delay:.8s;"></i>
+    <i class="c1" style="left:68%; animation-duration:3.3s; animation-delay:1.1s;"></i>
+    <i class="c2" style="left:76%; animation-duration:2.7s; animation-delay:.3s;"></i>
+    <i class="c3" style="left:84%; animation-duration:3.5s; animation-delay:.9s;"></i>
+    <i class="c4" style="left:92%; animation-duration:2.6s; animation-delay:.5s;"></i>
+  </div>
+
+  <div class="top">
+    <div class="big">🎉</div>
+    <h1>¡La planta es tuya!</h1>
+    <p><strong>Maya ya puede contar contigo.</strong></p>
+  </div>
+
+  <div class="card-wrap">
+    <div class="stamp">lo tiene Fran B.</div>
+    <div class="card">
+      <h3>Una planta para el balcón</h3>
+      <p class="nota">"Cualquiera menos cactus, porfa 🌵"</p>
+      <span class="flex-mark">ALGO COMO ESTO</span>
+    </div>
+  </div>
+
+  <div class="foot">
+    <a href="#">Volver a la lista</a>
+  </div>
+
+  <div class="nudge">
+    ¿Cambias seguido de teléfono? <a href="#">Deja tu email</a> para no perder tu elección.
+  </div>
+</div>
+</body>
+</html>

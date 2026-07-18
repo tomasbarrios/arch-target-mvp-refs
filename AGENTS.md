@@ -1,3 +1,5 @@
+READ ~/Projects/agent-scripts/AGENTS.MD BEFORE ANYTHING (skip if missing).
+
 # Git
 
 - No hagas commits si no se solicita explicitamente.
@@ -16,11 +18,13 @@ Esto se basa en la filosofia de Kent Beck.
 
 Si no hay codigo previo con respecto a la feature, entonces nos concentraremos en que simplemente funcione.
 
-- Tratamos de escribir poco codigo
+- Tratamos de escribir poco codigo, no para ser breves sino para ser YAGNI.
+- Claridad en la intención del lenguaje en el codigo
 - No importa si repetimos (DRY no es necesario pero si deseable)
 - Evita magias escondidas dificiles de leer
 - El codigo no tiene que ser de la mejor calidad necesariamente
 - Hace justo lo que se necesita, no hace mas (muy YAGNI)
+- Si el codigo no es autoexplicativo con una mirada rápida al bloque, debemos comentarlo.
 
 2. Ya existe y funciona. Pero podría mejorarse. Then "Make it right"
 

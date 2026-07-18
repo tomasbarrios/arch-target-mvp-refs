@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dirección C — Hecho a mano</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Karla:ital,wght@0,400;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#e8e6e2; font-family:'Karla',sans-serif; display:flex; justify-content:center; padding:30px 0; }
+  .phone { width:390px; background:#fffefb; min-height:800px; border-radius:24px; overflow:hidden; box-shadow:0 10px 40px rgba(0,0,0,.15); color:#33302c; }
+
+  .top { padding:26px 22px 8px; text-align:center; }
+  .polaroid { width:150px; margin:0 auto; background:#fff; padding:10px 10px 26px; box-shadow:0 4px 14px rgba(0,0,0,.18); transform:rotate(-3deg); position:relative; }
+  .polaroid .ph { height:120px; background:#d9c7a7; display:flex; align-items:center; justify-content:center; font-size:40px; }
+  .polaroid .tape { position:absolute; top:-10px; left:50%; transform:translateX(-50%) rotate(2deg); width:70px; height:22px; background:rgba(217,165,20,.45); }
+  .top h1 { font-family:'Caveat',cursive; font-size:40px; font-weight:700; margin-top:14px; }
+  .top .date { font-size:14px; font-weight:700; color:#8a8577; }
+  .top .count { display:inline-block; font-family:'Caveat',cursive; font-size:21px; color:#d64533; transform:rotate(-2deg); margin-top:4px; }
+
+  .welcome { margin:18px 22px; background:#faf6ec; border-left:4px solid #d9a514; padding:14px 16px; font-size:15px; line-height:1.6; }
+  .welcome .sig { font-family:'Caveat',cursive; font-size:22px; margin-top:6px; text-align:right; }
+
+  .section { margin:14px 22px 4px; font-family:'Caveat',cursive; font-size:25px; color:#33302c; }
+  .card { margin:12px 22px; background:#fff; border:1.5px solid #e5decf; border-radius:6px; padding:16px 18px; position:relative; }
+  .card:nth-child(odd) { transform:rotate(.4deg); }
+  .card h3 { font-size:16.5px; font-weight:800; }
+  .nota { font-family:'Caveat',cursive; font-size:20px; color:#6d675c; margin:4px 0 8px; }
+  .flex-mark { font-size:12.5px; font-weight:800; letter-spacing:.03em; }
+  .exact { color:#d64533; }
+  .ref { color:#5a7d3b; }
+  .take { float:right; background:#33302c; color:#fffefb; border:none; font-family:'Karla'; font-weight:800; font-size:13.5px; padding:9px 16px; border-radius:4px; }
+  .taken { background:#faf8f2; }
+  .taken .stamp { position:absolute; right:14px; top:12px; font-family:'Caveat',cursive; font-size:20px; color:#5a7d3b; transform:rotate(-6deg); border:2px solid #5a7d3b; border-radius:4px; padding:0 8px; }
+  .foot { text-align:center; font-family:'Caveat',cursive; font-size:21px; color:#8a8577; padding:12px 0 28px; }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="top">
+    <div class="polaroid"><div class="tape"></div><div class="ph">📷</div></div>
+    <h1>El cumple de Maya</h1>
+    <div class="date">sábado 30 de agosto</div>
+    <div class="count">¡faltan 43 días!</div>
+  </div>
+  <div class="welcome">
+    "Hola :) Se viene mi cumple y quise dejarte estas ideas de regalo, de esas que una no cuenta por pudor. Nada es obligación — lo que más quiero es celebrar contigo ese día."
+    <div class="sig">— Maya</div>
+  </div>
+  <div class="section">Mis deseos ✨</div>
+  <div class="card">
+    <button class="take">Yo me encargo</button>
+    <h3>Entradas para Los Bunkers</h3>
+    <p class="nota">"¡Van a tocar en septiembre y me muero por ir!"</p>
+    <span class="flex-mark exact">ESTE EXACTO ✓</span>
+  </div>
+  <div class="card">
+    <button class="take">Yo me encargo</button>
+    <h3>Una planta para el balcón</h3>
+    <p class="nota">"Cualquiera menos cactus, porfa 🌵"</p>
+    <span class="flex-mark ref">ALGO COMO ESTO</span>
+  </div>
+  <div class="card taken">
+    <div class="stamp">¡lo tiene Caro!</div>
+    <h3>Un buen vermut</h3>
+    <p class="nota">"Para la sobremesa del mismo cumple"</p>
+  </div>
+  <div class="foot">2 de 7 deseos ya tienen padrino 🙌</div>
+</div>
+</body>
+</html>

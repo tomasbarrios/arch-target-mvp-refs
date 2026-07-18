@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tomar un deseo — El cumple de Maya</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Karla:ital,wght@0,400;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#e8e6e2; font-family:'Karla',sans-serif; display:flex; justify-content:center; padding:30px 0; }
+  .phone { width:390px; background:#fffefb; min-height:800px; border-radius:24px; overflow:hidden; box-shadow:0 10px 40px rgba(0,0,0,.15); color:#33302c; }
+
+  .topbar { display:flex; align-items:center; padding:18px 22px 0; }
+  .back { font-size:14px; font-weight:700; color:#8a8577; }
+
+  /* El deseo, fuera de la tarjeta: protagonista */
+  .wish { text-align:center; padding:18px 22px 0; }
+  .wish .polaroid { width:190px; margin:0 auto; background:#fff; padding:11px 11px 28px; box-shadow:0 6px 18px rgba(0,0,0,.2); transform:rotate(2.5deg); position:relative; }
+  .wish .polaroid .ph { height:150px; background:#d9c7a7; display:flex; align-items:center; justify-content:center; font-size:52px; }
+  .wish .polaroid .tape { position:absolute; top:-10px; left:50%; transform:translateX(-50%) rotate(-3deg); width:76px; height:22px; background:rgba(217,165,20,.45); }
+  .wish h2 { font-size:23px; font-weight:800; margin-top:18px; line-height:1.25; }
+  .wish .nota { font-family:'Caveat',cursive; font-size:25px; color:#6d675c; margin-top:8px; }
+  .wish .meta { display:flex; justify-content:center; align-items:center; gap:14px; margin-top:12px; }
+  .flex-mark { font-size:12.5px; font-weight:800; letter-spacing:.03em; color:#5a7d3b; }
+  .price { display:flex; align-items:center; gap:4px; }
+  .price span { width:6px; height:6px; border-radius:50%; border:1.3px solid #8a8577; }
+  .price span.fill { background:#8a8577; }
+  .price .cap { width:auto; height:auto; border:none; border-radius:0; font-size:12px; color:#8a8577; margin-left:2px; }
+
+  .hero { text-align:center; padding:26px 22px 6px; }
+  .hero .hand { font-size:34px; transform:rotate(-6deg); display:inline-block; }
+  .hero h1 { font-family:'Caveat',cursive; font-size:38px; font-weight:700; margin-top:4px; }
+  .hero p { font-size:14.5px; color:#6d675c; margin-top:6px; line-height:1.5; }
+
+  .form { margin:18px 22px 0; }
+  .form label { display:block; font-size:14px; font-weight:800; margin-bottom:8px; }
+  .form input { width:100%; font-family:'Karla'; font-size:17px; font-weight:700; color:#33302c; background:#faf6ec; border:1.5px solid #e5decf; border-radius:6px; padding:14px 16px; outline:none; }
+  .form input::placeholder { color:#b5ac98; font-weight:400; }
+  .form input:focus { border-color:#d9a514; }
+  .form .why { font-size:12.5px; color:#8a8577; margin-top:6px; }
+  .confirm { display:block; width:100%; margin-top:16px; background:#33302c; color:#fffefb; border:none; font-family:'Karla'; font-weight:800; font-size:16px; padding:15px; border-radius:4px; }
+
+  .reassure { margin:22px 22px 30px; }
+  .reassure .line { display:flex; gap:10px; align-items:flex-start; margin-bottom:14px; }
+  .reassure .icon { font-size:17px; line-height:1.5; }
+  .reassure .txt { font-size:14px; color:#6d675c; line-height:1.5; }
+  .reassure .txt b { color:#33302c; }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="topbar">
+    <span class="back">‹ volver a los deseos</span>
+  </div>
+
+  <div class="wish">
+    <div class="polaroid"><div class="tape"></div><div class="ph">🪴</div></div>
+    <h2>Una planta para el balcón</h2>
+    <p class="nota">"Cualquiera menos cactus, porfa 🌵"</p>
+    <div class="meta">
+      <span class="flex-mark">ALGO COMO ESTO — tú eliges cuál</span>
+      <span class="price"><span class="fill"></span><span></span><span></span><span class="cap">precio aprox.</span></span>
+    </div>
+  </div>
+
+  <div class="hero">
+    <span class="hand">✋</span>
+    <h1>¡Se agradece la mano!</h1>
+    <p>Deja tu nombre y ya está — sin correo, sin claves.</p>
+  </div>
+
+  <div class="form">
+    <label for="nombre">¿Cómo te llamas?</label>
+    <input id="nombre" type="text" placeholder="Nombre y apellido">
+    <p class="why">Con tu apellido (o su inicial) tus conocidos sabrán que eres tú.</p>
+    <button class="confirm">Yo me encargo</button>
+  </div>
+
+  <div class="reassure">
+    <div class="line">
+      <span class="icon">👀</span>
+      <span class="txt"><b>Maya y los demás van a saber</b> que tú te encargaste de esto — así nadie lo trae duplicado.</span>
+    </div>
+    <div class="line">
+      <span class="icon">🔄</span>
+      <span class="txt">¿Te arrepientes? <b>Puedes soltarlo cuando quieras</b>, sin drama.</span>
+    </div>
+  </div>
+</div>
+</body>
+</html>
