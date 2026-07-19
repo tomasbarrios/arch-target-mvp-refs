@@ -1,505 +1,594 @@
-import type { ActionArgs, LoaderArgs, LinksFunction } from "@remix-run/node";
+import type { ActionArgs, LinksFunction, LoaderArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import {
   Form,
+  Link,
   isRouteErrorResponse,
-  useRouteError,
+  useActionData,
   useLoaderData,
-  useLocation,
-  useActionData, // can delete safely, not using currently
+  useRouteError,
 } from "@remix-run/react";
-import { useState, useRef, useEffect } from "react";
-
 import invariant from "tiny-invariant";
+
 import {
-  getWish,
-  getWishAlreadyVolunteered,
-  isUserVolunteer,
-  assignVolunteer,
-} from "~/models/wish.server";
-// import {showDate} from "@/lib/date"
-// import { getUsers } from "~/models/user.server";
+  FlexBadge,
+  Polaroid,
+  PrecioDots,
+  Timbre,
+  hechoAManoLinks,
+} from "~/components/hechoamano";
+import { prisma } from "~/db.server";
+import { createGuestSession, getGuestId } from "~/guest-session.server";
 import {
-  ExclamationTriangleIcon,
-  CircleIcon,
-  CheckCircledIcon,
-  HeartFilledIcon,
-  PersonIcon,
-} from "@radix-ui/react-icons";
-// import {
-//   Card,
-//   CardContent,
-//   CardDescription,
-//   CardFooter,
-//   CardHeader,
-//   CardTitle,
-// } from "@/components/ui/card";
-// import { Input } from "@/components/ui/input";
-// import { Label } from "@/components/ui/label";
-
-import { Alert, AlertDescription, AlertTitle } from "~/ui/alert";
-// import { Confetti } from "~/shared/Confetti";
-
-import { requireUserId, commitSession, getSession } from "~/session.server";
-import Text from "../shared/Text";
-
-import styles from "~/styles/deseo.css";
-
-import { Confetti, links as confettiLinks } from "~/shared/Confetti";
+  createGuest,
+  getGuest,
+  setGuestEmail,
+  setGuestName,
+} from "~/models/guest.server";
+import {
+  getListaPublica,
+  releaseWish,
+  takeWish,
+} from "~/models/lista-publica.server";
 import Button from "~/shared/Button";
+import { Confetti, links as confettiLinks } from "~/shared/Confetti";
 
-// console.log({ confettiLinks }, "http://localhost:3000/" + confettiLinks);
+export const links: LinksFunction = () => [
+  ...hechoAManoLinks(),
+  ...confettiLinks(),
+];
 
-export const links: LinksFunction = () => {
-  return [
-    // ...tileGridLinks(),
-    // ...productTileLinks(),
-    // ...productDetailsLinks(),
-    ...confettiLinks(),
-    { rel: "stylesheet", href: styles },
-  ];
-};
-
-// import Text from "../shared/Text";
-// import { Alert } from "@/components/ui/alert";
-
-// default: short
-
-function showDate(date: Date) {
-  // https://stackoverflow.com/questions/66590691/typescript-type-string-is-not-assignable-to-type-numeric-2-digit-in-d
-
-  let options = {
-    // weekday: "long",
-    // year: "numeric", // not addingthis will result in
-    // month: "long",
-    // day: "numeric",
-    timeZone: "America/Santiago",
-    // timeZoneName: "short",
-  };
-  // let options2 = {};
-  // const defaultOptions = {
-  //   ...options,
-  //   ...options2,
-  // };
-  const dateFormat = new Intl.DateTimeFormat(undefined, options);
-  const usedOptions = dateFormat.resolvedOptions();
-
-  // console.log({ calendar: usedOptions.calendar });
-  // // "chinese"
-
-  // console.log({ numberingSystem: usedOptions.numberingSystem });
-  // // "arab"
-
-  console.log({ timeZone: usedOptions.timeZone });
-
-  return dateFormat.format(date);
+function nombreDelDueno(title: string) {
+  const match = title.match(/\bde\s+(.+)$/i);
+  return match ? match[1].trim() : null;
 }
 
 export async function loader({ request, params }: LoaderArgs) {
-  invariant(params.wishId, "wishId s not found");
+  invariant(params.listaId, "listaId not found");
+  invariant(params.wishId, "wishId not found");
 
-  const wish = await getWish({ id: params.wishId });
-  if (!wish) {
-    throw new Response("Not Found", { status: 404 });
+  const lista = await getListaPublica({ listaId: params.listaId });
+  const wish = lista?.wishes.find((w) => w.id === params.wishId);
+  if (!lista || !wish) {
+    throw new Response("No encontrado", { status: 404 });
   }
 
-  // USER
-
-  const userId = await requireUserId(request);
-
-
-  //WISH
-
-  const wishWithVolunteers = await getWishAlreadyVolunteered({
-    wishId: wish.id,
-  });
-  const isCurrentUserAVolunteer = await isUserVolunteer({
-    wishId: wish.id,
-    userId,
+  const guestOnWish = await prisma.guestOnWish.findUnique({
+    where: { wishId: params.wishId },
+    select: { guestId: true },
   });
 
-  let currentUserWishVolunteeringInfo = null;
-  if (isCurrentUserAVolunteer) {
-    currentUserWishVolunteeringInfo = wishWithVolunteers?.volunteers.find(
-      (v) => v.userId === userId
-    );
-  }
+  const guestId = await getGuestId(request);
+  const esMio = !!guestOnWish && guestOnWish.guestId === guestId;
 
-  // console.log("isCurrentUserAVolunteer", { wishWithVolunteers });
-  // console.log("wishHasCurrentUserAsVolunteer", {isUserVolunteer})
+  const guest = esMio && guestId ? await getGuest(guestId) : null;
 
-  const session = await getSession(request);
+  const url = new URL(request.url);
+  const mostrarConfirmacion = esMio && url.searchParams.get("tomado") === "1";
 
-  const globalMessage = session.get("globalMessage");
-  let additional: {} = {};
-  // VERY IMPORTANT, these clears out the flash messages, if any
-  if (session && globalMessage) {
-    additional = { // if not changing this, the message wont dessapear when clicking on other wishes ("read all messages")
-      // if you delete the following lines, message wont go away (?)
-      headers: {
-        "Set-Cookie": await commitSession(session),
-      },
-    };
-  }
-
-  return json(
-    {
-      wish: {
-        ...wish,
-        hasWishAlreadyVolunteer: !!wishWithVolunteers,
-        isCurrentUserAVolunteer: isCurrentUserAVolunteer,
-        volunteers: wishWithVolunteers?.volunteers,
-        currentUserWishVolunteeringInfo,
-      },
-      globalMessage,
+  return json({
+    listaId: params.listaId,
+    dueño: nombreDelDueno(lista.title),
+    wish: {
+      id: wish.id,
+      title: wish.title,
+      body: wish.body,
+      exampleUrls: wish.exampleUrls,
+      flexibility: wish.flexibility,
+      priceTier: wish.priceTier,
     },
-    additional
-  );
+    estado: esMio ? "mio" : wish.takenBy ? "otro" : "libre",
+    tomadoPor: wish.takenBy?.name ?? null,
+    mostrarConfirmacion,
+    guestName: guest?.name ?? null,
+    guestEmail: guest?.email ?? null,
+  });
 }
 
 export async function action({ request, params }: ActionArgs) {
+  invariant(params.listaId, "listaId not found");
   invariant(params.wishId, "wishId not found");
 
   const formData = await request.formData();
-  const quantity = formData.get("quantity");
+  const intent = formData.get("intent");
 
-  if (typeof quantity !== "string" || quantity.length === 0) {
-    return json(
-      {
-        errors: {
-          quantity: "Cantidad debe ser válida",
+  type Errors = { name?: string; take?: string; email?: string };
+
+  if (intent === "take") {
+    const name = formData.get("name");
+    if (typeof name !== "string" || name.trim().length === 0) {
+      return json<{ errors: Errors }>(
+        {
+          errors: {
+            name: "Cuéntanos cómo te llamas, así saben quién se encargó 🙂",
+          },
         },
-      },
-      { status: 400 }
-    );
-  } else if (Number(quantity) <= 0) {
-    return json(
-      {
-        errors: {
-          quantity: "Cantidad debe ser mayor que 0",
+        { status: 400 }
+      );
+    }
+
+    const existingGuestId = await getGuestId(request);
+    const existingGuest = existingGuestId
+      ? await getGuest(existingGuestId)
+      : null;
+    let guestId: string;
+    let headers: HeadersInit = {};
+
+    if (existingGuest) {
+      guestId = existingGuest.id;
+      await setGuestName({ id: guestId, name: name.trim() });
+    } else {
+      // Cookie sin invitado válido (nunca tomó nada, o su guest fue borrado) — identidad nueva.
+      const guest = await createGuest({ name: name.trim() });
+      guestId = guest.id;
+      headers = await createGuestSession({ request, guestId });
+    }
+
+    const result = await takeWish({
+      wishId: params.wishId,
+      guestId,
+    });
+
+    if ("error" in result) {
+      return json<{ errors: Errors }>(
+        {
+          errors: {
+            take: "Justo se te adelantaron 😅 alguien más ya se encargó de este deseo.",
+          },
         },
-      },
-      { status: 400 }
+        { status: 400 }
+      );
+    }
+
+    return redirect(
+      `/lista/${params.listaId}/deseo/${params.wishId}?tomado=1`,
+      { headers }
     );
   }
 
-  const userId = await requireUserId(request);
+  if (intent === "email") {
+    const guestId = await getGuestId(request);
+    const email = formData.get("email");
 
-  await assignVolunteer({
-    wishId: params.wishId,
-    userId,
-    quantity,
-  });
+    if (!guestId) {
+      return json<{ errors: Errors }>(
+        { errors: { email: "No pudimos identificarte, prueba de nuevo." } },
+        { status: 400 }
+      );
+    }
+    if (typeof email !== "string" || !email.includes("@")) {
+      return json<{ errors: Errors }>(
+        { errors: { email: "Ponle un correo válido, porfa." } },
+        { status: 400 }
+      );
+    }
 
-  const session = await getSession(request);
-  session.flash(
-    "globalMessage",
-    "Gracias por sumarte a este deseo ❤️"
-  );
-  // OK? then ...
-  // TODO: Disimissable (?)
+    await setGuestEmail({ id: guestId, email: email.trim() });
+    return json({ emailSaved: true });
+  }
 
-  const redirectToURL = new URL(request.url).pathname;
-  const searchParams = new URLSearchParams([["redirectTo", redirectToURL]]);
+  if (intent === "release") {
+    const guestId = await getGuestId(request);
+    if (guestId) {
+      await releaseWish({ wishId: params.wishId, guestId });
+    }
+    return redirect(`/lista/${params.listaId}/deseos`);
+  }
 
-  const redirectTo =
-    searchParams.get("redirectTo") || `/lista/${params.listaId}`;
-  // console.log("REDIRECTREDIRECTREDIRECT", { redirectTo });
-  // console.log("session flash", { msg: session.get("globalMessage") });
-  const additionalOpts = {
-    headers: {
-      "Set-Cookie": await commitSession(session),
-    },
-  };
-  return redirect(redirectTo, additionalOpts);
+  throw new Response("Solicitud no reconocida", { status: 400 });
 }
 
-const showUsername = (user: any) => {
-  const showFirst = (str: string, index: number) => {
-    return str.slice(0, index);
-  };
-  return user.username || showFirst(user.email, 8) + "***";
-};
+const linkVolver = { fontSize: 14, fontWeight: 700, color: "var(--ha-gris)" };
 
-export default function WishDetailsPage() {
-  console.log("Rendering WishListPage Wish");
+export default function DeseoPage() {
   const data = useLoaderData<typeof loader>();
-
   const actionData = useActionData<typeof action>();
-  const quantityRef = useRef<HTMLInputElement>(null);
+  const errors =
+    actionData && "errors" in actionData ? actionData.errors : undefined;
 
-  const validFlags = {
-    important: "important",
-    done: "done",
-  };
-  const separator = "\n";
-  const wishFlags = data.wish.flaggedAs?.split(separator);
-
-  const { globalMessage } = data;
-  // const user = useUser()
-  const location = useLocation();
-  const [savedLocation] = useState(location.key);
-
-  const sumFn = (accumulator: any, currentObject: any) =>
-    accumulator + currentObject.quantity;
-
-  // console.log("TYPE", data.wish.volunteers);
-  const compromisedQuotaByVolunteers = (data.wish?.volunteers || []).reduce(
-    sumFn,
-    0
-  );
-  const pendingQuota =
-    data.wish.volunteers !== undefined && data.wish.volunteers.length >= 1
-      ? (Number(data.wish.maxQuantity) || 1) - compromisedQuotaByVolunteers
-      : undefined;
-
-  // console.log("pendingQuota", {
-  //   pendingQuota,
-  //   numberMax: Number(data.wish.maxQuantity),
-  //   compromisedQuotaByVolunteers,
-  // });
-  useEffect(() => {
-    if (actionData?.errors?.quantity) {
-      quantityRef.current?.focus();
-    }
-  }, [actionData]);
-
-  // console.log({ wwww: data.wish, pendingQuota });
-  const shouldShowQuantityDisclaimer =
-    data.wish.maxQuantity && data.wish.maxQuantity > 1;
-
-  const QuantityBanner = (
-    <>
-      <br />
-      <Alert className="mb-6">
-        <span className="flex">
-          <PersonIcon className="h-4 w-4" />
-          <PersonIcon className="h-4 w-4" />
-          <PersonIcon className="h-4 w-4" />
-        </span>
-        {/* <PersonIcon className="h-4 w-4" /> */}
-        <AlertTitle>
-          <div className="flex">Deseo colaborativo</div>
-        </AlertTitle>
-
-        <AlertDescription>
-          <p>
-            Este deseo tiene como meta {data.wish.maxQuantity}{" "}
-            <i>"{data.wish.title}". </i>
-          </p>
-          <p>Puedes ser voluntaria junto con otras personas.</p>
-          <p>
-            <b>La cantidad la defines tu ;)</b>
-          </p>
-        </AlertDescription>
-      </Alert>
-    </>
+  const volver = (
+    <div style={{ padding: "18px 22px 0" }}>
+      <Link to={`/lista/${data.listaId}/deseos`} style={linkVolver}>
+        ‹ volver a los deseos
+      </Link>
+    </div>
   );
 
+  const notaDelDueno = data.wish.body && (
+    <p
+      className="ha-manuscrita"
+      style={{ fontSize: 23, color: "var(--ha-gris)", marginTop: 8 }}
+    >
+      &ldquo;{data.wish.body}&rdquo;
+    </p>
+  );
+
+  const nudgeEmail = !data.guestEmail && (
+    <Form method="post" style={{ margin: "22px 22px 0", textAlign: "center" }}>
+      <input type="hidden" name="intent" value="email" />
+      <p style={{ fontSize: 13, color: "var(--ha-gris)", lineHeight: 1.6 }}>
+        ¿Cambias seguido de teléfono?{" "}
+        <label htmlFor="email" style={{ textDecoration: "underline" }}>
+          Deja tu email
+        </label>{" "}
+        para no perder tu elección.
+      </p>
+      <div style={{ display: "flex", gap: 8, marginTop: 10 }}>
+        <input
+          id="email"
+          name="email"
+          type="email"
+          placeholder="tu@correo.com"
+          style={{
+            flex: 1,
+            fontFamily: "Karla",
+            fontSize: 14,
+            border: "1.5px solid var(--ha-borde)",
+            borderRadius: 6,
+            padding: "10px 12px",
+          }}
+        />
+        <button
+          type="submit"
+          className="ha-btn-secundario"
+          aria-label="Guardar email"
+          style={{
+            paddingLeft: 14,
+            paddingRight: 14,
+            fontSize: 16,
+            lineHeight: 1,
+          }}
+        >
+          ✓
+        </button>
+      </div>
+      {errors?.email && (
+        <p style={{ color: "var(--ha-rojo)", fontSize: 13, marginTop: 6 }}>
+          {errors.email}
+        </p>
+      )}
+    </Form>
+  );
+
+  const emailConfirmado = data.guestEmail && (
+    <p
+      style={{
+        textAlign: "center",
+        fontSize: 13,
+        color: "var(--ha-verde)",
+        margin: "22px 22px 0",
+      }}
+    >
+      Ya tenemos tu correo ✅
+    </p>
+  );
+
+  if (data.estado === "otro") {
+    return (
+      <div>
+        {volver}
+        <div style={{ textAlign: "center", padding: "40px 22px" }}>
+          <Timbre name={data.tomadoPor ?? "otra persona"} />
+          <h2
+            style={{
+              fontSize: 23,
+              fontWeight: 800,
+              marginTop: 20,
+              lineHeight: 1.25,
+            }}
+          >
+            {data.wish.title}
+          </h2>
+          {notaDelDueno}
+          <p
+            style={{
+              fontSize: 14,
+              color: "var(--ha-gris)",
+              marginTop: 18,
+              lineHeight: 1.5,
+            }}
+          >
+            {data.tomadoPor} ya se encargó de este. ¡Gracias por pasar a mirar!
+            💛
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (data.estado === "mio" && data.mostrarConfirmacion) {
+    return (
+      <div style={{ position: "relative" }}>
+        <Confetti />
+        <div style={{ textAlign: "center", padding: "52px 22px 6px" }}>
+          <div style={{ fontSize: 58 }}>🎉</div>
+          <h1
+            className="ha-manuscrita"
+            style={{
+              fontSize: 44,
+              fontWeight: 700,
+              marginTop: 8,
+              transform: "rotate(-1.5deg)",
+            }}
+          >
+            Listo, {data.wish.title} es tuyo 🙌
+          </h1>
+          <p
+            className="ha-manuscrita"
+            style={{ fontSize: 23, lineHeight: 1.3, marginTop: 14 }}
+          >
+            &ldquo;¿Llorando yo? Bah, estás loco. Me entró una pelusa 😏.&rdquo;
+          </p>
+          <p
+            className="ha-manuscrita"
+            style={{ fontSize: 17, color: "var(--ha-gris)", marginTop: 2 }}
+          >
+            — {data.dueño ?? "quien organiza esto"}
+          </p>
+        </div>
+
+        <div style={{ margin: "34px 22px 4px", position: "relative" }}>
+          <div style={{ position: "absolute", top: -18, right: -6, zIndex: 1 }}>
+            <Timbre name={data.guestName ?? "ti"} />
+          </div>
+          <div className="ha-card" style={{ transform: "rotate(.4deg)" }}>
+            <h3 style={{ fontSize: 16.5, fontWeight: 800 }}>
+              {data.wish.title}
+            </h3>
+            {data.wish.body && (
+              <p
+                className="ha-manuscrita"
+                style={{
+                  fontSize: 20,
+                  color: "var(--ha-gris)",
+                  margin: "4px 0 8px",
+                }}
+              >
+                &ldquo;{data.wish.body}&rdquo;
+              </p>
+            )}
+            <FlexBadge flexibility={data.wish.flexibility} />
+          </div>
+        </div>
+
+        <div style={{ margin: "44px 22px 0", textAlign: "center" }}>
+          <Link
+            to={`/lista/${data.listaId}/deseos`}
+            className="ha-btn-secundario"
+          >
+            Volver a los deseos
+          </Link>
+        </div>
+
+        {data.guestEmail ? emailConfirmado : nudgeEmail}
+        <div style={{ paddingBottom: 30 }} />
+      </div>
+    );
+  }
+
+  if (data.estado === "mio") {
+    return (
+      <div>
+        {volver}
+        <div style={{ textAlign: "center", padding: "40px 22px 10px" }}>
+          <Timbre name="ti" />
+          <h2
+            style={{
+              fontSize: 23,
+              fontWeight: 800,
+              marginTop: 20,
+              lineHeight: 1.25,
+            }}
+          >
+            {data.wish.title}
+          </h2>
+          {notaDelDueno}
+          <p
+            style={{
+              fontSize: 14,
+              color: "var(--ha-gris)",
+              marginTop: 18,
+              lineHeight: 1.5,
+            }}
+          >
+            Tú te encargas de esto.
+          </p>
+        </div>
+
+        {data.guestEmail ? emailConfirmado : nudgeEmail}
+
+        <details style={{ margin: "26px 22px 34px", textAlign: "center" }}>
+          <summary
+            style={{ fontSize: 13, color: "var(--ha-gris)", cursor: "pointer" }}
+          >
+            ¿Ya no puedes encargarte?
+          </summary>
+          <Form method="post" style={{ marginTop: 14 }}>
+            <input type="hidden" name="intent" value="release" />
+            <Button
+              type="submit"
+              className="ha-btn-secundario"
+              confirmPrompt="¿Soltar este deseo? Alguien más podrá tomarlo."
+            >
+              Soltar este deseo
+            </Button>
+          </Form>
+        </details>
+      </div>
+    );
+  }
+
+  // estado === "libre"
   return (
     <div>
-      {/* THIS WILL NOT SHOW */}
-      {location.key === savedLocation && <p>{globalMessage}</p>}
+      {volver}
 
-      {/* THIS WILL SHOW */}
-      {globalMessage && (
-        <Alert variant="success" className="mb-6">
-          <CheckCircledIcon className="h-4 w-4" />
-          <AlertTitle>Perfecto! Quedaste registrada como voluntaria</AlertTitle>
-
-          <AlertDescription>{globalMessage}</AlertDescription>
-        </Alert>
-      )}
-      {/* TODO
-        globalMessage could be anything, must have a better condition
-        It will fail if globalMessage exists for another reason
-      */}
-      {globalMessage && <Confetti />}
-
-      <h3 className="text-2xl font-bold">{data.wish.title}</h3>
-
-      <Text className="py-3">{data.wish.body}</Text>
-
-      {shouldShowQuantityDisclaimer && (
-        <div>
-          <p>
-            <b>Cantidad total</b> (meta): {data.wish.maxQuantity}{" "}
-          </p>
-          <br />
+      <div style={{ textAlign: "center", padding: "18px 22px 0" }}>
+        <div style={{ display: "inline-block" }}>
+          <Polaroid rotate={2.5} />
         </div>
-      )}
-
-      {data.wish.exampleUrls && (
-        <div>
-          <h4>Links de ejemplo</h4>
-          <ul className="ml-4 list-disc">
-            {data.wish.exampleUrls.split("\n").map((url) => {
-              return (
-                <li key={url}>
-                  <a href={url}>{url}</a>
-                </li>
-              );
-            })}
-          </ul>
+        <h2
+          style={{
+            fontSize: 23,
+            fontWeight: 800,
+            marginTop: 18,
+            lineHeight: 1.25,
+          }}
+        >
+          {data.wish.title}
+        </h2>
+        {notaDelDueno}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: 14,
+            marginTop: 12,
+          }}
+        >
+          <FlexBadge flexibility={data.wish.flexibility} detailed />
+          <PrecioDots tier={data.wish.priceTier} detailed />
         </div>
-      )}
-
-      {wishFlags?.some((wf) => wf.startsWith(validFlags.important)) && (
-        <div>
-          <b>🔝 Proridad Top</b>: Deseo prioritario
-        </div>
-      )}
-
-      {shouldShowQuantityDisclaimer && (
-        <div>{shouldShowQuantityDisclaimer}</div>
-      )}
-      {shouldShowQuantityDisclaimer && QuantityBanner}
-      <hr className="my-4" />
-      {wishFlags?.some((wf) => wf.startsWith(validFlags.done)) && (
-        <div>
-          <b>✅ Deseo cumplido</b>: La meta se alcanzó! 🎊🥳
-          <br />
-          <br />
-        </div>
-      )}
-
-      <div>
-        {/* Lista de voluntarios */}
-        {data.wish.hasWishAlreadyVolunteer && data.wish.volunteers ? (
-          <>
-            <details>
-              <summary>
-                Este deseo tiene {data.wish.volunteers.length} voluntaria(s). 🧙🏻‍♀️
-              </summary>
-              <br />
-              <h2>Lista de voluntarias</h2>
-              <ol className="list-inside list-decimal">
-                {data.wish.volunteers?.map((v, i) => (
-                  <li key={v.user.id}>
-                    {showUsername(v.user)}
-                    <i> --- {showDate(new Date(v.assignedAt))}</i>
-                  </li>
-                ))}
-              </ol>
-            </details>
-            <br />
-          </>
-        ) : (
-          <>
-            <p>Este deseo aún no tiene voluntaria(s). Se tu la primera</p>
-            <br />
-          </>
-        )}
-
-        {data.wish.isCurrentUserAVolunteer ? (
-          <Form method="post">
-            {/* variant="default" */}
-
-            <Alert>
-              <HeartFilledIcon className="h-4 w-4" />
-              <AlertTitle>Tu Estado: Voluntaria</AlertTitle>
-
-              <AlertDescription>
-                <br />
-
-                <p>
-                  {" "}
-                  Actualmente <b>eres voluntaria</b> para cumplir este deseo.
-                </p>
-                <p>
-                  Estas anotada con{" "}
-                  <b>
-                    {data.wish.currentUserWishVolunteeringInfo?.quantity}{" "}
-                    unidad(es)
-                  </b>
-                  .
-                </p>
-                <br />
-
-                <br />
-                <details>
-                  <summary>Haz click aqui para cambiar tu estado</summary>
-
-                  <Alert variant="destructive">
-                    <ExclamationTriangleIcon className="h-4 w-4" />
-
-                    <AlertTitle>Salir de lista de Voluntarias</AlertTitle>
-
-                    <AlertDescription>
-                      <p>
-                        (Se quitará tu nombre la lista)
-                        <button
-                          type="submit"
-                          className="rounded bg-blue-500  px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400"
-                        >
-                          Ya NO QUIERO ser voluntaria
-                        </button>{" "}
-                      </p>
-                    </AlertDescription>
-                  </Alert>
-                </details>
-              </AlertDescription>
-            </Alert>
-          </Form>
-        ) : (
-          <Form method="post">
-            <Alert>
-              <CircleIcon className="h-4 w-4" />
-              <AlertTitle>Anotate como voluntaria</AlertTitle>
-              <AlertDescription>
-                <br />
-                <details>
-                  <summary>
-                    <span>Define la cantidad y confirma</span>
-                  </summary>
-                  <br />
-                  <hr />
-                  <br />
-
-                  <br />
-                  <label className="flex w-full flex-col gap-1">
-                    <span>Cantidad</span>
-                    <input
-                      ref={quantityRef}
-                      name="quantity"
-                      type="number"
-                      defaultValue={1}
-                      className="flex-1 rounded-md border-2 border-blue-500 px-3 text-lg leading-loose"
-                      aria-invalid={
-                        actionData?.errors?.quantity ? true : undefined
-                      }
-                      aria-errormessage={
-                        actionData?.errors?.quantity
-                          ? "noteId-error"
-                          : undefined
-                      }
-                    />
-                  </label>
-                  {actionData?.errors?.quantity && (
-                    <div className="pt-1 text-red-700" id="quantity-error">
-                      {actionData.errors.quantity}
-                    </div>
-                  )}
-
-                  <br />
-                  {pendingQuota && pendingQuota > 0 && (
-                    <p>
-                      Aun faltan {pendingQuota} para el objetivo total
-                    </p>
-                  )}
-                  <br />
-
-                  <Button
-                    type="submit"
-                    className="rounded bg-blue-500  px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400"
+        {data.wish.exampleUrls && (
+          <div style={{ marginTop: 10 }}>
+            {data.wish.exampleUrls
+              .split("\n")
+              .filter(Boolean)
+              .map((url) => (
+                <div key={url}>
+                  <a
+                    href={url}
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{
+                      fontSize: 13,
+                      fontWeight: 700,
+                      color: "var(--ha-tinta)",
+                    }}
                   >
-                    Confirmar como voluntaria 🧙🏻‍♀️
-                  </Button>
-                </details>
-              </AlertDescription>
-            </Alert>
-          </Form>
+                    ver dónde comprarlo →
+                  </a>
+                </div>
+              ))}
+          </div>
         )}
+      </div>
+
+      <div style={{ textAlign: "center", padding: "26px 22px 6px" }}>
+        <span
+          style={{
+            fontSize: 34,
+            display: "inline-block",
+            transform: "rotate(-6deg)",
+          }}
+        >
+          ✋
+        </span>
+        <h1
+          className="ha-manuscrita"
+          style={{ fontSize: 38, fontWeight: 700, marginTop: 4 }}
+        >
+          Me vas a emocionar
+        </h1>
+        <p
+          style={{
+            fontSize: 14.5,
+            color: "var(--ha-gris)",
+            marginTop: 6,
+            lineHeight: 1.5,
+          }}
+        >
+          Deja tu nombre y ya está — sin correo, sin claves.
+        </p>
+      </div>
+
+      <Form method="post" style={{ margin: "18px 22px 0" }}>
+        <input type="hidden" name="intent" value="take" />
+        <label
+          htmlFor="name"
+          style={{
+            display: "block",
+            fontSize: 14,
+            fontWeight: 800,
+            marginBottom: 8,
+          }}
+        >
+          ¿Cómo te llamas?
+        </label>
+        <input
+          id="name"
+          name="name"
+          type="text"
+          placeholder="Tu nombre y apellido, o inicial — ej. Caro B."
+          aria-invalid={errors?.name ? true : undefined}
+          style={{
+            width: "100%",
+            fontFamily: "Karla",
+            fontSize: 17,
+            fontWeight: 700,
+            color: "var(--ha-tinta)",
+            background: "var(--ha-papel)",
+            border: "1.5px solid var(--ha-borde)",
+            borderRadius: 6,
+            padding: "14px 16px",
+            outline: "none",
+          }}
+        />
+        {(errors?.name || errors?.take) && (
+          <p style={{ color: "var(--ha-rojo)", fontSize: 13, marginTop: 6 }}>
+            {errors.name ?? errors.take}
+          </p>
+        )}
+        <p style={{ fontSize: 12.5, color: "var(--ha-gris)", marginTop: 6 }}>
+          Con tu apellido (o su inicial) tus conocidos sabrán que eres tú.
+        </p>
+        <button
+          type="submit"
+          className="ha-btn"
+          style={{
+            display: "block",
+            width: "100%",
+            marginTop: 16,
+            fontSize: 16,
+            padding: 15,
+          }}
+        >
+          Yo me encargo
+        </button>
+      </Form>
+
+      <div style={{ margin: "22px 22px 30px" }}>
+        <div
+          style={{
+            display: "flex",
+            gap: 10,
+            alignItems: "flex-start",
+            marginBottom: 14,
+          }}
+        >
+          <span style={{ fontSize: 17, lineHeight: 1.5 }}>👀</span>
+          <span
+            style={{ fontSize: 14, color: "var(--ha-gris)", lineHeight: 1.5 }}
+          >
+            <b style={{ color: "var(--ha-tinta)" }}>
+              {data.dueño ?? "El resto"} va a saber
+            </b>{" "}
+            que tú te encargaste de esto — así nadie lo trae duplicado.
+          </span>
+        </div>
+        <div style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
+          <span style={{ fontSize: 17, lineHeight: 1.5 }}>🔄</span>
+          <span
+            style={{ fontSize: 14, color: "var(--ha-gris)", lineHeight: 1.5 }}
+          >
+            ¿Te arrepientes?{" "}
+            <b style={{ color: "var(--ha-tinta)" }}>
+              Puedes soltarlo cuando quieras
+            </b>
+            , sin drama.
+          </span>
+        </div>
       </div>
     </div>
   );
@@ -508,17 +597,19 @@ export default function WishDetailsPage() {
 export function ErrorBoundary() {
   const error = useRouteError();
 
-  if (error instanceof Error) {
-    return <div>An unexpected error occurred: {error.message}</div>;
+  if (isRouteErrorResponse(error) && error.status === 404) {
+    return (
+      <div style={{ padding: "60px 22px", textAlign: "center" }}>
+        <p className="ha-manuscrita" style={{ fontSize: 26 }}>
+          Este deseo no existe o ya no está disponible.
+        </p>
+      </div>
+    );
   }
 
-  if (!isRouteErrorResponse(error)) {
-    return <h1>Unknown Error</h1>;
-  }
-
-  if (error.status === 404) {
-    return <div>Note not found</div>;
-  }
-
-  return <div>An unexpected error occurred: {error.statusText}</div>;
+  return (
+    <div style={{ padding: "60px 22px", textAlign: "center" }}>
+      <p>Algo salió mal. Intenta de nuevo más tarde.</p>
+    </div>
+  );
 }

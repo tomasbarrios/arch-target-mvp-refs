@@ -28,14 +28,16 @@ model Password {
 }
 
 model Note {
-  id        String   @id @default(cuid())
-  title     String
-  body      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  wish      Wish[]
+  id         String    @id @default(cuid())
+  title      String
+  body       String
+  eventDate  DateTime?
+  coverImage String?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  userId     String
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  wish       Wish[]
 }
 
 model Task {
@@ -100,17 +102,20 @@ model UsersOnOrganizations {
 }
 
 model Wish {
-  id          String   @id @default(cuid())
-  title       String
-  body        String
-  exampleUrls String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  noteId      String?
-  note        Note?    @relation(fields: [noteId], references: [id], onDelete: Cascade)
-  volunteers  UsersOnWishVolunteers[]
-  flaggedAs   String?
-  maxQuantity Int?     @default(1)
+  id             String   @id @default(cuid())
+  title          String
+  body           String
+  exampleUrls    String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  noteId         String?
+  note           Note?    @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  volunteers     UsersOnWishVolunteers[]
+  flaggedAs      String?
+  maxQuantity    Int?     @default(1)
+  flexibility    String?
+  priceTier      Int?
+  guestVolunteer GuestOnWish?
 }
 
 model UsersOnWishVolunteers {
@@ -123,4 +128,22 @@ model UsersOnWishVolunteers {
   user           User         @relation(fields: [userId], references: [id])
 
   @@id([wishId, userId])
+}
+
+model Guest {
+  id          String        @id @default(cuid())
+  name        String
+  email       String?
+  createdAt   DateTime      @default(now())
+  wishesTaken GuestOnWish[]
+}
+
+model GuestOnWish {
+  wishId     String   @unique
+  guestId    String
+  assignedAt DateTime @default(now())
+  wish       Wish     @relation(fields: [wishId], references: [id], onDelete: Cascade)
+  guest      Guest    @relation(fields: [guestId], references: [id], onDelete: Cascade)
+
+  @@id([wishId, guestId])
 }

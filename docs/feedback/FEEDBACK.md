@@ -1,6 +1,6 @@
 # Feedback
 
-**Último feedback procesado**: `2026-07-08-anonimo-mejoras.md`
+**Último feedback procesado**: `2026-07-19-interno-tomas.md`
 
 ## Resumen por taxonomía
 
@@ -8,7 +8,7 @@
 |---|---|---|---|
 | Personalización | ¿Cómo hago que la lista se sienta más personal? | Contenido personalizado, Galería de fotos | 1 |
 | Sugerencias bidireccionales | Invitado: ¿Qué pasa si tengo otra idea de regalo? Dueño: ¿Cómo reviso y acepto sugerencias? | Sistema de aceptación, Notificación, Adjuntos | 1 |
-| Experiencia post-asignación | Invitado: ¿Pasó algo cuando me asigné un deseo? | Mensaje de agradecimiento | 1 |
+| Experiencia post-asignación | Invitado: ¿Pasó algo cuando me asigné un deseo? | Mensaje de agradecimiento, Foto/video personalizado, Rotación de mensajes | 2 |
 | Versatilidad del producto | ¿Sirve solo para regalos o para otros tipos de lista también? | Tipos de evento, Distintos formatos de lista | 1 |
 | Control de acceso | Dueño: ¿Cualquiera con el link puede asignarse un deseo? | Limitar acceso a cumplir deseos | 1 |
 | Privacidad | Invitado: ¿Mi email queda visible cuando me asigno un deseo? | Mostrar nombre en vez de email | 1 |
@@ -30,4 +30,6 @@
 | Limitar acceso a cumplir un deseo | 1 | anónimo |
 | Mostrar nombre en vez de email del voluntario | 1 | anónimo |
 | Cantidad intuitiva (slider / % completado) | 1 | pato-barrios |
+| Foto/video personalizado de agradecimiento post-toma | 1 | interno-tomas |
+| Rotación de mensajes de confirmación | 1 | interno-tomas |
 
