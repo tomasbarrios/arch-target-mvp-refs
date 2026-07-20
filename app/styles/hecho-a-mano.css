@@ -27,6 +27,7 @@
 
 .ha-manuscrita {
   font-family: 'Caveat', cursive;
+  white-space: pre-line;
 }
 
 /* Bloque papel — mensaje del dueño */
@@ -36,6 +37,7 @@
   padding: 14px 16px;
   font-size: 15px;
   line-height: 1.6;
+  white-space: pre-line;
 }
 
 /* Bloque compromiso — estado del invitado, no voz del dueño (sin franja mostaza) */
