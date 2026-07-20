@@ -53,7 +53,7 @@ Dirección ganadora de la ronda de exploración (2026-07-18). Referencia viva:
 ## Lenguaje
 
 Chileno, tuteo, habla una persona (nunca un sistema ni un "asistente del anfitrión").
-Ver guardrails en `docs/handoff-creativo.md`.
+Ver guardrails en `docs/design/handoff-creativo.md`.
 
 ## Restricciones
 
