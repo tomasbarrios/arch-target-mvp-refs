@@ -37,6 +37,7 @@ export async function action({ request }: ActionArgs) {
   const maxQuantity = formData.get("maxQuantity");
   const exampleUrls = formData.get("exampleUrls");
   const hidden = formData.get("hidden") === "on";
+  const flexibility = formData.get("flexibility");
   const flaggedAs = validFlags
     .map((f) => {
       return formData.get("flaggedAs_" + f) == "on" ? f : null;
@@ -168,6 +169,7 @@ export async function action({ request }: ActionArgs) {
     maxQuantity: Number(maxQuantity),
     noteId: typeof noteId === "string" && noteId.length > 0 ? noteId : null,
     hidden,
+    flexibility: typeof flexibility === "string" ? flexibility : null,
   });
 
   return redirect(`/wishes/${wish.id}`);
@@ -261,6 +263,21 @@ export default function NewWishPage() {
         />
         <label htmlFor="hidden" className="text-sm text-gray-900">
           Ocultar de la lista pública
+        </label>
+      </div>
+
+      <div>
+        <label className="flex w-full flex-col gap-1">
+          <span>Indicador de flexibilidad (opcional):</span>
+          <select
+            name="flexibility"
+            defaultValue={data.wish.flexibility ?? ""}
+            className="flex-1 rounded-md border-2 border-blue-500 px-3 text-lg leading-loose"
+          >
+            <option value="">Sin indicador</option>
+            <option value="exact">Quiero exactamente este</option>
+            <option value="similar">Algo como esto — la marca da lo mismo</option>
+          </select>
         </label>
       </div>
 

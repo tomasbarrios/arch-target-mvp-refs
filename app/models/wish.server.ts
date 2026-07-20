@@ -66,6 +66,7 @@ export function getWish({
       maxQuantity: true,
       hidden: true,
       linkImages: true,
+      flexibility: true,
     },
     where: { id },
   });
@@ -89,7 +90,8 @@ export async function createWish({
   exampleUrls,
   flaggedAs,
   noteId,
-}: Pick<Wish, "body" | "title" | "exampleUrls" | "flaggedAs"> & {
+  flexibility,
+}: Pick<Wish, "body" | "title" | "exampleUrls" | "flaggedAs" | "flexibility"> & {
   noteId: Note["id"];
 }) {
   const linkImages = await fetchLinkImages(exampleUrls);
@@ -101,6 +103,7 @@ export async function createWish({
       flaggedAs,
       noteId,
       linkImages,
+      flexibility: flexibility && flexibility.length > 0 ? flexibility : null,
     },
   });
 }
@@ -248,9 +251,17 @@ export async function updateWish({
   maxQuantity,
   noteId,
   hidden,
+  flexibility,
 }: Pick<
   Wish,
-  "id" | "body" | "title" | "exampleUrls" | "flaggedAs" | "maxQuantity" | "hidden"
+  | "id"
+  | "body"
+  | "title"
+  | "exampleUrls"
+  | "flaggedAs"
+  | "maxQuantity"
+  | "hidden"
+  | "flexibility"
 > & { noteId?: string | null }) {
   const linkImages = await fetchLinkImages(exampleUrls);
   return prisma.wish.update({
@@ -266,6 +277,7 @@ export async function updateWish({
       noteId,
       hidden,
       linkImages,
+      flexibility: flexibility && flexibility.length > 0 ? flexibility : null,
     },
   });
 }

@@ -12,6 +12,7 @@ export const action = async ({ request }: ActionArgs) => {
   const formData = await request.formData();
   const title = formData.get("title");
   const body = formData.get("body");
+  const eventDate = formData.get("eventDate");
 
   if (typeof title !== "string" || title.length === 0) {
     return json(
@@ -27,7 +28,12 @@ export const action = async ({ request }: ActionArgs) => {
     );
   }
 
-  const note = await createNote({ body, title, userId });
+  const note = await createNote({
+    body,
+    title,
+    userId,
+    eventDate: typeof eventDate === "string" && eventDate.length > 0 ? new Date(eventDate) : null,
+  });
 
   return redirect(`/notes/${note.id}`);
 };
@@ -94,6 +100,17 @@ export default function NewNotePage() {
             {actionData.errors.body}
           </div>
         ) : null}
+      </div>
+
+      <div>
+        <label className="flex w-full flex-col gap-1">
+          <span>Fecha del evento (opcional): </span>
+          <input
+            name="eventDate"
+            type="date"
+            className="flex-1 rounded-md border-2 border-blue-500 px-3 text-lg leading-loose"
+          />
+        </label>
       </div>
 
       <div className="text-right">

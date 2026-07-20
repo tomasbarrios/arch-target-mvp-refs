@@ -52,6 +52,7 @@ export async function action({ request }: ActionArgs) {
   const body = formData.get("body");
   const exampleUrls = formData.get("exampleUrls");
   const noteId = formData.get("noteId");
+  const flexibility = formData.get("flexibility");
   const flaggedAs = flags
     .map((f) => {
       return formData.get("flaggedAs_" + f) == "on" ? f : null;
@@ -186,6 +187,7 @@ export async function action({ request }: ActionArgs) {
     exampleUrls,
     flaggedAs: flaggedAs.length > 0 ? flaggedAs.join("\n") : null,
     noteId: listToAssign.id,
+    flexibility: typeof flexibility === "string" ? flexibility : null,
   });
 
   return redirect(`/wishes/${wish.id}`);
@@ -341,6 +343,21 @@ export default function NewWishPage() {
           {actionData.errors.flaggedAs}
         </div>
       )}
+
+      {/* FLEXIBILITY */}
+      <div>
+        <label className="flex w-full flex-col gap-1">
+          <span>Indicador de flexibilidad (opcional):</span>
+          <select
+            name="flexibility"
+            className="flex-1 rounded-md border-2 border-blue-500 px-3 text-lg leading-loose"
+          >
+            <option value="">Sin indicador</option>
+            <option value="exact">Quiero exactamente este</option>
+            <option value="similar">Algo como esto — la marca da lo mismo</option>
+          </select>
+        </label>
+      </div>
 
       {/* FLAGS end */}
 

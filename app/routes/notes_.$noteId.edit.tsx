@@ -36,6 +36,7 @@ export async function action({ request }: ActionArgs) {
   const formData = await request.formData();
   const title = formData.get("title");
   const body = formData.get("body");
+  const eventDate = formData.get("eventDate");
   const coverImage = formData.get("coverImage");
   const introSignerName = formData.get("introSignerName");
   const preAssignCopy = formData.get("preAssignCopy");
@@ -83,6 +84,10 @@ export async function action({ request }: ActionArgs) {
     id,
     title,
     body,
+    eventDate:
+      typeof eventDate === "string" && eventDate.length > 0
+        ? new Date(eventDate)
+        : null,
     coverImage: coverImage.length > 0 ? coverImage : null,
     introSignerName:
       typeof introSignerName === "string" ? introSignerName : null,
@@ -189,6 +194,22 @@ export default function EditDetailsPage() {
               className="mt-2 h-24 w-24 rounded object-cover"
             />
           )}
+        </div>
+
+        <div>
+          <label className="flex w-full flex-col gap-1">
+            <span>Fecha del evento (opcional): </span>
+            <input
+              defaultValue={
+                data.note.eventDate
+                  ? new Date(data.note.eventDate).toISOString().slice(0, 10)
+                  : ""
+              }
+              name="eventDate"
+              type="date"
+              className="flex-1 rounded-md border-2 border-blue-500 px-3 text-lg leading-loose"
+            />
+          </label>
         </div>
 
         <hr className="my-4" />

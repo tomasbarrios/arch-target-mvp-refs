@@ -13,6 +13,7 @@ export function getNote({
       id: true,
       body: true,
       title: true,
+      eventDate: true,
       coverImage: true,
       introSignerName: true,
       preAssignCopy: true,
@@ -34,13 +35,16 @@ export function createNote({
   body,
   title,
   userId,
+  eventDate,
 }: Pick<Note, "body" | "title"> & {
+  eventDate?: Note["eventDate"];
   userId: User["id"];
 }) {
   return prisma.note.create({
     data: {
       title,
       body,
+      eventDate: eventDate ?? null,
       user: {
         connect: {
           id: userId,
@@ -176,6 +180,7 @@ export function updateNote({
   id,
   body,
   title,
+  eventDate,
   coverImage,
   introSignerName,
   preAssignCopy,
@@ -185,6 +190,7 @@ export function updateNote({
   | "id"
   | "body"
   | "title"
+  | "eventDate"
   | "coverImage"
   | "introSignerName"
   | "preAssignCopy"
@@ -197,6 +203,7 @@ export function updateNote({
     data: {
       title,
       body,
+      eventDate: eventDate ?? null,
       coverImage,
       introSignerName: introSignerName?.length ? introSignerName : null,
       preAssignCopy: preAssignCopy?.length ? preAssignCopy : null,
