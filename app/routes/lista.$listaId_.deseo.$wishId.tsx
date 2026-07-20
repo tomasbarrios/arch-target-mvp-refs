@@ -74,6 +74,7 @@ export async function loader({ request, params }: LoaderArgs) {
       title: wish.title,
       body: wish.body,
       exampleUrls: wish.exampleUrls,
+      linkImages: wish.linkImages,
       flexibility: wish.flexibility,
       priceTier: wish.priceTier,
     },
@@ -455,22 +456,49 @@ export default function DeseoPage() {
             {data.wish.exampleUrls
               .split("\n")
               .filter(Boolean)
-              .map((url) => (
-                <div key={url}>
-                  <a
-                    href={url}
-                    target="_blank"
-                    rel="noreferrer"
+              .map((url) => {
+                const linkImages: Record<string, string> = data.wish
+                  .linkImages
+                  ? JSON.parse(data.wish.linkImages)
+                  : {};
+                const image = linkImages[url];
+                return (
+                  <div
+                    key={url}
                     style={{
-                      fontSize: 13,
-                      fontWeight: 700,
-                      color: "var(--ha-tinta)",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      gap: 8,
                     }}
                   >
-                    ver dónde comprarlo →
-                  </a>
-                </div>
-              ))}
+                    {image && (
+                      <img
+                        src={image}
+                        alt=""
+                        style={{
+                          width: 40,
+                          height: 40,
+                          borderRadius: 8,
+                          objectFit: "cover",
+                        }}
+                      />
+                    )}
+                    <a
+                      href={url}
+                      target="_blank"
+                      rel="noreferrer"
+                      style={{
+                        fontSize: 13,
+                        fontWeight: 700,
+                        color: "var(--ha-tinta)",
+                      }}
+                    >
+                      ver dónde comprarlo →
+                    </a>
+                  </div>
+                );
+              })}
           </div>
         )}
       </div>

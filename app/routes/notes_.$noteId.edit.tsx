@@ -13,6 +13,7 @@ import invariant from "tiny-invariant";
 
 import { updateNote, getNote } from "~/models/note.server";
 import { requireUserId } from "~/session.server";
+import { validateURLString } from "~/urls";
 
 export const loader = async ({ params, request }: LoaderArgs) => {
   const userId = await requireUserId(request);
@@ -31,18 +32,35 @@ export async function action({ request }: ActionArgs) {
   const formData = await request.formData();
   const title = formData.get("title");
   const body = formData.get("body");
+  const coverImage = formData.get("coverImage");
   const id = formData.get("id");
 
   if (typeof title !== "string" || title.length === 0) {
     return json(
-      { errors: { title: "Title is required", body: null } },
+      { errors: { title: "Title is required", body: null, coverImage: null } },
       { status: 400 }
     );
   }
 
   if (typeof body !== "string" || body.length === 0) {
     return json(
-      { errors: { title: null, body: "Body is required" } },
+      { errors: { title: null, body: "Body is required", coverImage: null } },
+      { status: 400 }
+    );
+  }
+
+  if (
+    typeof coverImage !== "string" ||
+    (coverImage.length > 0 && !validateURLString(coverImage))
+  ) {
+    return json(
+      {
+        errors: {
+          title: null,
+          body: null,
+          coverImage: "El link de la imagen debe ser válido y comenzar con http o https",
+        },
+      },
       { status: 400 }
     );
   }
@@ -50,11 +68,16 @@ export async function action({ request }: ActionArgs) {
   if (typeof id !== "string" || id.length === 0) {
     console.log("ID", { id });
     return json(
-      { errors: { title: null, body: null, id: "id is required" } },
+      { errors: { title: null, body: null, coverImage: null, id: "id is required" } },
       { status: 400 }
     );
   }
-  const note = await updateNote({ id, title, body });
+  const note = await updateNote({
+    id,
+    title,
+    body,
+    coverImage: coverImage.length > 0 ? coverImage : null,
+  });
 
   return redirect(`/notes/${note.id}`);
 }
@@ -125,6 +148,34 @@ export default function EditDetailsPage() {
             <div className="pt-1 text-red-700" id="body-error">
               {actionData.errors.body}
             </div>
+          )}
+        </div>
+
+        <div>
+          <label className="flex w-full flex-col gap-1">
+            <span>Imagen de portada (link): </span>
+            <input
+              defaultValue={data.note.coverImage ?? ""}
+              name="coverImage"
+              placeholder="https://..."
+              className="flex-1 rounded-md border-2 border-blue-500 px-3 text-lg leading-loose"
+              aria-invalid={actionData?.errors?.coverImage ? true : undefined}
+              aria-errormessage={
+                actionData?.errors?.coverImage ? "coverImage-error" : undefined
+              }
+            />
+          </label>
+          {actionData?.errors?.coverImage && (
+            <div className="pt-1 text-red-700" id="coverImage-error">
+              {actionData.errors.coverImage}
+            </div>
+          )}
+          {data.note.coverImage && (
+            <img
+              src={data.note.coverImage}
+              alt="Vista previa"
+              className="mt-2 h-24 w-24 rounded object-cover"
+            />
           )}
         </div>
 

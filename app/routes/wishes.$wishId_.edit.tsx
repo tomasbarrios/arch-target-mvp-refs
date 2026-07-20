@@ -36,6 +36,7 @@ export async function action({ request }: ActionArgs) {
   const body = formData.get("body");
   const maxQuantity = formData.get("maxQuantity");
   const exampleUrls = formData.get("exampleUrls");
+  const hidden = formData.get("hidden") === "on";
   const flaggedAs = validFlags
     .map((f) => {
       return formData.get("flaggedAs_" + f) == "on" ? f : null;
@@ -166,6 +167,7 @@ export async function action({ request }: ActionArgs) {
     exampleUrls,
     maxQuantity: Number(maxQuantity),
     noteId: typeof noteId === "string" && noteId.length > 0 ? noteId : null,
+    hidden,
   });
 
   return redirect(`/wishes/${wish.id}`);
@@ -246,6 +248,19 @@ export default function NewWishPage() {
         />
         <label htmlFor="flaggedAs_done" className="text-sm text-gray-900">
           Marcar como cumplido
+        </label>
+      </div>
+
+      <div className="flex items-center gap-2">
+        <input
+          id="hidden"
+          name="hidden"
+          type="checkbox"
+          defaultChecked={data.wish.hidden}
+          className="h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-500"
+        />
+        <label htmlFor="hidden" className="text-sm text-gray-900">
+          Ocultar de la lista pública
         </label>
       </div>
 

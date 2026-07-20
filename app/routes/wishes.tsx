@@ -57,7 +57,7 @@ export default function WishesPage() {
                     }
                     to={wish.id}
                   >
-                    📝 {wish.title}
+                    📝 {wish.title} {wish.hidden && "🙈"}
                   </NavLink>
 
                   {/* If we have a related note, this would show it */}

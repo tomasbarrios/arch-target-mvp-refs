@@ -4,6 +4,7 @@ READ ~/Projects/agent-scripts/AGENTS.MD BEFORE ANYTHING (skip if missing).
 
 - No hagas commits si no se solicita explicitamente.
 - Los commits solo deben ceñirse a lo que se hizo en la sesión
+- Los commits JAMAS deben llevar Co-Authored-By ni ninguna mención a un agente/IA.
 
 # Codestyle
 

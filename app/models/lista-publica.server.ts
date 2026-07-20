@@ -21,11 +21,13 @@ export async function getListaPublica({
       eventDate: true,
       coverImage: true,
       wish: {
+        where: { hidden: false },
         select: {
           id: true,
           title: true,
           body: true,
           exampleUrls: true,
+          linkImages: true,
           flexibility: true,
           priceTier: true,
           flaggedAs: true,

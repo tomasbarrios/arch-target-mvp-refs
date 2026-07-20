@@ -6,6 +6,49 @@ export type { User, UsersOnWishVolunteers, Wish } from "@prisma/client";
 
 export const flags = ["important", "ok2ndHand", "done"];
 
+// property/content order varies by site, so both are matched
+const OG_IMAGE_REGEXES = [
+  /<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i,
+  /<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image["']/i,
+];
+
+async function fetchOgImage(url: string): Promise<string | null> {
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 5000);
+    const res = await fetch(url, { signal: controller.signal });
+    clearTimeout(timeout);
+    if (!res.ok) return null;
+    const html = await res.text();
+    for (const regex of OG_IMAGE_REGEXES) {
+      const match = html.match(regex);
+      if (match) return match[1];
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+export async function fetchLinkImages(
+  exampleUrls: string | null | undefined
+): Promise<string | null> {
+  if (!exampleUrls) return null;
+  const urls = exampleUrls
+    .split("\n")
+    .map((u) => u.trim())
+    .filter(Boolean);
+
+  const entries = await Promise.all(
+    urls.map(async (url) => [url, await fetchOgImage(url)] as const)
+  );
+  const linkImages = Object.fromEntries(
+    entries.filter(([, image]) => image !== null)
+  );
+
+  return Object.keys(linkImages).length > 0 ? JSON.stringify(linkImages) : null;
+}
+
 export function getWish({
   id,
   noteId,
@@ -21,6 +64,8 @@ export function getWish({
       flaggedAs: true,
       noteId: true,
       maxQuantity: true,
+      hidden: true,
+      linkImages: true,
     },
     where: { id },
   });
@@ -33,12 +78,12 @@ export function getWishListItems({ userId }: { userId: User["id"] }) {
         userId,
       },
     },
-    select: { id: true, title: true, noteId: true },
+    select: { id: true, title: true, noteId: true, hidden: true },
     orderBy: { updatedAt: "desc" },
   });
 }
 
-export function createWish({
+export async function createWish({
   body,
   title,
   exampleUrls,
@@ -47,6 +92,7 @@ export function createWish({
 }: Pick<Wish, "body" | "title" | "exampleUrls" | "flaggedAs"> & {
   noteId: Note["id"];
 }) {
+  const linkImages = await fetchLinkImages(exampleUrls);
   return prisma.wish.create({
     data: {
       title,
@@ -54,6 +100,7 @@ export function createWish({
       exampleUrls,
       flaggedAs,
       noteId,
+      linkImages,
     },
   });
 }
@@ -100,6 +147,8 @@ export function getWishWithNote({
       title: true,
       exampleUrls: true,
       noteId: true,
+      hidden: true,
+      linkImages: true,
     },
     where: { id },
     // include: {
@@ -190,7 +239,7 @@ export function assignVolunteer({
   });
 }
 
-export function updateWish({
+export async function updateWish({
   id,
   body,
   title,
@@ -198,10 +247,12 @@ export function updateWish({
   flaggedAs,
   maxQuantity,
   noteId,
+  hidden,
 }: Pick<
   Wish,
-  "id" | "body" | "title" | "exampleUrls" | "flaggedAs" | "maxQuantity"
+  "id" | "body" | "title" | "exampleUrls" | "flaggedAs" | "maxQuantity" | "hidden"
 > & { noteId?: string | null }) {
+  const linkImages = await fetchLinkImages(exampleUrls);
   return prisma.wish.update({
     where: {
       id,
@@ -213,6 +264,8 @@ export function updateWish({
       flaggedAs,
       maxQuantity,
       noteId,
+      hidden,
+      linkImages,
     },
   });
 }

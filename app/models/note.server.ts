@@ -9,7 +9,7 @@ export function getNote({
   userId: User["id"];
 }) {
   return prisma.note.findFirst({
-    select: { id: true, body: true, title: true },
+    select: { id: true, body: true, title: true, coverImage: true },
     where: { id, userId },
   });
 }
@@ -168,7 +168,8 @@ export function updateNote({
   id,
   body,
   title,
-}: Pick<Note, "id" | "body" | "title">) {
+  coverImage,
+}: Pick<Note, "id" | "body" | "title" | "coverImage">) {
   return prisma.note.update({
     where: {
       id,
@@ -176,6 +177,7 @@ export function updateNote({
     data: {
       title,
       body,
+      coverImage,
     },
   });
 }

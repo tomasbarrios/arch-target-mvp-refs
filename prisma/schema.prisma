@@ -115,6 +115,8 @@ model Wish {
   maxQuantity    Int?     @default(1)
   flexibility    String?
   priceTier      Int?
+  hidden         Boolean  @default(false)
+  linkImages     String?
   guestVolunteer GuestOnWish?
 }
 
