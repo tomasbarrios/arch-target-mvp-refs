@@ -12,6 +12,10 @@ import { useEffect, useRef } from "react";
 import invariant from "tiny-invariant";
 
 import { updateNote, getNote } from "~/models/note.server";
+import {
+  DEFAULT_PRE_ASSIGN_COPY,
+  DEFAULT_SUCCESS_THANKS_COPY,
+} from "~/models/note-copys.server";
 import { requireUserId } from "~/session.server";
 import { validateURLString } from "~/urls";
 
@@ -33,6 +37,9 @@ export async function action({ request }: ActionArgs) {
   const title = formData.get("title");
   const body = formData.get("body");
   const coverImage = formData.get("coverImage");
+  const introSignerName = formData.get("introSignerName");
+  const preAssignCopy = formData.get("preAssignCopy");
+  const successThanksCopy = formData.get("successThanksCopy");
   const id = formData.get("id");
 
   if (typeof title !== "string" || title.length === 0) {
@@ -77,6 +84,11 @@ export async function action({ request }: ActionArgs) {
     title,
     body,
     coverImage: coverImage.length > 0 ? coverImage : null,
+    introSignerName:
+      typeof introSignerName === "string" ? introSignerName : null,
+    preAssignCopy: typeof preAssignCopy === "string" ? preAssignCopy : null,
+    successThanksCopy:
+      typeof successThanksCopy === "string" ? successThanksCopy : null,
   });
 
   return redirect(`/notes/${note.id}`);
@@ -177,6 +189,50 @@ export default function EditDetailsPage() {
               className="mt-2 h-24 w-24 rounded object-cover"
             />
           )}
+        </div>
+
+        <hr className="my-4" />
+        <h4 className="text-lg font-bold">Copys personalizables</h4>
+        <p className="py-2 text-sm text-gray-600">
+          Dejá en blanco para usar el texto por defecto.
+        </p>
+
+        <div>
+          <label className="flex w-full flex-col gap-1">
+            <span>Firma del intro (home): </span>
+            <input
+              defaultValue={data.note.introSignerName ?? ""}
+              name="introSignerName"
+              placeholder="Si está vacío, se deriva del título de la lista"
+              className="flex-1 rounded-md border-2 border-blue-500 px-3 text-lg leading-loose"
+            />
+          </label>
+        </div>
+
+        <div>
+          <label className="flex w-full flex-col gap-1">
+            <span>Frase antes de asignar el regalo: </span>
+            <textarea
+              defaultValue={data.note.preAssignCopy ?? ""}
+              name="preAssignCopy"
+              rows={2}
+              placeholder={DEFAULT_PRE_ASSIGN_COPY}
+              className="w-full flex-1 rounded-md border-2 border-blue-500 px-3 py-2 text-lg leading-6"
+            />
+          </label>
+        </div>
+
+        <div>
+          <label className="flex w-full flex-col gap-1">
+            <span>Frase de broma del dueño (pantalla de éxito): </span>
+            <textarea
+              defaultValue={data.note.successThanksCopy ?? ""}
+              name="successThanksCopy"
+              rows={2}
+              placeholder={DEFAULT_SUCCESS_THANKS_COPY}
+              className="w-full flex-1 rounded-md border-2 border-blue-500 px-3 py-2 text-lg leading-6"
+            />
+          </label>
         </div>
 
         <div className="text-right">

@@ -61,18 +61,32 @@ Cortos y autoexplicativos, sin abreviaturas crípticas:
 - `preAssignCopy` — copy previo a la asignación del regalo.
 - `successThanksCopy` — copy de la pantalla de éxito.
 
+## Defaults sugeridos (texto cuando el campo está vacío)
+
+Estos son los `HARDCODED_ACTUAL` que caen cuando el campo es `null`. El
+`preAssignCopy` se definió aplicando el skill `product-designer-narrativa`
+sobre el texto original ("Me vas a emocionar"): se bajó la intensidad de
+"emocionar" (que pedía un hit emocional grande) por algo cálido y sin presión
+sobre el invitado.
+
+| Campo | Default sugerido | Nota |
+|-------|------------------|------|
+| `introSignerName` | _(definir)_ | falta elegir el texto del home |
+| `preAssignCopy` | `Me va a encantar` | reemplaza "Me vas a emocionar"; voz del dueño, cálido, sin presionar |
+| `successThanksCopy` | _(definir)_ | falta elegir el texto de éxito |
+
 ## Comportamiento de lectura (para cuando se implemente)
 
 En el frontend, cada texto se resuelve así:
 
 ```
-textoMostrado = note.campo ?? HARDCODED_ACTUAL
+textoMostrado = note.campo ?? DEFAULT_SUGERIDO[campo]
 ```
 
 El `??` (fallback) garantiza que listas existentes (con `null`) siguen
-mostrando el texto de hoy sin migración de datos. Los tres `HARDCODED_ACTUAL`
-son los strings que hoy están en el código; conviene centralizarlos en una
-constante por si cambian, pero eso es detalle de implementación.
+mostrando el default sin migración de datos. Los defaults conviene
+centralizarlos en una constante por si cambian, pero eso es detalle de
+implementación.
 
 ## Tradeoffs considerados
 
@@ -85,14 +99,15 @@ constante por si cambian, pero eso es detalle de implementación.
 
 ## Fuera de alcance (esta RFC)
 
-- Migración Prisma y corrida de `prisma migrate`.
-- código que lee los campos y aplica el `??`.
-- UI de edición en `/notes/:id/edit` (campos de texto para los 3).
 - cualquier otro string de la app que no sea estos 3.
 
-## Siguiente paso sugerido (cuando se apruebe)
+## Estado de implementación
 
-1. `prisma migrate dev --name add_note_copys` con el diff de arriba.
-2. Centralizar los 3 hardcoded actuales en constantes.
-3. Aplicar `??` en los 3 lugares de render.
-4. (Opcional, otra sesión) campos de edición en `/notes/:id/edit`.
+- **Migración** (`prisma migrate dev`, 20260720171549_add_note_copys): aplicada.
+- **Lectura con fallback** (`??` a defaults centralizados en `app/models/note-copys.server.ts`): hecha en `lista-publica.server.ts` + render de `lista.$listaId.tsx` y `lista.$listaId_.deseo.$wishId.tsx`.
+- **UI de edición** en `/notes/:id/edit`: agregados 3 campos (input para `introSignerName`, textarea para `preAssignCopy` y `successThanksCopy`) con placeholder mostrando el default. Vacío => se guarda `null` y cae al fallback. Fuera de alcance original, pero implementado.
+
+## Siguiente paso sugerido
+
+- (Opcional) un campo de vista previa en la edición para ver cómo queda el copy en el home/deseo antes de guardar.
+- Llevar a prod (backup de volume + apply vía `apply-plan.ts --env prod` o migración directa).

@@ -9,7 +9,15 @@ export function getNote({
   userId: User["id"];
 }) {
   return prisma.note.findFirst({
-    select: { id: true, body: true, title: true, coverImage: true },
+    select: {
+      id: true,
+      body: true,
+      title: true,
+      coverImage: true,
+      introSignerName: true,
+      preAssignCopy: true,
+      successThanksCopy: true,
+    },
     where: { id, userId },
   });
 }
@@ -169,7 +177,19 @@ export function updateNote({
   body,
   title,
   coverImage,
-}: Pick<Note, "id" | "body" | "title" | "coverImage">) {
+  introSignerName,
+  preAssignCopy,
+  successThanksCopy,
+}: Pick<
+  Note,
+  | "id"
+  | "body"
+  | "title"
+  | "coverImage"
+  | "introSignerName"
+  | "preAssignCopy"
+  | "successThanksCopy"
+>) {
   return prisma.note.update({
     where: {
       id,
@@ -178,6 +198,9 @@ export function updateNote({
       title,
       body,
       coverImage,
+      introSignerName: introSignerName?.length ? introSignerName : null,
+      preAssignCopy: preAssignCopy?.length ? preAssignCopy : null,
+      successThanksCopy: successThanksCopy?.length ? successThanksCopy : null,
     },
   });
 }
