@@ -4,7 +4,7 @@
 
 ```mermaid
 flowchart TB
-  A["Intake único<br/>(docs/feedback/ — usuarios e internos)"]
+  A["Intake único<br/>(docs/research/feedback/ — usuarios e internos)"]
   R["ROADMAP.md<br/>(estrategia + hito actual + próximos + pool)"]
   H["Ejecución<br/>(tareas de 1-2 semanas)"]
   J["features.md + deploy"]
@@ -17,7 +17,7 @@ flowchart TB
 
 ## Flujo
 
-1. **Llega feedback** — de usuarios o del equipo (fuente `interno-<autor>`), todo a `docs/feedback/`.
+1. **Llega feedback** — de usuarios o del equipo (fuente `interno-<autor>`), todo a `docs/research/feedback/`.
 2. **Ritual semanal**: se revisa `docs/ROADMAP.md` completo — se mueven candidatos al pool, se purgan ideas estancadas, se marcan slices del hito actual y, si se completó, se promueve el próximo hito.
 3. **Se ejecutan tareas** de 1-2 semanas para el hito actual.
 4. **Se entrega**: deploy + fila nueva en `docs/features.md`.
@@ -31,7 +31,7 @@ El criterio de selección, la definition of ready y el checklist del ritual est�
 |---|---|---|
 | **Criterio de selección** | ¿Qué hace que una idea entre al roadmap vs se quede en el pool? ¿Quién decide? | Resuelto — ver "Criterio de selección" en `docs/ROADMAP.md` |
 | **Frecuencia de ciclo** | ¿Cada cuánto se hace el proceso completo? ¿Semanal, quincenal? | Resuelto — ritual semanal, ver `docs/ROADMAP.md` |
-| **Ideas internas: formato** | ¿Mismo formato que feedback o algo más liviano? | Resuelto — fusionado en `docs/feedback/`, fuente `interno-<autor>` |
+| **Ideas internas: formato** | ¿Mismo formato que feedback o algo más liviano? | Resuelto — fusionado en `docs/research/feedback/`, fuente `interno-<autor>` |
 | **Pool: límite de capacidad** | ¿Cuántas ideas máx en el pool? ¿Cuándo se purgan? | Resuelto — máx 15 ítems, purga en el ritual semanal si llevan +2 meses sin subir de prioridad |
 | **Slicing de hitos** | ¿Quién define los slices? ¿Cómo se decide el tamaño de cada slice? | Resuelto — máx 5 slices, se definen recién al promover del pool (ver definition of ready en `docs/ROADMAP.md`) |
 | **Feedback loop** | ¿Cómo vuelve al usuario lo que implementamos? (changelog público, email, etc.) | Abierto a propósito — con la base actual de usuarios alcanza con contarle directo a quien dio el feedback; formalizar un canal sería proceso antes de necesidad |
@@ -46,7 +46,7 @@ Lo que sigue registra cómo se llegó al proceso vigente: la primera propuesta, 
 ```mermaid
 flowchart TB
   subgraph Inputs
-    A["Feedback de usuarios<br/>(docs/feedback/ → FEEDBACK.md)"]
+    A["Feedback de usuarios<br/>(docs/research/feedback/ → FEEDBACK.md)"]
     B["Ideas internas<br/>(docs/ideas-internas/)"]
   end
 
@@ -84,7 +84,7 @@ flowchart TB
 
 ### Flujo original
 
-1. **Llegan inputs** — feedback de usuarios (`docs/feedback/`) e ideas del equipo.
+1. **Llegan inputs** — feedback de usuarios (`docs/research/feedback/`) e ideas del equipo.
 2. **Se selecciona** qué entra al roadmap (criterio pendiente de definir).
 3. **El roadmap se organiza** en estrategia, hito actual (sliced), hitos siguientes (~2) y un pool de ideas para ~2 meses que puede reordenarse en cualquier momento.
 4. **Se ejecutan tareas** concretas para 1-2 semanas.
@@ -134,7 +134,7 @@ El análisis anterior diagnostica; esta sección prescribe. La idea central: **r
 
 ```mermaid
 flowchart TB
-  A["Intake único<br/>(docs/feedback/ — usuarios e internos)"]
+  A["Intake único<br/>(docs/research/feedback/ — usuarios e internos)"]
   R["ROADMAP.md<br/>(estrategia + hito actual + próximos + pool)"]
   H["Ejecución<br/>(tareas de 1-2 semanas)"]
   J["features.md + deploy"]
@@ -180,13 +180,13 @@ Es el hoyo más grande: el proceso entero orbita alrededor de un roadmap que no 
 <lista con viñetas, ordenada por prioridad descendente; máx 15 ítems; cada ítem = 1 línea + link al feedback que lo originó>
 ```
 
-**Hecho cuando:** el archivo existe, el hito actual tiene slices marcables, y cada ítem del pool referencia su origen en `docs/feedback/`.
+**Hecho cuando:** el archivo existe, el hito actual tiene slices marcables, y cada ítem del pool referencia su origen en `docs/research/feedback/`.
 
 ##### 2. Definir el ritual semanal (la cadencia — hoy inexistente)
 
 Agregar al final de `ROADMAP.md` una sección `## Ritual semanal` con este checklist (día fijo, ~30 min, quien tenga el rol de producto — hoy Tomás):
 
-1. Leer feedback nuevo en `docs/feedback/` y actualizar `FEEDBACK.md` (ocurrencias).
+1. Leer feedback nuevo en `docs/research/feedback/` y actualizar `FEEDBACK.md` (ocurrencias).
 2. Mover candidatos al **pool** (no directo al hito). Purgar del pool lo que lleve >2 meses sin subir de prioridad.
 3. Revisar el **hito actual**: marcar slices hechos. Si el hito se completó → registrar en `features.md`, promover el próximo hito y slicearlo recién ahí.
 4. Releer la **estrategia** (30 segundos). Solo se reescribe si hubo un aprendizaje que la contradiga — no cada semana.
@@ -225,8 +225,8 @@ Formato: tabla append-only, una fila por entrega, se escribe en el paso 3 del ri
 
 ##### 6. Fusionar `ideas-internas/` en `feedback/`
 
-- Mover los archivos de `docs/ideas-internas/` a `docs/feedback/` renombrando a `YYYY-MM-DD-interno-<autor>.md`.
-- Actualizar `docs/feedback/README.md`: una línea que diga que la fuente `interno-*` marca ideas del equipo.
+- Mover los archivos de `docs/ideas-internas/` a `docs/research/feedback/` renombrando a `YYYY-MM-DD-interno-<autor>.md`.
+- Actualizar `docs/research/feedback/README.md`: una línea que diga que la fuente `interno-*` marca ideas del equipo.
 - Borrar `docs/ideas-internas/`.
 
 **Hecho cuando:** el directorio ya no existe y el README menciona la convención.
@@ -263,7 +263,7 @@ El diagrama y la sección "Flujo" al inicio de este archivo describen el proceso
 
 La instrucción 5 decía reconstruir desde `playbook.md` **y git log**; solo se usó el playbook. Faltan al menos estas entregas visibles al usuario, todas del 2026-07-07 (verificar con `git log --oneline`):
 
-- Recordar la última lista seleccionada al crear un deseo (`9dd1beb`, ver `docs/exploraciones/001-lista-preseleccionada.md`)
+- Recordar la última lista seleccionada al crear un deseo (`9dd1beb`, ver `docs/rfcs/001-lista-preseleccionada.md`)
 - Separar el estado "cumplido" de las opciones del deseo (`2c9b7f7`)
 - Mejorar labels y checkboxes del formulario de deseo (`dc1ed29`)
 - Ordenar la lista default por fecha descendente (`83183be`)
@@ -272,7 +272,7 @@ La instrucción 5 decía reconstruir desde `playbook.md` **y git log**; solo se 
 
 ##### C. Corregir el slice 1 del hito actual en `ROADMAP.md`
 
-El primer slice dice "Elegir método (magic link / código / identifier-first)". Eso es una **decisión**, no un slice entregable — viola la propia plantilla ("entregable por sí solo"). Sacarlo de la lista de checkboxes y ponerlo como nota previa al hito ("Decisión pendiente: método de identificación — opciones B, C, E de `docs/happy-path.md`"). Los slices restantes deben redactarse como resultados observables por el usuario, no como pasos técnicos.
+El primer slice dice "Elegir método (magic link / código / identifier-first)". Eso es una **decisión**, no un slice entregable — viola la propia plantilla ("entregable por sí solo"). Sacarlo de la lista de checkboxes y ponerlo como nota previa al hito ("Decisión pendiente: método de identificación — opciones B, C, E de `docs/rfcs/happy-path.md`"). Los slices restantes deben redactarse como resultados observables por el usuario, no como pasos técnicos.
 
 **Hecho cuando:** todos los checkboxes del hito describen algo que un usuario podría notar al usarlo.
 
@@ -288,7 +288,7 @@ Los próximos hitos dicen "3 ocurrencias agrupadas" y "2 ocurrencias agrupadas".
 
 **Hecho cuando:** ninguna línea del roadmap infle ocurrencias sumando ideas de un mismo clúster.
 
-##### F. Arreglar la referencia rota en `docs/feedback/README.md`
+##### F. Arreglar la referencia rota en `docs/research/feedback/README.md`
 
 El paso 2 de la sección "Proceso" dice "Actualizar `CONSOLIDADO.md`" — ese archivo no existe; el real es `FEEDBACK.md`. Preexistente a esta ronda, pero ahora que es el README del intake único, es el único lugar que documenta el proceso de entrada y apunta a un archivo fantasma. Cambiar `CONSOLIDADO.md` → `FEEDBACK.md`.
 
@@ -309,7 +309,7 @@ Ejecutados A–F el 2026-07-08:
 - **C**: el slice "elegir método" del hito actual se convirtió en una nota de "decisión pendiente" separada de los slices; los 3 slices restantes quedaron redactados como resultado observable por el usuario.
 - **D**: "Última revisión" movida a la segunda línea de `ROADMAP.md`, justo bajo el título.
 - **E**: corregido el conteo — los próximos hitos ahora dicen "N ideas de 1 fuente" en vez de "N ocurrencias agrupadas", para no inflar el criterio de selección.
-- **F**: `docs/feedback/README.md` ya no referencia `CONSOLIDADO.md`; dice `FEEDBACK.md`.
+- **F**: `docs/research/feedback/README.md` ya no referencia `CONSOLIDADO.md`; dice `FEEDBACK.md`.
 
 **Refuerzo adicional no pedido explícitamente, agregado por consistencia con "que el proceso no falle":** el Pool de `ROADMAP.md` no tenía fecha de entrada por ítem, lo que hacía inaplicable la regla de purga del ritual semanal ("+2 meses sin subir de prioridad" — sin fecha, nada que comparar). Se agregó `(pool desde YYYY-MM-DD)` a cada ítem existente y una nota que instruye actualizar esa fecha al reordenar o promover un ítem.
 

@@ -39,4 +39,4 @@ Esta página nace de la necesidad de tener un feedback público estructurado que
 2. Eduque a quienes llegan ("esto es lo que hemos aprendido")
 3. Invite a participar ("suma tu voz")
 
-A su vez, el sistema de feedback interno (en `docs/feedback/`) alimenta esta página: las sesiones de feedback se consolidan y lo que es relevante públicamente se publica acá.
+A su vez, el sistema de feedback interno (en `docs/research/feedback/`) alimenta esta página: las sesiones de feedback se consolidan y lo que es relevante públicamente se publica acá.

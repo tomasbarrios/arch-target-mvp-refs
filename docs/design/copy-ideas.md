@@ -1,7 +1,7 @@
 # Ideas de copy
 
 Documento vivo de lluvia de ideas de copywriting, separado del feedback de producto
-(`docs/feedback/`). Acá se anotan frases sueltas por situación apenas se les ocurran —
+(`docs/research/feedback/`). Acá se anotan frases sueltas por situación apenas se les ocurran —
 en la calle, en la ducha, donde sea — sin filtrar. Las favoritas del momento se marcan
 con ⭐ y suben al principio de su sección; las descartadas se dejan igual, no se borran,
 por si sirven después.

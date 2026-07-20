@@ -48,3 +48,10 @@ No todo el codigo debe ser rápido, pero si decidimos que una parte de nuestro s
 
 SI: Recordar ultima seleccion
 No: Combobox para seleccionar
+
+# Documentación (docs-kit v0.1.0)
+
+Antes de crear un `.md` en `docs/`: clasificarlo con la tabla de `docs/README.md`
+(pregunta → carpeta). Hechos del mundo externo → `domain/`; approach de app → `rfcs/`;
+UX conceptual → `design/`; feedback de usuarios → `research/`; patrón en el codebase →
+`architecture/vigente/`; convención operativa → `devs/`.

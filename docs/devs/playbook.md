@@ -19,8 +19,8 @@ Había cambios sin committear desde agosto 2023 (~3 años). Un WIP que intentaba
 
 ### Exploraciones
 
-- **Recordar última lista usada al crear deseo** → [exploración](exploraciones/001-lista-preseleccionada.md)
+- **Recordar última lista usada al crear deseo** → [exploración](../rfcs/001-lista-preseleccionada.md)
 
 ### Estructura de documentación
 
-Decidimos usar `docs/playbook.md` como diario de proceso, y `docs/exploraciones/` para profundizar decisiones que cumplan los [criterios](playbook-criteria.md).
+Decidimos usar `docs/devs/playbook.md` como diario de proceso, y `docs/rfcs/` para profundizar decisiones que cumplan los [criterios](playbook-criteria.md).
