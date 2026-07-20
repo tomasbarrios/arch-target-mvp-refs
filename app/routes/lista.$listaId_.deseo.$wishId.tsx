@@ -18,6 +18,10 @@ import {
   hechoAManoLinks,
 } from "~/components/hechoamano";
 import { prisma } from "~/db.server";
+import {
+  DEFAULT_PRE_ASSIGN_COPY,
+  DEFAULT_SUCCESS_THANKS_COPY,
+} from "~/models/note-copys.server";
 import { createGuestSession, getGuestId } from "~/guest-session.server";
 import {
   createGuest,
@@ -69,6 +73,9 @@ export async function loader({ request, params }: LoaderArgs) {
   return json({
     listaId: params.listaId,
     dueño: nombreDelDueno(lista.title),
+    // Copys personalizables: el campo de la Note o el default centralizado.
+    preAssignCopy: lista.preAssignCopy ?? DEFAULT_PRE_ASSIGN_COPY,
+    successThanksCopy: lista.successThanksCopy ?? DEFAULT_SUCCESS_THANKS_COPY,
     wish: {
       id: wish.id,
       title: wish.title,
@@ -318,7 +325,7 @@ export default function DeseoPage() {
             className="ha-manuscrita"
             style={{ fontSize: 23, lineHeight: 1.3, marginTop: 14 }}
           >
-            &ldquo;¿Llorando yo? Bah, estás loco. Me entró una pelusa 😏.&rdquo;
+            &ldquo;{data.successThanksCopy}&rdquo;
           </p>
           <p
             className="ha-manuscrita"
@@ -517,7 +524,7 @@ export default function DeseoPage() {
           className="ha-manuscrita"
           style={{ fontSize: 38, fontWeight: 700, marginTop: 4 }}
         >
-          Me vas a emocionar
+          {data.preAssignCopy}
         </h1>
         <p
           style={{

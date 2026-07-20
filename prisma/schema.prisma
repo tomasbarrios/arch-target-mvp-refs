@@ -33,6 +33,10 @@ model Note {
   body       String
   eventDate  DateTime?
   coverImage String?
+  // --- copys personalizables por lista (opcionales; null => fallback hardcodeado) ---
+  introSignerName   String? // 1. quién firma el texto de intro en el home
+  preAssignCopy     String? // 2. frase emotiva antes de asignar el regalo
+  successThanksCopy String? // 3. frase de agradecimiento en pantalla de éxito
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
   userId     String

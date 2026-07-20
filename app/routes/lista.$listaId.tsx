@@ -61,7 +61,7 @@ export async function loader({ request, params }: LoaderArgs) {
     eventDate: lista.eventDate,
     coverImage: lista.coverImage,
     dias,
-    nombre: nombreDelDueno(lista.title),
+    nombre: lista.introSignerName || nombreDelDueno(lista.title),
     misCompromisos,
     tomadosCount,
     total: lista.wishes.length,
@@ -203,6 +203,7 @@ export default function LaCarta() {
           <div className="ha-papel" style={{ margin: "24px 22px" }}>
             &ldquo;{data.body}&rdquo;
             {data.nombre && <div className="ha-firma">— {data.nombre}</div>}
+            {/* introSignerName: si está vacío, nombreDelDueno lo deriva del título */}
           </div>
 
           <div style={{ margin: "auto 22px 0", paddingBottom: 38, textAlign: "center" }}>

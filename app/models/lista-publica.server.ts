@@ -20,6 +20,9 @@ export async function getListaPublica({
       body: true,
       eventDate: true,
       coverImage: true,
+      introSignerName: true,
+      preAssignCopy: true,
+      successThanksCopy: true,
       wish: {
         where: { hidden: false },
         select: {
