@@ -34,6 +34,7 @@ import {
   releaseWish,
   takeWish,
 } from "~/models/lista-publica.server";
+import { sendGuestEmailConfirmation } from "~/services/email.server";
 import Button from "~/shared/Button";
 import { Confetti, links as confettiLinks } from "~/shared/Confetti";
 
@@ -171,7 +172,20 @@ export async function action({ request, params }: ActionArgs) {
       );
     }
 
-    await setGuestEmail({ id: guestId, email: email.trim() });
+    const guest = await setGuestEmail({ id: guestId, email: email.trim() });
+
+    const wish = await prisma.wish.findUnique({
+      where: { id: params.wishId },
+      select: { title: true },
+    });
+    if (wish) {
+      await sendGuestEmailConfirmation({
+        to: guest.email!,
+        guestName: guest.name,
+        wishTitle: wish.title,
+      });
+    }
+
     return json({ emailSaved: true });
   }
 
