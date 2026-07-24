@@ -176,13 +176,18 @@ export async function action({ request, params }: ActionArgs) {
 
     const wish = await prisma.wish.findUnique({
       where: { id: params.wishId },
-      select: { title: true },
+      select: {
+        title: true,
+        note: { select: { title: true, eventDate: true } },
+      },
     });
-    if (wish) {
+    if (wish?.note) {
       await sendGuestEmailConfirmation({
         to: guest.email!,
         guestName: guest.name,
         wishTitle: wish.title,
+        dueño: nombreDelDueno(wish.note.title),
+        eventDate: wish.note.eventDate,
       });
     }
 
