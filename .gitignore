@@ -8,6 +8,9 @@ node_modules
 /cypress/videos
 /prisma/data.db
 /prisma/data.db-journal
+/prisma/data.db.bak-*
+
+dev.log
 
 /app/styles/tailwind.css
 
