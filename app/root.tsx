@@ -38,6 +38,9 @@ export default function App() {
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
+        {process.env.NODE_ENV === "production" && (
+          <script data-goatcounter="/api/f" async src="/api/f.js" />
+        )}
       </body>
     </html>
   );
