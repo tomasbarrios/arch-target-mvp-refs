@@ -22,6 +22,7 @@ import {
   DEFAULT_PRE_ASSIGN_COPY,
   DEFAULT_SUCCESS_THANKS_COPY,
 } from "~/models/note-copys.server";
+import { createGuestToken, verifyGuestToken } from "~/guest-token.server";
 import { createGuestSession, getGuestId } from "~/guest-session.server";
 import {
   createGuest,
@@ -52,6 +53,23 @@ export async function loader({ request, params }: LoaderArgs) {
   invariant(params.listaId, "listaId not found");
   invariant(params.wishId, "wishId not found");
 
+  const url = new URL(request.url);
+  const restoreGuestId = url.searchParams.get("guestId");
+  const restoreToken = url.searchParams.get("token");
+  if (
+    restoreGuestId &&
+    restoreToken &&
+    verifyGuestToken(restoreGuestId, restoreToken)
+  ) {
+    const headers = await createGuestSession({
+      request,
+      guestId: restoreGuestId,
+    });
+    url.searchParams.delete("guestId");
+    url.searchParams.delete("token");
+    return redirect(url.pathname + url.search, { headers });
+  }
+
   const lista = await getListaPublica({ listaId: params.listaId });
   const wish = lista?.wishes.find((w) => w.id === params.wishId);
   if (!lista || !wish) {
@@ -68,7 +86,6 @@ export async function loader({ request, params }: LoaderArgs) {
 
   const guest = esMio && guestId ? await getGuest(guestId) : null;
 
-  const url = new URL(request.url);
   const mostrarConfirmacion = esMio && url.searchParams.get("tomado") === "1";
 
   return json({
@@ -182,12 +199,17 @@ export async function action({ request, params }: ActionArgs) {
       },
     });
     if (wish?.note) {
+      const restoreUrl = new URL(request.url);
+      restoreUrl.searchParams.set("guestId", guestId);
+      restoreUrl.searchParams.set("token", createGuestToken(guestId));
+
       await sendGuestEmailConfirmation({
         to: guest.email!,
         guestName: guest.name,
         wishTitle: wish.title,
         dueño: nombreDelDueno(wish.note.title),
         eventDate: wish.note.eventDate,
+        restoreUrl: restoreUrl.toString(),
       });
     }
 

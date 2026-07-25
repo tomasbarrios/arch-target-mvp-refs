@@ -15,6 +15,9 @@ antes de abrirlo — los tres se trabajan acá:
    justo debajo/al lado del asunto, antes de abrir el correo — también
    llamado "preheader").
 4. **Cuerpo del email.**
+5. **Link de "volver a tu deseo"** (restaura la sesión del invitado sin
+   cookie — ver `docs/devs/testing-email.md` y el plan de implementación
+   del 2026-07-24 para el mecanismo técnico).
 
 ## Cómo usar este documento
 
@@ -86,6 +89,14 @@ junto a [deseo], el deseo del que te encargaste."):
   [remitente]" (Tomás)
   Nota: [...] es el título del deseo reclamado (confirmado 2026-07-23).
 
+## 5. Link de "volver a tu deseo"
+
+Decisión (Tomás, interview 2026-07-24): va discreto, texto chico al final,
+no un botón — no debe competir con el tono positivo del resto del email.
+
+- ⭐ "¿Cambiaste de opinión? Volver a tu deseo." (Claude)
+  Placeholder implementado mientras se pule el texto definitivo.
+
 ## Propuesta final (para implementar)
 
 Basada en las ⭐ de cada sección, con el ajuste de tono del último feedback
@@ -94,6 +105,7 @@ Basada en las ⭐ de cada sección, con el ajuste de tono del último feedback
 - **Remitente:** "Lista de Deseos de [...]" (Tomás)
 - **Asunto:** "En serio? Es que te pasas! 🌟" (Tomás)
 - **Preheader:** "Gracias por hacerte cargo 💚" (Tomás)
+- **Link de vuelta:** "¿Cambiaste de opinión? Volver a tu deseo." (Claude, placeholder)
 
 Variante (Claude) — mismo texto, otros íconos, por si el 🌟 y el 💚 no
 conviven bien entre sí o con el resto de la marca:

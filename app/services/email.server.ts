@@ -28,12 +28,14 @@ export async function sendGuestEmailConfirmation({
   wishTitle,
   dueño,
   eventDate,
+  restoreUrl,
 }: {
   to: string;
   guestName: string;
   wishTitle: string;
   dueño: string | null;
   eventDate: Date | null;
+  restoreUrl: string;
 }) {
   const address = process.env.EMAIL_FROM;
   if (!address) {
@@ -62,6 +64,9 @@ export async function sendGuestEmailConfirmation({
     <p>Hemos guardado tu correo y te anotamos con el regalo <b>${safeWishTitle}</b>.</p>
     ${citaParrafo}
     <p>Nos vemos, ${escapeHtml(senderName)}</p>
+    <p style="font-size:12px;color:#888;margin-top:16px;">
+      ¿Cambiaste de opinión? <a href="${restoreUrl}">Volver a tu deseo</a>.
+    </p>
   `;
 
   const { error } = await resend.emails.send({
