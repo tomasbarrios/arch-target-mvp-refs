@@ -229,11 +229,79 @@ export async function action({ request, params }: ActionArgs) {
 
 const linkVolver = { fontSize: 14, fontWeight: 700, color: "var(--ha-gris)" };
 
+function EnlacesDeEjemplo({
+  exampleUrls,
+  linkImagesJson,
+}: {
+  exampleUrls: string | null;
+  linkImagesJson: string | null;
+}) {
+  if (!exampleUrls) return null;
+
+  const linkImages: Record<string, string> = linkImagesJson
+    ? JSON.parse(linkImagesJson)
+    : {};
+
+  return (
+    <div style={{ marginTop: 10 }}>
+      {exampleUrls
+        .split("\n")
+        .filter(Boolean)
+        .map((url) => {
+          const image = linkImages[url];
+          return (
+            <div
+              key={url}
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: 8,
+              }}
+            >
+              {image && (
+                <img
+                  src={image}
+                  alt=""
+                  style={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: 8,
+                    objectFit: "cover",
+                  }}
+                />
+              )}
+              <a
+                href={url}
+                target="_blank"
+                rel="noreferrer"
+                style={{
+                  fontSize: 13,
+                  fontWeight: 700,
+                  color: "var(--ha-tinta)",
+                }}
+              >
+                ver dónde comprarlo →
+              </a>
+            </div>
+          );
+        })}
+    </div>
+  );
+}
+
 export default function DeseoPage() {
   const data = useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
   const errors =
     actionData && "errors" in actionData ? actionData.errors : undefined;
+
+  const enlaces = (
+    <EnlacesDeEjemplo
+      exampleUrls={data.wish.exampleUrls}
+      linkImagesJson={data.wish.linkImages}
+    />
+  );
 
   const volver = (
     <div style={{ padding: "18px 22px 0" }}>
@@ -397,6 +465,7 @@ export default function DeseoPage() {
               </p>
             )}
             <FlexBadge flexibility={data.wish.flexibility} />
+            {enlaces}
           </div>
         </div>
 
@@ -432,6 +501,7 @@ export default function DeseoPage() {
             {data.wish.title}
           </h2>
           {notaDelDueno}
+          {enlaces}
           <p
             style={{
               fontSize: 14,
@@ -499,56 +569,7 @@ export default function DeseoPage() {
           <FlexBadge flexibility={data.wish.flexibility} detailed />
           <PrecioDots tier={data.wish.priceTier} detailed />
         </div>
-        {data.wish.exampleUrls && (
-          <div style={{ marginTop: 10 }}>
-            {data.wish.exampleUrls
-              .split("\n")
-              .filter(Boolean)
-              .map((url) => {
-                const linkImages: Record<string, string> = data.wish
-                  .linkImages
-                  ? JSON.parse(data.wish.linkImages)
-                  : {};
-                const image = linkImages[url];
-                return (
-                  <div
-                    key={url}
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      gap: 8,
-                    }}
-                  >
-                    {image && (
-                      <img
-                        src={image}
-                        alt=""
-                        style={{
-                          width: 40,
-                          height: 40,
-                          borderRadius: 8,
-                          objectFit: "cover",
-                        }}
-                      />
-                    )}
-                    <a
-                      href={url}
-                      target="_blank"
-                      rel="noreferrer"
-                      style={{
-                        fontSize: 13,
-                        fontWeight: 700,
-                        color: "var(--ha-tinta)",
-                      }}
-                    >
-                      ver dónde comprarlo →
-                    </a>
-                  </div>
-                );
-              })}
-          </div>
-        )}
+        {enlaces}
       </div>
 
       <div style={{ textAlign: "center", padding: "26px 22px 6px" }}>
